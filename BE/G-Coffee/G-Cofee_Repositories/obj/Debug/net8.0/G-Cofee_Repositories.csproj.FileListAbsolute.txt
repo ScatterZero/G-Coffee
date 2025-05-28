@@ -1,0 +1,15 @@
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\bin\Debug\net8.0\G-Cofee_Repositories.deps.json
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\bin\Debug\net8.0\G-Cofee_Repositories.runtimeconfig.json
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\bin\Debug\net8.0\G-Cofee_Repositories.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\bin\Debug\net8.0\G-Cofee_Repositories.pdb
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.csproj.AssemblyReference.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.GeneratedMSBuildEditorConfig.editorconfig
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.AssemblyInfoInputs.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.AssemblyInfo.cs
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.csproj.CoreCompileInputs.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.sourcelink.json
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\refint\G-Cofee_Repositories.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.pdb
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\G-Cofee_Repositories.genruntimeconfig.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Cofee_Repositories\obj\Debug\net8.0\ref\G-Cofee_Repositories.dll

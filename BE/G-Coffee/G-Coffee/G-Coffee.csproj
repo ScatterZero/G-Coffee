@@ -15,4 +15,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\G-Coffee_Services\G-Coffee_Services.csproj" />
+  </ItemGroup>
+
 </Project>

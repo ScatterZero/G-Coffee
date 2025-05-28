@@ -1,0 +1,16 @@
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\bin\Debug\net8.0\G-Coffee_Services.deps.json
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\bin\Debug\net8.0\G-Coffee_Services.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\bin\Debug\net8.0\G-Coffee_Services.pdb
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\bin\Debug\net8.0\G-Cofee_Repositories.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\bin\Debug\net8.0\G-Cofee_Repositories.pdb
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.csproj.AssemblyReference.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.GeneratedMSBuildEditorConfig.editorconfig
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.AssemblyInfoInputs.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.AssemblyInfo.cs
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.csproj.CoreCompileInputs.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.sourcelink.json
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee.DCB9992D.Up2Date
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\refint\G-Coffee_Services.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\G-Coffee_Services.pdb
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee_Services\obj\Debug\net8.0\ref\G-Coffee_Services.dll
