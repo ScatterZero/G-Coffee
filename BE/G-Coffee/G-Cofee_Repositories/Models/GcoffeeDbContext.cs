@@ -33,9 +33,6 @@ public partial class GcoffeeDbContext : DbContext
 
     public virtual DbSet<Warehouse> Warehouses { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=Zen;Database=GCoffeeDB;User Id=sa;Password=12345;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -124,11 +121,11 @@ public partial class GcoffeeDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Barcode).HasName("PK__Products__177800D296728DEB");
+            entity.HasKey(e => e.ProductID).HasName("PK__Products__177800D296728DEB");
 
-            entity.HasIndex(e => e.Barcode, "IDX_Products_Barcode");
+            entity.HasIndex(e => e.ProductID, "IDX_Products_Barcode");
 
-            entity.Property(e => e.Barcode)
+            entity.Property(e => e.ProductID)
                 .HasMaxLength(13)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedBy)

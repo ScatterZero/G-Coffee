@@ -5,7 +5,7 @@ namespace G_Cofee_Repositories.Models;
 
 public partial class Product
 {
-    public string Barcode { get; set; } = null!;
+    public string ProductID { get; set; } = null!;
 
     public string ProductName { get; set; } = null!;
 
