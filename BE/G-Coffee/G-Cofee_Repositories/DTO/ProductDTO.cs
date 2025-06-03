@@ -9,7 +9,7 @@ namespace G_Cofee_Repositories.DTO
 {
     public class ProductDto
     {
-        public string ProductID { get; set; }
+        public string? ProductID { get; set; }
         public string ProductName { get; set; }
         public string? ShortName { get; set; }
         public string UnitOfMeasureId { get; set; }

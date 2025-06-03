@@ -5,6 +5,12 @@ namespace G_Cofee_Repositories.Models;
 
 public partial class User
 {
+    public enum RoleEnum
+    {
+        User,
+        Manager,
+        Admin
+    }
     public string UserId { get; set; } = null!;
 
     public string Username { get; set; } = null!;
@@ -13,7 +19,8 @@ public partial class User
 
     public string? FullName { get; set; }
 
-    public string Role { get; set; } = null!;
+    public RoleEnum Role { get; set; } /*= null!;*/
+    
 
     public DateTime? CreatedDate { get; set; }
 

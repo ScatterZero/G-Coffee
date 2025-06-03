@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using G_Cofee_Repositories.DTO;
+using G_Cofee_Repositories.Helper;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,56 +27,136 @@ namespace G_Coffee_Services.Services
 
         public async Task<ProductDto> CreateProductAsync(ProductDto productDto)
         {
+            // Validate DTO
+            if (productDto == null) throw new ArgumentNullException(nameof(productDto));
             if (string.IsNullOrEmpty(productDto.ProductName)) throw new ArgumentException("Product name is required");
-            if (productDto.UnitPrice < 0) throw new ArgumentException("Unit price cannot be negative");
+            if (string.IsNullOrEmpty(productDto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
+            if (string.IsNullOrEmpty(productDto.ShortName)) throw new ArgumentException("Unit of measure is required");
+            if (productDto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
+            if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non" +
+                "-negative");
+            //if (!string.IsNullOrEmpty(productDto.ProductID)) throw new ArgumentException("ProductID is auto-generated and should not be provided");
 
-            var product = _mapper.Map<Product>(productDto);
-            product.CreatedDate = DateTime.Now;
-            product.UpdatedDate = DateTime.Now;
+                try
+            {
+                var math = new Caculate(); // Đã sửa từ Caculate thành Math
+                do
+                {
+                    productDto.ProductID = math.GenerateEan13Barcode();
+                } while (await _productRepository.ExistsAsync(p => p.ProductID == productDto.ProductID));
 
-            await _productRepository.AddAsync(product);
-            await _unitOfWork.SaveChangesAsync();
+                var product = _mapper.Map<Product>(productDto);
+                product.CreatedDate = DateTime.UtcNow;
+                product.UpdatedDate = DateTime.UtcNow;
 
-            return _mapper.Map<ProductDto>(product);
+                await _productRepository.AddAsync(product);
+                await _unitOfWork.SaveChangesAsync();
+
+                return _mapper.Map<ProductDto>(product);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("Failed to create product due to database error", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error while creating product", ex);
+            }
         }
 
         public async Task<ProductDto> GetProductByIdAsync(string id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
-            return product == null ? null : _mapper.Map<ProductDto>(product);
+            if (string.IsNullOrEmpty(id)) throw new ArgumentException("Product ID is required");
+
+            try
+            {
+                var product = await _productRepository.GetByIdAsync(id);
+                return product == null ? null : _mapper.Map<ProductDto>(product);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving product with ID {id}", ex);
+            }
         }
 
         public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
         {
-            var products = await _productRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<ProductDto>>(products);
+            try
+            {
+                var products = await _productRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<ProductDto>>(products);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving all products", ex);
+            }
         }
 
         public async Task UpdateProductAsync(ProductDto productDto)
         {
-            var product = await _productRepository.GetByIdAsync(productDto.ProductID);
-            if (product == null) throw new KeyNotFoundException("Product not found");
+            // Validate DTO
+            if (productDto == null) throw new ArgumentNullException(nameof(productDto));
+            if (string.IsNullOrEmpty(productDto.ProductID)) throw new ArgumentException("Product ID is required");
+            if (string.IsNullOrEmpty(productDto.ProductName)) throw new ArgumentException("Product name is required");
+            if (string.IsNullOrEmpty(productDto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
+            if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
 
-            _mapper.Map(productDto, product);
-            product.UpdatedDate = DateTime.Now;
+            try
+            {
+                var product = await _productRepository.GetByIdAsync(productDto.ProductID);
+                if (product == null) throw new KeyNotFoundException("Product not found");
 
-            _productRepository.Update(product);
-            await _unitOfWork.SaveChangesAsync();
+                _mapper.Map(productDto, product);
+                product.UpdatedDate = DateTime.UtcNow;
+
+                _productRepository.Update(product);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("Failed to update product due to database error", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error while updating product", ex);
+            }
         }
 
         public async Task DeleteProductAsync(string id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
-            if (product == null) throw new KeyNotFoundException("Product not found");
+            if (string.IsNullOrEmpty(id)) throw new ArgumentException("Product ID is required");
 
-            _productRepository.Remove(product);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                var product = await _productRepository.GetByIdAsync(id);
+                if (product == null) throw new KeyNotFoundException("Product not found");
+
+                _productRepository.Remove(product);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("Failed to delete product due to database error", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error while deleting product", ex);
+            }
         }
 
         public async Task<IEnumerable<ProductDto>> GetProductsBySupplierIdAsync(string supplierId)
         {
-            var products = await _productRepository.GetProductsBySupplierIdAsync(supplierId);
-            return _mapper.Map<IEnumerable<ProductDto>>(products);
+            if (string.IsNullOrEmpty(supplierId)) throw new ArgumentException("Supplier ID is required");
+
+            try
+            {
+                var products = await _productRepository.GetProductsBySupplierIdAsync(supplierId);
+                return _mapper.Map<IEnumerable<ProductDto>>(products);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving products for supplier {supplierId}", ex);
+            }
         }
     }
 }

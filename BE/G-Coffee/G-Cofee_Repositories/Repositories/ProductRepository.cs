@@ -14,8 +14,16 @@ using Microsoft.EntityFrameworkCore;
 // Repository cho Products
 public class ProductRepository : GenericRepository<Product>, IProductRepository
 {
+    private readonly GcoffeeDbContext _context;
+
     public ProductRepository(GcoffeeDbContext context) : base(context)
     {
+        _context = context;
+    }
+
+    public async Task<bool> ExistsAsync(Expression<Func<Product, bool>> predicate)
+    {
+        return await _context.Products.AnyAsync(predicate);
     }
 
     public async Task<IEnumerable<Product>> GetProductsBySupplierIdAsync(string supplierId)

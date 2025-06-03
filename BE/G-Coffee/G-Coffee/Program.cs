@@ -15,10 +15,14 @@ builder.Services.AddDbContext<GcoffeeDbContext>(options =>
 // Đăng ký UnitOfWork và Repository
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IGenericRepository<Product>, GenericRepository<Product>>();
+builder.Services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+
 
 // Đăng ký ProductService - Chỗ đăng ký DI
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Add services to the container.
 
