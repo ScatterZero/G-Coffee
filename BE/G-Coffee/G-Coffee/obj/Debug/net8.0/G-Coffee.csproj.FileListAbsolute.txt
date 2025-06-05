@@ -64,12 +64,6 @@ D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\scopedcss\bundle\G-Coff
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.build.json
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.development.json
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets\msbuild.G-Coffee.Microsoft.AspNetCore.StaticWebAssets.props
-D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets\msbuild.G-Coffee.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets\msbuild.build.G-Coffee.props
-D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.G-Coffee.props
-D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.G-Coffee.props
-D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.pack.json
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.csproj.Up2Date
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.dll
@@ -145,3 +139,4 @@ D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\zh-Hans\Microsoft.CodeA
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\AutoMapper.dll
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.build.json.cache
