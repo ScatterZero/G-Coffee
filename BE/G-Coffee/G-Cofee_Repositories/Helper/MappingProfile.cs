@@ -17,7 +17,8 @@ public class MappingProfile : Profile
         CreateMap<Product, ProductDto>()
             .ForMember(dest => dest.UnitOfMeasureId, opt => opt.MapFrom(src => src.UnitOfMeasureId))
             .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => src.SupplierId));
-
+        CreateMap<UserLoginDTO, User>()
+           .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()));
         CreateMap<UserRegisterDTO, User>()
            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))

@@ -36,6 +36,11 @@ public partial class GcoffeeDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .HasConversion<string>();
+    
         modelBuilder.Entity<Inventory>(entity =>
         {
             entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D395371765");

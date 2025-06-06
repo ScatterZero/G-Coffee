@@ -26,9 +26,10 @@ namespace G_Cofee_Repositories.Repositories
 
         public async Task<User?> GetUserByNameAsync(string username)
         {
-            //if (_dbContext?.Users == null) 
-            //    return null;
-            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null) Console.WriteLine("User not found");
+            else Console.WriteLine($"Id: {user.UserId}, Username: {user.Username}");
+            return user;
         }
     }
 }

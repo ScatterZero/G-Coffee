@@ -22,6 +22,33 @@ namespace G_Cofee_Repositories.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            //--------------------------------------------------
+                modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion<string>(); // Lưu và đọc Role dưới dạng chuỗi
+
+            modelBuilder.Entity<Payment>()
+    .Property(p => p.CreatedBy)
+    .HasColumnType("varchar_TC(50)");
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.UpdatedBy)
+                .HasColumnType("varchar(50)");
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.CreatedBy)
+                .HasColumnType("varchar(50)");
+            modelBuilder.Entity<Product>()
+                .Property(p => p.UpdatedBy)
+                .HasColumnType("varchar(50)");
+
+            modelBuilder.Entity<Supplier>()
+                .Property(s => s.CreatedBy)
+                .HasColumnType("varchar(50)");
+            modelBuilder.Entity<Supplier>()
+                .Property(s => s.UpdatedBy)
+                .HasColumnType("varchar(50)");
+            //-----------------------------------------
+
             modelBuilder.Entity("G_Cofee_Repositories.Models.Inventory", b =>
                 {
                     b.Property<Guid>("InventoryId")
