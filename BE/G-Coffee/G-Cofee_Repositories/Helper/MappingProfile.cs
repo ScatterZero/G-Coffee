@@ -29,6 +29,11 @@ public class MappingProfile : Profile
           .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => true))
           .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
         CreateMap<Supplier, SupplierDTO>(); // If reverse mapping is needed
+        CreateMap<UnitOfMeasureDTO, UnitsOfMeasure>()
+      .ForMember(dest => dest.UnitOfMeasureId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                  .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+        CreateMap<UnitsOfMeasure, UnitOfMeasureDTO>();
+
 
     }
 }
