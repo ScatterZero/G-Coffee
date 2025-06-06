@@ -140,3 +140,4 @@ D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\zh-Hant\Microsoft.CodeA
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\AutoMapper.dll
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\Github\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

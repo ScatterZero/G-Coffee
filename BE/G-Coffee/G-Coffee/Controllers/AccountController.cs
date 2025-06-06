@@ -1,44 +1,49 @@
 ﻿using G_Cofee_Repositories.DTO;
-using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace G_Coffee.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    public class AccountController : ControllerBase
+    {
+        private readonly IAccountService _userService;
 
-        public class AccountController : ControllerBase
+        public AccountController(IAccountService userService)
         {
-            private readonly IAccountService _userService;
-
-            public AccountController(IAccountService userService)
-            {
-                _userService = userService;
-            }
+            _userService = userService;
+        }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO loginDto)
         {
-            var user = await _userService.LoginAsync(loginDto);
-            if (user == null)
-                return Unauthorized();
-            return Ok(new { user.UserId, user.Username, user.Role });
+            try
+            {
+                var token = await _userService.LoginAsync(loginDto);
+                return Ok(new { Token = token });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Tên người dùng hoặc mật khẩu không đúng");
+            }
         }
 
         [HttpPost("register")]
-            public async Task<IActionResult> Register([FromBody] UserRegisterDTO registerDto)
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] UserRegisterDTO registerDto)
+        {
+            try
             {
-                try
-                {
-                    await _userService.RegisterAsync(registerDto);
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                await _userService.RegisterAsync(registerDto);
+                return Ok("Đăng ký thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
+    }
 }

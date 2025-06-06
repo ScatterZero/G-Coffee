@@ -11,7 +11,7 @@ namespace G_Coffee_Services.IServices
 {
     public interface IAccountService
     {
-        Task<User?> LoginAsync(UserLoginDTO loginDto);
+        Task<string?> LoginAsync(UserLoginDTO loginDto);
         Task RegisterAsync(UserRegisterDTO registerDto);
     }
 }
