@@ -32,6 +32,101 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "G_Coffee.Controllers.InventoryController",
+    "Method": "CreateInventory",
+    "RelativePath": "api/Inventory",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "InventoryDTO",
+        "Type": "G_Cofee_Repositories.DTO.InventoryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.InventoryController",
+    "Method": "GetAllInventorys",
+    "RelativePath": "api/Inventory",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.InventoryController",
+    "Method": "GetInventory",
+    "RelativePath": "api/Inventory/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.InventoryController",
+    "Method": "UpdateInventory",
+    "RelativePath": "api/Inventory/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "InventoryDto",
+        "Type": "G_Cofee_Repositories.DTO.InventoryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.InventoryController",
+    "Method": "DeleteInventory",
+    "RelativePath": "api/Inventory/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.InventoryController",
+    "Method": "GetInventorysByInventoryId",
+    "RelativePath": "api/Inventory/Inventory/{InventoryId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "InventoryId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "G_Coffee.Controllers.ProductsController",
     "Method": "CreateProduct",
     "RelativePath": "api/Products",

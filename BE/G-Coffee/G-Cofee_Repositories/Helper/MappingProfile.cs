@@ -33,6 +33,10 @@ public class MappingProfile : Profile
       .ForMember(dest => dest.UnitOfMeasureId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
                   .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
         CreateMap<UnitsOfMeasure, UnitOfMeasureDTO>();
+        CreateMap<InventoryDTO, Inventory>()
+            .ForMember(dest => dest.InventoryId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()));
+        CreateMap<Inventory, InventoryDTO>().ReverseMap();
+
 
 
     }

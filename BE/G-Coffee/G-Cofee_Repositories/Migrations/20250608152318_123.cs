@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace G_Cofee_Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class DB : Migration
+    public partial class _123 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -203,7 +203,7 @@ namespace G_Cofee_Repositories.Migrations
                 {
                     InventoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
                     WarehouseID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    Barcode = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: false),
+                    ProductId = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValue: 0m),
                     LastUpdated = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())")
                 },
@@ -264,7 +264,7 @@ namespace G_Cofee_Repositories.Migrations
                 {
                     TransactionDetailID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
                     TransactionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Barcode = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: false),
+                    ProductId = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValue: 0m),
@@ -279,7 +279,7 @@ namespace G_Cofee_Repositories.Migrations
                     table.PrimaryKey("PK__Transact__F2B27FE63411FC08", x => x.TransactionDetailID);
                     table.ForeignKey(
                         name: "FK__Transacti__Barco__6D0D32F4",
-                        column: x => x.Barcode,
+                        column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductID");
                     table.ForeignKey(
@@ -305,9 +305,9 @@ namespace G_Cofee_Repositories.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IDX_Inventory_Barcode",
+                name: "IDX_Inventory_ProductID",
                 table: "Inventory",
-                column: "Barcode");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inventory_WarehouseID",
@@ -335,7 +335,7 @@ namespace G_Cofee_Repositories.Migrations
                 column: "UpdatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IDX_Products_Barcode",
+                name: "IDX_Products_ProductId",
                 table: "Products",
                 column: "ProductID");
 
@@ -370,14 +370,14 @@ namespace G_Cofee_Repositories.Migrations
                 column: "UpdatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TransactionDetails_Barcode",
-                table: "TransactionDetails",
-                column: "Barcode");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TransactionDetails_CreatedBy",
                 table: "TransactionDetails",
                 column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransactionDetails_ProductId",
+                table: "TransactionDetails",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TransactionDetails_TransactionID",

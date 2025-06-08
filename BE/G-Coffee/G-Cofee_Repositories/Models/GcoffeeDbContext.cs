@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using static G_Cofee_Repositories.Models.User;
 
 namespace G_Cofee_Repositories.Models;
 
@@ -37,22 +38,26 @@ public partial class GcoffeeDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.Role)
-            .HasConversion<string>();
-    
+        //modelBuilder.Entity<User>(entity =>
+        //{
+        //    entity.Property(e => e.Role)
+        //        .HasConversion(
+        //            v => v.ToString(), // Chuyển RoleEnum sang string
+        //            v => (RoleEnum)Enum.Parse(typeof(RoleEnum), v)); // Chuyển string về RoleEnum
+        //});
+
         modelBuilder.Entity<Inventory>(entity =>
         {
             entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D395371765");
 
             entity.ToTable("Inventory");
 
-            entity.HasIndex(e => e.Barcode, "IDX_Inventory_Barcode");
+            entity.HasIndex(e => e.ProductId, "IDX_Inventory_ProductID");
 
             entity.Property(e => e.InventoryId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("InventoryID");
-            entity.Property(e => e.Barcode)
+            entity.Property(e => e.ProductId)
                 .HasMaxLength(13)
                 .IsUnicode(false);
             entity.Property(e => e.LastUpdated)
@@ -128,7 +133,7 @@ public partial class GcoffeeDbContext : DbContext
         {
             entity.HasKey(e => e.ProductID).HasName("PK__Products__177800D296728DEB");
 
-            entity.HasIndex(e => e.ProductID, "IDX_Products_Barcode");
+            entity.HasIndex(e => e.ProductID, "IDX_Products_ProductId");
 
             entity.Property(e => e.ProductID)
                 .HasMaxLength(13)
@@ -278,7 +283,7 @@ public partial class GcoffeeDbContext : DbContext
             entity.Property(e => e.TransactionDetailId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("TransactionDetailID");
-            entity.Property(e => e.Barcode)
+            entity.Property(e => e.ProductId)
                 .HasMaxLength(13)
                 .IsUnicode(false);
             entity.Property(e => e.CreatedBy)
@@ -303,7 +308,7 @@ public partial class GcoffeeDbContext : DbContext
                 .HasColumnName("WarehouseID");
 
             entity.HasOne(d => d.BarcodeNavigation).WithMany(p => p.TransactionDetails)
-                .HasForeignKey(d => d.Barcode)
+                .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Transacti__Barco__6D0D32F4");
 
@@ -375,8 +380,11 @@ public partial class GcoffeeDbContext : DbContext
                 .HasMaxLength(256)
                 .IsUnicode(false);
             entity.Property(e => e.Role)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+        .HasMaxLength(50)
+        .IsUnicode(false)
+        .HasConversion(
+            v => v.ToString(),
+            v => (RoleEnum)Enum.Parse(typeof(RoleEnum), v));
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)

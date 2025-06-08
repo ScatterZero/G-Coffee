@@ -9,7 +9,7 @@ public partial class TransactionDetail
 
     public Guid TransactionId { get; set; }
 
-    public string Barcode { get; set; } = null!;
+    public string ProductId { get; set; } = null!;
 
     public decimal Quantity { get; set; }
 

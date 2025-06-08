@@ -9,7 +9,7 @@ public partial class Inventory
 
     public string WarehouseId { get; set; } = null!;
 
-    public string Barcode { get; set; } = null!;
+    public string ProductId { get; set; } = null!;
 
     public decimal? Quantity { get; set; }
 

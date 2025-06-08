@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G_Cofee_Repositories.Migrations
 {
     [DbContext(typeof(GcoffeeDbContext))]
-    [Migration("20250601054052_DB")]
-    partial class DB
+    [Migration("20250608152333_Update")]
+    partial class Update
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,16 +33,16 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnName("InventoryID")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<string>("Barcode")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(13)");
-
                     b.Property<DateTime?>("LastUpdated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(13)");
 
                     b.Property<decimal?>("Quantity")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.HasIndex("WarehouseId");
 
-                    b.HasIndex(new[] { "Barcode" }, "IDX_Inventory_Barcode");
+                    b.HasIndex(new[] { "ProductId" }, "IDX_Inventory_ProductID");
 
                     b.ToTable("Inventory", (string)null);
                 });
@@ -204,7 +204,7 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.HasIndex(new[] { "ProductID" }, "IDX_Products_Barcode");
+                    b.HasIndex(new[] { "ProductID" }, "IDX_Products_ProductId");
 
                     b.ToTable("Products");
                 });
@@ -362,12 +362,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnName("TransactionDetailID")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<string>("Barcode")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(13)");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -377,6 +371,12 @@ namespace G_Cofee_Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(13)");
 
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18, 2)");
@@ -410,9 +410,9 @@ namespace G_Cofee_Repositories.Migrations
                     b.HasKey("TransactionDetailId")
                         .HasName("PK__Transact__F2B27FE63411FC08");
 
-                    b.HasIndex("Barcode");
-
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("TransactionId");
 
@@ -692,16 +692,16 @@ namespace G_Cofee_Repositories.Migrations
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.TransactionDetail", b =>
                 {
-                    b.HasOne("G_Cofee_Repositories.Models.Product", "BarcodeNavigation")
-                        .WithMany("TransactionDetails")
-                        .HasForeignKey("Barcode")
-                        .IsRequired()
-                        .HasConstraintName("FK__Transacti__Barco__6D0D32F4");
-
                     b.HasOne("G_Cofee_Repositories.Models.User", "CreatedByNavigation")
                         .WithMany("TransactionDetailCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK__Transacti__Creat__6EF57B66");
+
+                    b.HasOne("G_Cofee_Repositories.Models.Product", "BarcodeNavigation")
+                        .WithMany("TransactionDetails")
+                        .HasForeignKey("ProductId")
+                        .IsRequired()
+                        .HasConstraintName("FK__Transacti__Barco__6D0D32F4");
 
                     b.HasOne("G_Cofee_Repositories.Models.Transaction", "Transaction")
                         .WithMany("TransactionDetails")

@@ -158,5 +158,43 @@ namespace G_Coffee_Services.Services
                 throw new Exception($"Error retrieving products for supplier {supplierId}", ex);
             }
         }
+
+        public async Task ImportProductsAsync(IEnumerable<ProductDto> productDtos)
+        {
+            if (productDtos == null) throw new ArgumentNullException(nameof(productDtos));
+            if (!productDtos.Any()) throw new ArgumentException("No products to import");
+
+            var math = new Caculate();
+            var productsToAdd = new List<Product>();
+
+            foreach (var dto in productDtos)
+            {
+                if (string.IsNullOrEmpty(dto.ProductName)) throw new ArgumentException("Product name is required");
+                if (string.IsNullOrEmpty(dto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
+                if (string.IsNullOrEmpty(dto.ShortName)) throw new ArgumentException("Short name is required");
+                if (dto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
+                if (dto.UnitPrice == null || dto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
+
+                do
+                {
+                    dto.ProductID = math.GenerateEan13Barcode();
+                } while (await _productRepository.ExistsAsync(p => p.ProductID == dto.ProductID));
+
+                var product = _mapper.Map<Product>(dto);
+                product.CreatedDate = DateTime.UtcNow;
+                product.UpdatedDate = DateTime.UtcNow;
+                productsToAdd.Add(product);
+            }
+
+            try
+            {
+                await _productRepository.AddRangeAsync(productsToAdd);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("Database error occurred while importing products", ex);
+            }
+        }
     }
 }
