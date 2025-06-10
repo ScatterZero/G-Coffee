@@ -36,8 +36,15 @@ public class MappingProfile : Profile
         CreateMap<InventoryDTO, Inventory>()
             .ForMember(dest => dest.InventoryId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()));
         CreateMap<Inventory, InventoryDTO>().ReverseMap();
-
-
+        // Warehouse mapping
+            CreateMap<WarehouseDTO, Warehouse>()
+                .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.WarehouseId))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore());
+        CreateMap<Warehouse, WarehouseDTO>()
+     .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.WarehouseId.ToString()));
 
     }
 }

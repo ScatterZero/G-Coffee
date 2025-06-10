@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Github\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj": {}
+    "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj": {}
   },
   "projects": {
-    "D:\\Github\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj": {
+    "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Github\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
+        "projectUniqueName": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
         "projectName": "G-Cofee_Repositories",
-        "projectPath": "D:\\Github\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
+        "projectPath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
         "packagesPath": "C:\\Users\\tnqt3\\.nuget\\packages\\",
-        "outputPath": "D:\\Github\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\obj\\",
+        "outputPath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

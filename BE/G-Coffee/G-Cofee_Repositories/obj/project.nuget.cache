@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OqX2bDywZsM=",
+  "dgSpecHash": "PtZ2SCryQUU=",
   "success": true,
-  "projectFilePath": "D:\\Github\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
+  "projectFilePath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tnqt3\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\tnqt3\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

@@ -410,5 +410,100 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.WarehouseController",
+    "Method": "CreateWarehouse",
+    "RelativePath": "api/Warehouse",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "WarehouseDTO",
+        "Type": "G_Cofee_Repositories.DTO.WarehouseDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.WarehouseController",
+    "Method": "GetAllWarehouses",
+    "RelativePath": "api/Warehouse",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.WarehouseController",
+    "Method": "GetWarehouse",
+    "RelativePath": "api/Warehouse/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.WarehouseController",
+    "Method": "UpdateWarehouse",
+    "RelativePath": "api/Warehouse/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "WarehouseDto",
+        "Type": "G_Cofee_Repositories.DTO.WarehouseDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.WarehouseController",
+    "Method": "DeleteWarehouse",
+    "RelativePath": "api/Warehouse/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.WarehouseController",
+    "Method": "GetWarehousesByWarehouseId",
+    "RelativePath": "api/Warehouse/Warehouse/{WarehouseId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "WarehouseId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]
