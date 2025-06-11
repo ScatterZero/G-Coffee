@@ -60,5 +60,15 @@ namespace G_Cofee_Repositories.Repositories
         {
             _dbSet.RemoveRange(entities);
         }
+
+        public async Task<TEntity> GetByStringIdAsync(
+                Expression<Func<TEntity, bool>> predicate,
+                CancellationToken cancellationToken = default)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
         }
+    }
     }

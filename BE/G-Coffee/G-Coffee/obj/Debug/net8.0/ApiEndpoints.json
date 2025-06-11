@@ -317,6 +317,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "G_Coffee_API.Controllers.TransactionController",
+    "Method": "ImportReceipt",
+    "RelativePath": "api/Transaction/import",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "transaction",
+        "Type": "G_Cofee_Repositories.DTO.TransactionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "G_Coffee.Controllers.UnitOfMeasureController",
     "Method": "CreateUnitOfMeasure",
     "RelativePath": "api/UnitOfMeasure",

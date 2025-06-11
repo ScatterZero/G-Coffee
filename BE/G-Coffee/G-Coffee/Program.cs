@@ -24,6 +24,7 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 
 //
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IGenericRepository<Supplier>, GenericRepository<Suppl
 builder.Services.AddScoped<IGenericRepository<UnitsOfMeasure>, GenericRepository<UnitsOfMeasure>>();
 builder.Services.AddScoped<IGenericRepository<Inventory>, GenericRepository<Inventory>>();
 builder.Services.AddScoped<IGenericRepository<Warehouse>, GenericRepository<Warehouse>>();
+builder.Services.AddScoped<IGenericRepository<Transaction>, GenericRepository<Transaction>>();
 
 
 // Đăng ký Services
@@ -43,6 +45,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUnitOfMeasureService, UnitOfMeasureService>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 
 // Đăng ký AutoMapper

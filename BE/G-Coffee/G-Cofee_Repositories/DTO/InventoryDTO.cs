@@ -15,6 +15,7 @@ namespace G_Cofee_Repositories.DTO
         public string ProductID { get; set; } = null!;
 
         public decimal? Quantity { get; set; }
+        public DateTime? LastUpdated { get; set; }
 
     }
 }

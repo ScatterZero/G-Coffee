@@ -45,6 +45,10 @@ public class MappingProfile : Profile
                 .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore());
         CreateMap<Warehouse, WarehouseDTO>()
      .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.WarehouseId.ToString()));
+        // Transaction 
+        CreateMap<TransactionDTO, Transaction>()
+      .ForMember(dest => dest.TransactionDetails, opt => opt.MapFrom(src => src.TransactionDetails));
+        CreateMap<TransactionDetailDTO, TransactionDetail>();
 
     }
 }
