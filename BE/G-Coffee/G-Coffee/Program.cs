@@ -16,6 +16,14 @@ builder.Services.AddDbContext<GcoffeeDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+// Đăng ký CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
 
 // Đăng ký UnitOfWork và Repository
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
