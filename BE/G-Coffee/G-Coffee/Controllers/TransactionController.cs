@@ -37,5 +37,30 @@ namespace G_Coffee_API.Controllers
                 return StatusCode(500, new { Message = "An error occurred while processing the import.", Error = ex.Message });
             }
         }
+
+        [HttpPost("export")]
+        public async Task<IActionResult> ExportReceipt([FromBody] TransactionDTO transaction)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var result = await _transactionService.ExportReceipt(transaction);
+                return Ok(new { Message = "Export transaction processed successfully.", Transaction = result });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred while processing the export.", Error = ex.Message });
+            }
+        }
     }
 }

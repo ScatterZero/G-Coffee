@@ -277,10 +277,10 @@ D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.build.json.cache
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.development.json
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.csproj.Up2Date
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.dll
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\refint\G-Coffee.dll
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.pdb
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.genruntimeconfig.cache
 D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\ref\G-Coffee.dll
+D:\Github\Coffee\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

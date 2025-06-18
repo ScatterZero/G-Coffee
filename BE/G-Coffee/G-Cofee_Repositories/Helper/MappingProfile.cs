@@ -49,6 +49,14 @@ public class MappingProfile : Profile
         CreateMap<TransactionDTO, Transaction>()
       .ForMember(dest => dest.TransactionDetails, opt => opt.MapFrom(src => src.TransactionDetails));
         CreateMap<TransactionDetailDTO, TransactionDetail>();
+        // TransactionDetail mapping
+        CreateMap<TransactionDetailDTO, TransactionDetail>()
+            .ForMember(dest => dest.TransactionDetailId, opt => opt.MapFrom(src => src.TransactionDetailId))
+            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore());
+        CreateMap<TransactionDetail, TransactionDetailDTO>();
 
     }
 }

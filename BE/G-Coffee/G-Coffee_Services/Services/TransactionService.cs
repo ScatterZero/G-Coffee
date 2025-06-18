@@ -26,10 +26,7 @@ namespace G_Coffee_Services.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public Task<TransactionDTO> ExportReceipt(TransactionDTO entity)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task ImportReceipt(TransactionDTO transaction)
         {
@@ -60,7 +57,9 @@ namespace G_Coffee_Services.Services
                     throw new ArgumentNullException("ProductId or WarehouseId cannot be null or empty.");
 
                 // Fetch and update inventory
-                var inventory = await _inventoryRepository.GetByProductAndWarehouseAsync(detailDto.ProductId, detailDto.WarehouseId);
+                var inventory =
+                    await _inventoryRepository.GetByProductAndWarehouseAsync(detailDto.ProductId,
+                        detailDto.WarehouseId);
                 if (inventory == null)
                 {
                     inventory = new Inventory
@@ -76,7 +75,8 @@ namespace G_Coffee_Services.Services
                 inventory.Quantity += detailDto.Quantity;
                 inventory.LastUpdated = DateTime.Now;
 
-                if (!await _inventoryRepository.ExistsAsync(i => i.ProductId == detailDto.ProductId && i.WarehouseId == detailDto.WarehouseId))
+                if (!await _inventoryRepository.ExistsAsync(i =>
+                        i.ProductId == detailDto.ProductId && i.WarehouseId == detailDto.WarehouseId))
                     await _inventoryRepository.AddAsync(inventory);
                 else
                     _inventoryRepository.Update(inventory);
@@ -92,5 +92,72 @@ namespace G_Coffee_Services.Services
             // Save all changes
             await _unitOfWork.SaveChangesAsync();
         }
-    }
+
+        public async Task<TransactionDTO> ExportReceipt(TransactionDTO transaction)
+        {
+            if (transaction == null)
+                throw new ArgumentNullException(nameof(transaction));
+
+            if (transaction.TransactionType != "Export")
+                throw new ArgumentException("Invalid transaction type. Expected 'Export'.", nameof(transaction.TransactionType));
+
+            if (transaction.TotalQuantity <= 0 || transaction.TotalAmount <= 0)
+                throw new ArgumentException("Total quantity and amount must be greater than zero.", nameof(transaction));
+
+            // if (string.IsNullOrEmpty(transaction.CustomerId))
+            //     throw new ArgumentNullException(nameof(transaction.CustomerId), "CustomerId cannot be null or empty for export transactions.");
+
+            if (transaction.TransactionDetails == null || !transaction.TransactionDetails.Any())
+                throw new ArgumentException("Transaction must contain at least one detail.", nameof(transaction.TransactionDetails));
+
+            // Map TransactionDTO to Transaction
+            var transactionEntity = _mapper.Map<Transaction>(transaction) ?? throw new InvalidOperationException("Failed to map TransactionDTO to Transaction entity.");
+            transactionEntity.TransactionId = Guid.NewGuid();
+            transactionEntity.CreatedDate = DateTime.Now;
+            transactionEntity.Status = "Completed";
+            transactionEntity.TransactionDetails = new List<TransactionDetail>();
+
+            // Save Transaction first
+            await _transactionRepository.AddAsync(transactionEntity);
+
+            // Process TransactionDetails
+            foreach (var detailDto in transaction.TransactionDetails)
+            {
+                if (string.IsNullOrEmpty(detailDto.ProductId) || string.IsNullOrEmpty(detailDto.WarehouseId))
+                    throw new ArgumentNullException("ProductId or WarehouseId cannot be null or empty in transaction details.");
+
+                if (detailDto.Quantity <= 0)
+                    throw new ArgumentException($"Quantity must be greater than zero for ProductId: {detailDto.ProductId}.", nameof(detailDto.Quantity));
+
+                // Fetch inventory
+                var inventory = await _inventoryRepository.GetByProductAndWarehouseAsync(detailDto.ProductId, detailDto.WarehouseId);
+                if (inventory == null)
+                    throw new InvalidOperationException($"No inventory found for ProductId: {detailDto.ProductId} in WarehouseId: {detailDto.WarehouseId}.");
+
+                // Check if sufficient quantity is available
+                if (inventory.Quantity < detailDto.Quantity)
+                    throw new InvalidOperationException($"Insufficient inventory for ProductId: {detailDto.ProductId} in WarehouseId: {detailDto.WarehouseId}. Available: {inventory.Quantity}, Requested: {detailDto.Quantity}.");
+
+                // Update inventory
+                inventory.Quantity -= detailDto.Quantity;
+                inventory.LastUpdated = DateTime.Now;
+                _inventoryRepository.Update(inventory);
+
+                // Map and add TransactionDetail
+                var detailEntity = _mapper.Map<TransactionDetail>(detailDto) ?? throw new InvalidOperationException("Failed to map TransactionDetailDTO to TransactionDetail entity.");
+                detailEntity.TransactionDetailId = Guid.NewGuid();
+                detailEntity.TransactionId = transactionEntity.TransactionId;
+                detailEntity.CreatedDate = DateTime.Now;
+                transactionEntity.TransactionDetails.Add(detailEntity);
+            }
+
+            // Save all changes
+            await _unitOfWork.SaveChangesAsync();
+
+            // Map back to DTO for return
+            return _mapper.Map<TransactionDTO>(transactionEntity);
+         }
+        }
+      
+    
 }

@@ -318,6 +318,22 @@
   },
   {
     "ContainingType": "G_Coffee_API.Controllers.TransactionController",
+    "Method": "ExportReceipt",
+    "RelativePath": "api/Transaction/export",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "transaction",
+        "Type": "G_Cofee_Repositories.DTO.TransactionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee_API.Controllers.TransactionController",
     "Method": "ImportReceipt",
     "RelativePath": "api/Transaction/import",
     "HttpMethod": "POST",
@@ -327,6 +343,101 @@
       {
         "Name": "transaction",
         "Type": "G_Cofee_Repositories.DTO.TransactionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.TransactionDetailController",
+    "Method": "CreateTransactionDetail",
+    "RelativePath": "api/TransactionDetail",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "TransactionDetailDTO",
+        "Type": "G_Cofee_Repositories.DTO.TransactionDetailDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.TransactionDetailController",
+    "Method": "GetAllTransactionDetails",
+    "RelativePath": "api/TransactionDetail",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.TransactionDetailController",
+    "Method": "GetTransactionDetail",
+    "RelativePath": "api/TransactionDetail/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.TransactionDetailController",
+    "Method": "UpdateTransactionDetail",
+    "RelativePath": "api/TransactionDetail/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "TransactionDetailDto",
+        "Type": "G_Cofee_Repositories.DTO.TransactionDetailDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.TransactionDetailController",
+    "Method": "DeleteTransactionDetail",
+    "RelativePath": "api/TransactionDetail/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.TransactionDetailController",
+    "Method": "GetTransactionDetailsByTransactionDetailId",
+    "RelativePath": "api/TransactionDetail/TransactionDetail/{TransactionDetailId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "TransactionDetailId",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

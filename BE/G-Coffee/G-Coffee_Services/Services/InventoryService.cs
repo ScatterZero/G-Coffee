@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace G_Coffee_Services.Services
-{
+{  
     public class InventoryService : IInventoryService
     {
         private readonly IUnitOfWork _unitOfWork;

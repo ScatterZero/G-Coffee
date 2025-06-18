@@ -20,6 +20,10 @@ namespace G_Cofee_Repositories.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dbSet = context.Set<TEntity>();
         }
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.AnyAsync(predicate, cancellationToken);
+        }
 
         public async Task<TEntity> GetByIdAsync(object id, CancellationToken cancellationToken = default)
         {
