@@ -33,6 +33,9 @@ public partial class GcoffeeDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Warehouse> Warehouses { get; set; }
+    public virtual DbSet<Order> Orders { get; set; }
+    public virtual DbSet<ComboPackage> ComboPackages { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -390,7 +393,33 @@ public partial class GcoffeeDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
         });
+        //----------------------------------------------------
+        // Cấu hình ComboPackage
+        modelBuilder.Entity<ComboPackage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ComboPackages__3214EC07");
+            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+        });
 
+        // Cấu hình Order
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Orders__3214EC07");
+            entity.Property(e => e.OrderCode).IsRequired();
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Status).HasMaxLength(50).IsUnicode(false).HasDefaultValue("Pending");
+            entity.Property(e => e.CheckoutUrl).HasMaxLength(500).IsUnicode(false);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime").HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.ComboPackage)
+                  .WithMany()
+                  .HasForeignKey(d => d.ComboPackageId)
+                  .HasConstraintName("FK__Orders__ComboPackageID__12345678");
+
+
+        });
         modelBuilder.Entity<Warehouse>(entity =>
         {
             entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__2608AFD95DAF5031");

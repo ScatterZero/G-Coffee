@@ -16,6 +16,8 @@ builder.Services.AddDbContext<GcoffeeDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddHttpClient<PayOSService>();
 // Đăng ký CORS
 builder.Services.AddCors(options =>
 {
@@ -34,6 +36,7 @@ builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionDetailRepository, TransactionDetailRepository>();
+builder.Services.AddScoped<IComboPackageRepository, ComboPackageRepository>();
 
 
 //
@@ -46,6 +49,7 @@ builder.Services.AddScoped<IGenericRepository<Inventory>, GenericRepository<Inve
 builder.Services.AddScoped<IGenericRepository<Warehouse>, GenericRepository<Warehouse>>();
 builder.Services.AddScoped<IGenericRepository<Transaction>, GenericRepository<Transaction>>();
 builder.Services.AddScoped<IGenericRepository<TransactionDetail>, GenericRepository<TransactionDetail>>();
+builder.Services.AddScoped<IGenericRepository<ComboPackage>, GenericRepository<ComboPackage>>();
 
 
 // Đăng ký Services
@@ -57,6 +61,7 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionDetailService, TransactionDetailService>();
+builder.Services.AddScoped<IComboPackageService, ComboPackageService>();
 
 
 // Đăng ký AutoMapper

@@ -22,6 +22,31 @@ namespace G_Cofee_Repositories.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("G_Cofee_Repositories.Models.ComboPackage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.HasKey("Id")
+                        .HasName("PK__ComboPackages__3214EC07");
+
+                    b.ToTable("ComboPackages");
+                });
+
             modelBuilder.Entity("G_Cofee_Repositories.Models.Inventory", b =>
                 {
                     b.Property<Guid>("InventoryId")
@@ -61,6 +86,48 @@ namespace G_Cofee_Repositories.Migrations
                     b.HasIndex(new[] { "ProductId" }, "IDX_Inventory_ProductID");
 
                     b.ToTable("Inventory", (string)null);
+                });
+
+            modelBuilder.Entity("G_Cofee_Repositories.Models.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("CheckoutUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<Guid>("ComboPackageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<long>("OrderCode")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)")
+                        .HasDefaultValue("Pending");
+
+                    b.HasKey("Id")
+                        .HasName("PK__Orders__3214EC07");
+
+                    b.HasIndex("ComboPackageId");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Payment", b =>
@@ -580,6 +647,18 @@ namespace G_Cofee_Repositories.Migrations
                         .HasConstraintName("FK__Inventory__Wareh__59FA5E80");
 
                     b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("G_Cofee_Repositories.Models.Order", b =>
+                {
+                    b.HasOne("G_Cofee_Repositories.Models.ComboPackage", "ComboPackage")
+                        .WithMany()
+                        .HasForeignKey("ComboPackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__Orders__ComboPackageID__12345678");
+
+                    b.Navigation("ComboPackage");
                 });
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Payment", b =>
