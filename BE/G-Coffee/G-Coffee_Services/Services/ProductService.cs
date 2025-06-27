@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+// ... (các using giữ nguyên)
+
 namespace G_Coffee_Services.Services
 {
     public class ProductService : IProductService
@@ -28,19 +30,16 @@ namespace G_Coffee_Services.Services
 
         public async Task<ProductDto> CreateProductAsync(ProductDto productDto)
         {
-            // Validate DTO
-            if (productDto == null) throw new ArgumentNullException(nameof(productDto));
-            if (string.IsNullOrEmpty(productDto.ProductName)) throw new ArgumentException("Product name is required");
-            if (string.IsNullOrEmpty(productDto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
-            if (string.IsNullOrEmpty(productDto.ShortName)) throw new ArgumentException("Unit of measure is required");
-            if (productDto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
-            if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non" +
-                "-negative");
-            //if (!string.IsNullOrEmpty(productDto.ProductID)) throw new ArgumentException("ProductID is auto-generated and should not be provided");
-
-                try
+            try
             {
-                var math = new Caculate(); // Đã sửa từ Caculate thành Math
+                if (productDto == null) throw new ArgumentNullException(nameof(productDto));
+                if (string.IsNullOrEmpty(productDto.ProductName)) throw new ArgumentException("Product name is required");
+                if (string.IsNullOrEmpty(productDto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
+                if (string.IsNullOrEmpty(productDto.ShortName)) throw new ArgumentException("Short name is required");
+                if (productDto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
+                if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
+
+                var math = new Caculate();
                 do
                 {
                     productDto.ProductID = math.GenerateEan13Barcode();
@@ -67,12 +66,14 @@ namespace G_Coffee_Services.Services
 
         public async Task<ProductDto> GetProductByIdAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("Product ID is required");
-
             try
             {
+                if (string.IsNullOrEmpty(id)) throw new ArgumentException("Product ID is required");
+
                 var product = await _productRepository.GetByIdAsync(id);
-                return product == null ? null : _mapper.Map<ProductDto>(product);
+                if (product == null) throw new KeyNotFoundException($"Product with ID {id} not found");
+
+                return _mapper.Map<ProductDto>(product);
             }
             catch (Exception ex)
             {
@@ -95,15 +96,14 @@ namespace G_Coffee_Services.Services
 
         public async Task UpdateProductAsync(ProductDto productDto)
         {
-            // Validate DTO
-            if (productDto == null) throw new ArgumentNullException(nameof(productDto));
-            if (string.IsNullOrEmpty(productDto.ProductID)) throw new ArgumentException("Product ID is required");
-            if (string.IsNullOrEmpty(productDto.ProductName)) throw new ArgumentException("Product name is required");
-            if (string.IsNullOrEmpty(productDto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
-            if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
-
             try
             {
+                if (productDto == null) throw new ArgumentNullException(nameof(productDto));
+                if (string.IsNullOrEmpty(productDto.ProductID)) throw new ArgumentException("Product ID is required");
+                if (string.IsNullOrEmpty(productDto.ProductName)) throw new ArgumentException("Product name is required");
+                if (string.IsNullOrEmpty(productDto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
+                if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
+
                 var product = await _productRepository.GetByIdAsync(productDto.ProductID);
                 if (product == null) throw new KeyNotFoundException("Product not found");
 
@@ -125,10 +125,10 @@ namespace G_Coffee_Services.Services
 
         public async Task DeleteProductAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("Product ID is required");
-
             try
             {
+                if (string.IsNullOrEmpty(id)) throw new ArgumentException("Product ID is required");
+
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null) throw new KeyNotFoundException("Product not found");
 
@@ -147,10 +147,10 @@ namespace G_Coffee_Services.Services
 
         public async Task<IEnumerable<ProductDto>> GetProductsBySupplierIdAsync(string supplierId)
         {
-            if (string.IsNullOrEmpty(supplierId)) throw new ArgumentException("Supplier ID is required");
-
             try
             {
+                if (string.IsNullOrEmpty(supplierId)) throw new ArgumentException("Supplier ID is required");
+
                 var products = await _productRepository.GetProductsBySupplierIdAsync(supplierId);
                 return _mapper.Map<IEnumerable<ProductDto>>(products);
             }
@@ -162,39 +162,43 @@ namespace G_Coffee_Services.Services
 
         public async Task ImportProductsAsync(IEnumerable<ProductDto> productDtos)
         {
-            if (productDtos == null) throw new ArgumentNullException(nameof(productDtos));
-            if (!productDtos.Any()) throw new ArgumentException("No products to import");
-
-            var math = new Caculate();
-            var productsToAdd = new List<Product>();
-
-            foreach (var dto in productDtos)
-            {
-                if (string.IsNullOrEmpty(dto.ProductName)) throw new ArgumentException("Product name is required");
-                if (string.IsNullOrEmpty(dto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
-                if (string.IsNullOrEmpty(dto.ShortName)) throw new ArgumentException("Short name is required");
-                if (dto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
-                if (dto.UnitPrice == null || dto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
-
-                do
-                {
-                    dto.ProductID = math.GenerateEan13Barcode();
-                } while (await _productRepository.ExistsAsync(p => p.ProductID == dto.ProductID));
-
-                var product = _mapper.Map<Product>(dto);
-                product.CreatedDate = DateTime.UtcNow;
-                product.UpdatedDate = DateTime.UtcNow;
-                productsToAdd.Add(product);
-            }
-
             try
             {
+                if (productDtos == null) throw new ArgumentNullException(nameof(productDtos));
+                if (!productDtos.Any()) throw new ArgumentException("No products to import");
+
+                var math = new Caculate();
+                var productsToAdd = new List<Product>();
+
+                foreach (var dto in productDtos)
+                {
+                    if (string.IsNullOrEmpty(dto.ProductName)) throw new ArgumentException("Product name is required");
+                    if (string.IsNullOrEmpty(dto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
+                    if (string.IsNullOrEmpty(dto.ShortName)) throw new ArgumentException("Short name is required");
+                    if (dto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
+                    if (dto.UnitPrice == null || dto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
+
+                    do
+                    {
+                        dto.ProductID = math.GenerateEan13Barcode();
+                    } while (await _productRepository.ExistsAsync(p => p.ProductID == dto.ProductID));
+
+                    var product = _mapper.Map<Product>(dto);
+                    product.CreatedDate = DateTime.UtcNow;
+                    product.UpdatedDate = DateTime.UtcNow;
+                    productsToAdd.Add(product);
+                }
+
                 await _productRepository.AddRangeAsync(productsToAdd);
                 await _unitOfWork.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
                 throw new Exception("Database error occurred while importing products", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unexpected error while importing products", ex);
             }
         }
     }

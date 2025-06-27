@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G_Cofee_Repositories.Migrations
 {
     [DbContext(typeof(GcoffeeDbContext))]
-    [Migration("20250619124742_MIG")]
-    partial class MIG
+    [Migration("20250625082044_MIGG")]
+    partial class MIGG
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

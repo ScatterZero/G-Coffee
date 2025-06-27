@@ -10,8 +10,9 @@ namespace G_Cofee_Repositories.Models
     {
         public long OrderCode { get; set; } // Mã đơn hàng duy nhất (dùng timestamp)
         public int Amount { get; set; } // Số tiền (VND)
-        public required string Description { get; set; } // Mô tả đơn hàng
-        public required string CancelUrl { get; set; } // URL khi hủy
-        public required string ReturnUrl { get; set; } // URL khi thành công
+        public  string? Description { get; set; } // Mô tả đơn hàng
+        public  string? CancelUrl { get; set; } = "https://my.payos.vn/e880257ecd8e11ef943f0242ac110002/create-payment-link"; // URL khi hủy
+        public  string? ReturnUrl { get; set; } = "https://my.payos.vn/e880257ecd8e11ef943f0242ac110002/create-payment-link";// URL khi thành công
     }
+
 }

@@ -26,7 +26,9 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
+// API and View
 
+builder.Services.AddControllersWithViews();
 // Đăng ký UnitOfWork và Repository
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -37,6 +39,7 @@ builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionDetailRepository, TransactionDetailRepository>();
 builder.Services.AddScoped<IComboPackageRepository, ComboPackageRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
 //
@@ -50,6 +53,7 @@ builder.Services.AddScoped<IGenericRepository<Warehouse>, GenericRepository<Ware
 builder.Services.AddScoped<IGenericRepository<Transaction>, GenericRepository<Transaction>>();
 builder.Services.AddScoped<IGenericRepository<TransactionDetail>, GenericRepository<TransactionDetail>>();
 builder.Services.AddScoped<IGenericRepository<ComboPackage>, GenericRepository<ComboPackage>>();
+builder.Services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
 
 
 // Đăng ký Services
@@ -62,6 +66,8 @@ builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionDetailService, TransactionDetailService>();
 builder.Services.AddScoped<IComboPackageService, ComboPackageService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPayOSService, PayOSService>();
 
 
 // Đăng ký AutoMapper
@@ -121,6 +127,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
+// Use Endpoint
+
+    
 
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Thêm dòng này trước UseAuthorization

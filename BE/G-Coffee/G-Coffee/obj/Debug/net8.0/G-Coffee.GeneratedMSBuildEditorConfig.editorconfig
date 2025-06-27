@@ -19,3 +19,15 @@ build_property.MSBuildProjectDirectory = D:\Github\Coffee\G-Coffee\BE\G-Coffee\G
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
+
+[D:/Github/Coffee/G-Coffee/BE/G-Coffee/G-Coffee/Views/Payment/cancel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxjYW5jZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Github/Coffee/G-Coffee/BE/G-Coffee/G-Coffee/Views/Payment/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxpbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Github/Coffee/G-Coffee/BE/G-Coffee/G-Coffee/Views/Payment/success.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxzdWNjZXNzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 

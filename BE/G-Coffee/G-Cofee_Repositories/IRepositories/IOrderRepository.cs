@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace G_Cofee_Repositories.IRepositories
 {
-    public interface IOrderRerpository : IGenericRepository<Order>
+    public interface IOrderRepository : IGenericRepository<Order>
     {
         Task<bool> ExistsAsync(Expression<Func<Order, bool>> value);
 
     }
+
+
 }

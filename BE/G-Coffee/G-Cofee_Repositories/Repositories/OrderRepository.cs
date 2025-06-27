@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace G_Cofee_Repositories.Repositories
 {
-    public class OrderRepository : GenericRepository<Order>, IOrderRerpository
+    public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         private readonly GcoffeeDbContext _context;
         public OrderRepository(GcoffeeDbContext context) : base(context)

@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace G_Cofee_Repositories.Models
 {
     public class PaymentResponse
     {
+        [JsonPropertyName("checkoutUrl")]
+        public string? CheckoutUrl { get; set; }
+
+        [JsonPropertyName("orderCode")]
         public long OrderCode { get; set; }
-        public required string Status { get; set; } // PENDING, PAID, CANCELLED
+
+        [JsonPropertyName("amount")]
         public int Amount { get; set; }
-        public required string CheckoutUrl { get; set; } // URL thanh toán
+
+        [JsonPropertyName("status")]
+        public string Status { get; set; } = "PENDING";
     }
 }

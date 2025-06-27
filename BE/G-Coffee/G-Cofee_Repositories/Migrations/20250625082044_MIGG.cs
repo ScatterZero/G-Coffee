@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace G_Cofee_Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class MIG : Migration
+    public partial class MIGG : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

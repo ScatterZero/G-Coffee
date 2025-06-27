@@ -1,34 +1,48 @@
 ﻿using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
 using Microsoft.Extensions.Configuration;
-using System.Text;
-using System.Text.Json;
+using Net.payOS;
+using Net.payOS.Types;
 
 public class PayOSService : IPayOSService
 {
-    private readonly HttpClient _httpClient;
-    private readonly string _clientId;
-    private readonly string _apiKey;
+    private readonly PayOS _payOS;
+    private readonly IConfiguration _config;
 
-    public PayOSService(IConfiguration config, HttpClient httpClient)
+    public PayOSService(IConfiguration config)
     {
-        _httpClient = httpClient;
-        _clientId = config["PayOS:ClientId"];
-        _apiKey = config["PayOS:ApiKey"];
-        _httpClient.BaseAddress = new Uri(config["PayOS:BaseUrl"]);
+        _config = config;
+        _payOS = new PayOS(
+            _config["PayOS:ClientId"],
+            _config["PayOS:ApiKey"],
+            _config["PayOS:ChecksumKey"]
+        );
     }
 
     public async Task<PaymentResponse> CreatePaymentLink(PaymentRequest request)
     {
-        var json = JsonSerializer.Serialize(request);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-        _httpClient.DefaultRequestHeaders.Add("x-client-id", _clientId);
-        _httpClient.DefaultRequestHeaders.Add("x-api-key", _apiKey);
+        request.CancelUrl ??= _config["PayOS:CancelUrl"];
+        request.ReturnUrl ??= _config["PayOS:ReturnUrl"];
 
-        var response = await _httpClient.PostAsync("/v2/payment-requests", content);
-        response.EnsureSuccessStatusCode();
+        // Fix for CS7036: Provide a default value for the 'items' parameter
+        var payOSRequest = new PaymentData(
+            orderCode: request.OrderCode,
+            amount: request.Amount,
+            description: request.Description,
+            items: new List<ItemData>(), // Default empty list for 'items'
+            cancelUrl: request.CancelUrl,
+            returnUrl: request.ReturnUrl
+        );
 
-        var responseContent = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<PaymentResponse>(responseContent);
+        // Fix for CS1061: Await the Task<CreatePaymentResult> to access its properties
+        var paymentLinkResponse = await _payOS.createPaymentLink(payOSRequest);
+
+        return new PaymentResponse
+        {
+            CheckoutUrl = paymentLinkResponse.checkoutUrl,
+            OrderCode = paymentLinkResponse.orderCode,
+            Amount = request.Amount,
+            Status = "PENDING"
+        };
     }
 }

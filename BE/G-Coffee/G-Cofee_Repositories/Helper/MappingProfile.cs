@@ -57,6 +57,17 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore());
         CreateMap<TransactionDetail, TransactionDetailDTO>();
+        // Order
+        CreateMap<OrderDTO, Order>();
+        CreateMap<Order, OrderDTO>();
+        // payment mapping
+        CreateMap<PaymentWrapperResponse, Payment>()
+            .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore());
+        CreateMap<Payment, PaymentWrapperResponse>();
 
     }
 }
