@@ -1,118 +1,81 @@
-﻿using AutoMapper;
-using G_Cofee_Repositories.DTO;
-using G_Cofee_Repositories.IRepositories;
+﻿using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace G_Coffee_Services.Services
+public class ComboPackageService : IComboPackageService
 {
-    public class ComboPackageService : IComboPackageService
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IComboPackageRepository _comboPackageRepository;
+
+    public ComboPackageService(IUnitOfWork unitOfWork, IComboPackageRepository comboPackageRepository)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IComboPackageRepository _ComboPackageRepository;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _comboPackageRepository = comboPackageRepository ?? throw new ArgumentNullException(nameof(comboPackageRepository));
+    }
 
-        public ComboPackageService(IUnitOfWork unitOfWork, IComboPackageRepository ComboPackageRepository)
-        {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _ComboPackageRepository = ComboPackageRepository ?? throw new ArgumentNullException(nameof(ComboPackageRepository));
-        }
-        public async Task<ComboPackage> CreateComboPackageAsync(ComboPackage ComboPackage)
-        {
-            if (ComboPackage == null) throw new ArgumentNullException(nameof(ComboPackage));
+    public async Task<ComboPackage> CreateComboPackageAsync(ComboPackage comboPackage)
+    {
+        if (comboPackage == null)
+            throw new ArgumentNullException(nameof(comboPackage));
 
-            try
-            {
-                // Correctly map ComboPackageDTO to ComboPackage before passing to AddAsync
-                // Assuming ComboPackageEntity is the mapped entity
-                var ComboPackageEntity = ComboPackage; // Replace with actual mapping logic if needed
 
-                await _ComboPackageRepository.AddAsync(ComboPackageEntity); // Fix: Pass the mapped ComboPackage entity
-                await _unitOfWork.SaveChangesAsync();
+        await _comboPackageRepository.AddAsync(comboPackage);
+        await _unitOfWork.SaveChangesAsync();
 
-                return ComboPackageEntity; // Ensure a value is returned
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error creating ComboPackage", ex);
-            }
-        }
+        return comboPackage;
+    }
 
-        public async Task DeleteComboPackageAsync(string id)
-        {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("ComboPackage ID is required");
+    public async Task DeleteComboPackageAsync(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            throw new ArgumentException("ComboPackage ID is required");
 
-            try
-            {
-                var ComboPackage = await _ComboPackageRepository.GetByIdAsync(Guid.Parse(id));
-                if (ComboPackage == null) throw new Exception($"ComboPackage with ID {id} not found");
+        if (!Guid.TryParse(id, out Guid guidId))
+            throw new ArgumentException("Invalid ComboPackage ID format");
 
-                _ComboPackageRepository.Remove(ComboPackage);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error deleting ComboPackage with ID {id}", ex);
-            }
-        }
+        var comboPackage = await _comboPackageRepository.GetByIdAsync(guidId);
+        if (comboPackage == null)
+            throw new KeyNotFoundException($"ComboPackage with ID {id} not found");
 
-        public Task DeleteComboPackageAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+        _comboPackageRepository.Remove(comboPackage);
+        await _unitOfWork.SaveChangesAsync();
+    }
 
-        public async Task<IEnumerable<ComboPackage>> GetAllComboPackagesAsync()
-        {
-            try
-            {
-                var ComboPackages = await _ComboPackageRepository.GetAllAsync();
-                return ComboPackages; // Ensure a value is returned
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error retrieving all ComboPackages", ex);
-            }
-        }
+    public Task DeleteComboPackageAsync(int id)
+    {
+        throw new NotImplementedException("Use DeleteComboPackageAsync(string id) instead.");
+    }
 
-        public async Task<ComboPackage> GetComboPackageByIdAsync(string id)
-        {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("ComboPackage ID is required");
+    public async Task<IEnumerable<ComboPackage>> GetAllComboPackagesAsync()
+    {
+        return await _comboPackageRepository.GetAllAsync();
+    }
 
-            try
-            {
-                var ComboPackage = await _ComboPackageRepository.GetByIdAsync(Guid.Parse(id));
-                if (ComboPackage == null) throw new Exception($"ComboPackage with ID {id} not found");
+    public async Task<ComboPackage> GetComboPackageByIdAsync(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+            throw new ArgumentException("ComboPackage ID is required");
 
-                return ComboPackage; // Ensure a value is returned
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving ComboPackage with ID {id}", ex);
-            }
-        }
+        if (!Guid.TryParse(id, out Guid guidId))
+            throw new ArgumentException("Invalid ComboPackage ID format");
 
-       
+        var comboPackage = await _comboPackageRepository.GetByIdAsync(guidId);
+        if (comboPackage == null)
+            throw new KeyNotFoundException($"ComboPackage with ID {id} not found");
 
-        public async Task UpdateComboPackageAsync(ComboPackage comboPackage)
-        {
-            if (comboPackage == null) throw new ArgumentNullException(nameof(ComboPackage));
+        return comboPackage;
+    }
 
-            try
-            {
-                var ComboPackage = await _ComboPackageRepository.GetByIdAsync(comboPackage.Id);
-                if (ComboPackage == null) throw new Exception($"ComboPackage with ID {comboPackage.Id} not found");
+    public async Task UpdateComboPackageAsync(ComboPackage comboPackage)
+    {
+        if (comboPackage == null)
+            throw new ArgumentNullException(nameof(comboPackage));
 
-                _ComboPackageRepository.Update(ComboPackage); // Removed 'await' since Update is a void method.
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error updating ComboPackage with ID {comboPackage.Id}", ex);
-            }
-        }
+        var existing = await _comboPackageRepository.GetByIdAsync(comboPackage.Id);
+        if (existing == null)
+            throw new KeyNotFoundException($"ComboPackage with ID {comboPackage.Id} not found");
+
+        _comboPackageRepository.Update(comboPackage);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

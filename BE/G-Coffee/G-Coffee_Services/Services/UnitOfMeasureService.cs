@@ -2,12 +2,9 @@
 using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
-using G_Cofee_Repositories.Repositories;
 using G_Coffee_Services.IServices;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace G_Coffee_Services.Services
@@ -15,103 +12,74 @@ namespace G_Coffee_Services.Services
     public class UnitOfMeasureService : IUnitOfMeasureService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IUnitOfMeasureRepository _UnitOfMeasureRepository;
+        private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
         private readonly IMapper _mapper;
 
-        public UnitOfMeasureService(IUnitOfWork unitOfWork, IUnitOfMeasureRepository UnitOfMeasureRepository, IMapper mapper)
+        public UnitOfMeasureService(IUnitOfWork unitOfWork, IUnitOfMeasureRepository unitOfMeasureRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _UnitOfMeasureRepository = UnitOfMeasureRepository ?? throw new ArgumentNullException(nameof(UnitOfMeasureRepository));
+            _unitOfMeasureRepository = unitOfMeasureRepository ?? throw new ArgumentNullException(nameof(unitOfMeasureRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<UnitOfMeasureDTO> CreateUnitOfMeasureAsync(UnitOfMeasureDTO UnitOfMeasure)
+        public async Task<UnitOfMeasureDTO> CreateUnitOfMeasureAsync(UnitOfMeasureDTO dto)
         {
-            if (UnitOfMeasure == null) throw new ArgumentNullException(nameof(UnitOfMeasure));
+            if (dto == null)
+                throw new ArgumentException("Unit of Measure data cannot be null");
 
-            try
-            {
-                // Correctly map UnitOfMeasureDTO to UnitOfMeasure before passing to AddAsync
-                var UnitOfMeasureEntity = _mapper.Map<UnitsOfMeasure>(UnitOfMeasure);
-                UnitOfMeasureEntity.CreatedDate = DateTime.UtcNow;
-                UnitOfMeasureEntity.UpdatedDate = DateTime.UtcNow;
+            var entity = _mapper.Map<UnitsOfMeasure>(dto);
+            entity.CreatedDate = DateTime.UtcNow;
+            entity.UpdatedDate = DateTime.UtcNow;
 
-                await _UnitOfMeasureRepository.AddAsync(UnitOfMeasureEntity); // Fix: Pass the mapped UnitOfMeasure entity
-                await _unitOfWork.SaveChangesAsync();
+            await _unitOfMeasureRepository.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
 
-                return _mapper.Map<UnitOfMeasureDTO>(UnitOfMeasureEntity); // Fix: Return the mapped UnitOfMeasureDTO
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error creating UnitOfMeasure", ex);
-            }
+            return _mapper.Map<UnitOfMeasureDTO>(entity);
         }
 
         public async Task DeleteUnitOfMeasureAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("UnitOfMeasure ID is required");
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Unit of Measure ID is required");
 
-            try
-            {
-                var UnitOfMeasure = await _UnitOfMeasureRepository.GetByIdAsync(id);
-                if (UnitOfMeasure == null) throw new Exception($"UnitOfMeasure with ID {id} not found");
+            var unit = await _unitOfMeasureRepository.GetByIdAsync(id);
+            if (unit == null)
+                throw new KeyNotFoundException($"Unit of Measure with ID {id} not found");
 
-                _UnitOfMeasureRepository.Remove(UnitOfMeasure);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error deleting UnitOfMeasure with ID {id}", ex);
-            }
+            _unitOfMeasureRepository.Remove(unit);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<UnitOfMeasureDTO>> GetAllUnitOfMeasuresAsync()
         {
-            try
-            {
-                var UnitOfMeasures = await _UnitOfMeasureRepository.GetAllAsync();
-                return _mapper.Map<IEnumerable<UnitOfMeasureDTO>>(UnitOfMeasures);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error retrieving all UnitOfMeasures", ex);
-            }
+            var entities = await _unitOfMeasureRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<UnitOfMeasureDTO>>(entities);
         }
 
         public async Task<UnitOfMeasureDTO> GetUnitOfMeasureByIdAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("UnitOfMeasure ID is required");
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Unit of Measure ID is required");
 
-            try
-            {
-                var UnitOfMeasure = await _UnitOfMeasureRepository.GetByIdAsync(id);
-                if (UnitOfMeasure == null) throw new Exception($"UnitOfMeasure with ID {id} not found");
+            var unit = await _unitOfMeasureRepository.GetByIdAsync(id);
+            if (unit == null)
+                throw new KeyNotFoundException($"Unit of Measure with ID {id} not found");
 
-                return _mapper.Map<UnitOfMeasureDTO>(UnitOfMeasure);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving UnitOfMeasure with ID {id}", ex);
-            }
+            return _mapper.Map<UnitOfMeasureDTO>(unit);
         }
 
-        public async Task UpdateUnitOfMeasureAsync(UnitOfMeasureDTO UnitOfMeasureDto)
+        public async Task UpdateUnitOfMeasureAsync(UnitOfMeasureDTO dto)
         {
-            if (UnitOfMeasureDto == null) throw new ArgumentNullException(nameof(UnitOfMeasureDto));
+            if (dto == null)
+                throw new ArgumentException("Unit of Measure data cannot be null");
 
-            try
-            {
-                var UnitOfMeasure = await _UnitOfMeasureRepository.GetByIdAsync(UnitOfMeasureDto.UnitOfMeasureId);
-                if (UnitOfMeasure == null) throw new Exception($"UnitOfMeasure with ID {UnitOfMeasureDto.UnitOfMeasureId} not found");
+            var existing = await _unitOfMeasureRepository.GetByIdAsync(dto.UnitOfMeasureId);
+            if (existing == null)
+                throw new KeyNotFoundException($"Unit of Measure with ID {dto.UnitOfMeasureId} not found");
 
-                _mapper.Map(UnitOfMeasureDto, UnitOfMeasure);
-                _UnitOfMeasureRepository.Update(UnitOfMeasure); // Removed 'await' since Update is a void method.
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error updating UnitOfMeasure with ID {UnitOfMeasureDto.UnitOfMeasureId}", ex);
-            }
+            _mapper.Map(dto, existing);
+            _unitOfMeasureRepository.Update(existing);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

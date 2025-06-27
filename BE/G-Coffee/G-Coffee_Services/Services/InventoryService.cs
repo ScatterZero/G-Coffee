@@ -5,110 +5,84 @@ using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace G_Coffee_Services.Services
-{  
+{
     public class InventoryService : IInventoryService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IInventoryRepository _InventoryRepository;
+        private readonly IInventoryRepository _inventoryRepository;
         private readonly IMapper _mapper;
 
-        public InventoryService(IUnitOfWork unitOfWork, IInventoryRepository InventoryRepository, IMapper mapper)
+        public InventoryService(IUnitOfWork unitOfWork, IInventoryRepository inventoryRepository, IMapper mapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _InventoryRepository = InventoryRepository ?? throw new ArgumentNullException(nameof(InventoryRepository));
+            _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<InventoryDTO> CreateInventoryAsync(InventoryDTO Inventory)
+
+        public async Task<InventoryDTO> CreateInventoryAsync(InventoryDTO inventoryDto)
         {
-            if (Inventory == null) throw new ArgumentNullException(nameof(Inventory));
+            if (inventoryDto == null)
+                throw new ArgumentException("Inventory DTO cannot be null");
 
-            try
-            {
-                // Correctly map InventoryDTO to Inventory before passing to AddAsync
-                var InventoryEntity = _mapper.Map<Inventory>(Inventory);
-                
+            var entity = _mapper.Map<Inventory>(inventoryDto);
+            await _inventoryRepository.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
 
-                await _InventoryRepository.AddAsync(InventoryEntity); // Fix: Pass the mapped Inventory entity
-                await _unitOfWork.SaveChangesAsync();
-
-                return _mapper.Map<InventoryDTO>(InventoryEntity); // Fix: Return the mapped InventoryDTO
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error creating Inventory", ex);
-            }
+            return _mapper.Map<InventoryDTO>(entity);
         }
 
         public async Task DeleteInventoryAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("Inventory ID is required");
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Inventory ID is required");
 
-            try
-            {
-                var Inventory = await _InventoryRepository.GetByIdAsync(Guid.Parse(id));
-                if (Inventory == null) throw new Exception($"Inventory with ID {id} not found");
+            if (!Guid.TryParse(id, out var guidId))
+                throw new ArgumentException("Invalid Inventory ID format");
 
-                _InventoryRepository.Remove(Inventory);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error deleting Inventory with ID {id}", ex);
-            }
+            var inventory = await _inventoryRepository.GetByIdAsync(guidId);
+            if (inventory == null)
+                throw new KeyNotFoundException($"Inventory with ID {id} not found");
+
+            _inventoryRepository.Remove(inventory);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<InventoryDTO>> GetAllInventorysAsync()
         {
-            try
-            {
-                var Inventorys = await _InventoryRepository.GetAllAsync();
-                return _mapper.Map<IEnumerable<InventoryDTO>>(Inventorys);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error retrieving all Inventorys", ex);
-            }
+            var inventories = await _inventoryRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<InventoryDTO>>(inventories);
         }
 
         public async Task<InventoryDTO> GetInventoryByIdAsync(string id)
         {
-            if (string.IsNullOrEmpty(id)) throw new ArgumentException("Inventory ID is required");
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Inventory ID is required");
 
-            try
-            {
-                var Inventory = await _InventoryRepository.GetByIdAsync(Guid.Parse(id));
-                if (Inventory == null) throw new Exception($"Inventory with ID {id} not found");
+            if (!Guid.TryParse(id, out var guidId))
+                throw new ArgumentException("Invalid Inventory ID format");
 
-                return _mapper.Map<InventoryDTO>(Inventory);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving Inventory with ID {id}", ex);
-            }
+            var inventory = await _inventoryRepository.GetByIdAsync(guidId);
+            if (inventory == null)
+                throw new KeyNotFoundException($"Inventory with ID {id} not found");
+
+            return _mapper.Map<InventoryDTO>(inventory);
         }
 
-        public async Task UpdateInventoryAsync(InventoryDTO InventoryDto)
+        public async Task UpdateInventoryAsync(InventoryDTO inventoryDto)
         {
-            if (InventoryDto == null) throw new ArgumentNullException(nameof(InventoryDto));
+            if (inventoryDto == null)
+                throw new ArgumentException("Inventory DTO cannot be null");
 
-            try
-            {
-                var Inventory = await _InventoryRepository.GetByIdAsync(InventoryDto.InventoryId);
-                if (Inventory == null) throw new Exception($"Inventory with ID {InventoryDto.InventoryId} not found");
+            var inventory = await _inventoryRepository.GetByIdAsync(inventoryDto.InventoryId);
+            if (inventory == null)
+                throw new KeyNotFoundException($"Inventory with ID {inventoryDto.InventoryId} not found");
 
-                _mapper.Map(InventoryDto, Inventory);
-                _InventoryRepository.Update(Inventory); // Removed 'await' since Update is a void method.
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error updating Inventory with ID {InventoryDto.InventoryId}", ex);
-            }
+            _mapper.Map(inventoryDto, inventory);
+            _inventoryRepository.Update(inventory);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

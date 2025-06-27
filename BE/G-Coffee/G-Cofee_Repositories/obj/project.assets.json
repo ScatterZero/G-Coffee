@@ -4197,11 +4197,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
+      "projectUniqueName": "C:\\Users\\tnqt3\\Desktop\\CodeFix\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
       "projectName": "G-Cofee_Repositories",
-      "projectPath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
+      "projectPath": "C:\\Users\\tnqt3\\Desktop\\CodeFix\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj",
       "packagesPath": "C:\\Users\\tnqt3\\.nuget\\packages\\",
-      "outputPath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\obj\\",
+      "outputPath": "C:\\Users\\tnqt3\\Desktop\\CodeFix\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

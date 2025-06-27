@@ -1,65 +1,155 @@
 ﻿using G_Cofee_Repositories.DTO;
 using G_Coffee_Services.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace G_Coffee.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Bắt buộc xác thực JWT cho toàn bộ controller
     public class InventoryController : ControllerBase
     {
-        private readonly IInventoryService _InventoryService;
+        private readonly IInventoryService _inventoryService;
 
-        public InventoryController(IInventoryService InventoryService)
+        public InventoryController(IInventoryService inventoryService)
         {
-            _InventoryService = InventoryService;
+            _inventoryService = inventoryService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateInventory([FromBody] InventoryDTO InventoryDTO)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> CreateInventory([FromBody] InventoryDTO dto)
         {
-            if (InventoryDTO == null) return BadRequest("Inventory cannot be null");
-            var createdInventory = await _InventoryService.CreateInventoryAsync(InventoryDTO);
-            return CreatedAtAction(nameof(GetInventory), new { id = createdInventory.InventoryId }, createdInventory);
+            try
+            {
+                if (dto == null)
+                    return BadRequest("Inventory data cannot be null");
+
+                var created = await _inventoryService.CreateInventoryAsync(dto);
+                return CreatedAtAction(nameof(GetInventory), new { id = created.InventoryId }, created);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> GetInventory(string id)
         {
-            var Inventory = await _InventoryService.GetInventoryByIdAsync(id);
-            if (Inventory == null) return NotFound();
-            return Ok(Inventory);
+            try
+            {
+                var result = await _inventoryService.GetInventoryByIdAsync(id);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> GetAllInventorys()
         {
-            var Inventorys = await _InventoryService.GetAllInventorysAsync();
-            return Ok(Inventorys);
+            try
+            {
+                var result = await _inventoryService.GetAllInventorysAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateInventory(string id, [FromBody] InventoryDTO InventoryDto)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> UpdateInventory(string id, [FromBody] InventoryDTO dto)
         {
-            if (!Guid.TryParse(id, out var parsedId)) return BadRequest("Invalid Inventory ID format");
-            if (parsedId != InventoryDto.InventoryId) return BadRequest("Inventory ID mismatch");
-            await _InventoryService.UpdateInventoryAsync(InventoryDto);
-            return NoContent();
+            try
+            {
+                if (!Guid.TryParse(id, out var parsedId))
+                    return BadRequest("Invalid Inventory ID format");
+
+                if (parsedId != dto.InventoryId)
+                    return BadRequest("Inventory ID mismatch");
+
+                await _inventoryService.UpdateInventoryAsync(dto);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteInventory(string id)
         {
-            await _InventoryService.DeleteInventoryAsync(id);
-            return NoContent();
+            try
+            {
+                await _inventoryService.DeleteInventoryAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        [HttpGet("Inventory/{InventoryId}")]
-        public async Task<IActionResult> GetInventorysByInventoryId(string InventoryId)
+        [HttpGet("Inventory/{inventoryId}")]
+        [Authorize(Roles = "User,Manager,Admin")]
+        public async Task<IActionResult> GetInventorysByInventoryId(string inventoryId)
         {
-            var Inventorys = await _InventoryService.GetInventoryByIdAsync(InventoryId);
-            return Ok(Inventorys);
+            try
+            {
+                var result = await _inventoryService.GetInventoryByIdAsync(inventoryId);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

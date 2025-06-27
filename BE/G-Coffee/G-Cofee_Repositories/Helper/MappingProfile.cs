@@ -10,8 +10,8 @@ public class MappingProfile : Profile
         CreateMap<ProductDto, Product>()
             .ForMember(dest => dest.UnitOfMeasureId, opt => opt.MapFrom(src => src.UnitOfMeasureId))
             .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => src.SupplierId))
-            .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
-            .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+           .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+           .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
         // Ánh xạ Product -> ProductDto
         CreateMap<Product, ProductDto>()
@@ -68,6 +68,12 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore());
         CreateMap<Payment, PaymentWrapperResponse>();
+        // Combopackage mapping
+   
+
+
+
+
 
     }
 }

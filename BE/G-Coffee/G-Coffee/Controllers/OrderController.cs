@@ -1,66 +1,155 @@
 ﻿using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace G_Coffee.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _OrderService;
+        private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService OrderService)
+        public OrderController(IOrderService orderService)
         {
-            _OrderService = OrderService;
+            _orderService = orderService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderDTO Order)
+        [Authorize(Roles = "User,Manager")]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderDTO orderDto)
         {
-            if (Order == null) return BadRequest("Order cannot be null");
-            var createdOrder = await _OrderService.CreateOrderAsync(Order);
-            return CreatedAtAction(nameof(GetOrder), new { id = createdOrder.Id }, createdOrder);
+            try
+            {
+                if (orderDto == null) return BadRequest("Order data is required.");
+
+                var created = await _orderService.CreateOrderAsync(orderDto);
+                return CreatedAtAction(nameof(GetOrder), new { id = created.Id }, created);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> GetOrder(Guid id)
         {
-            var Order = await _OrderService.GetOrderByIdAsync(id);
-            if (Order == null) return NotFound();
-            return Ok(Order);
+            try
+            {
+                var order = await _orderService.GetOrderByIdAsync(id);
+                return Ok(order);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,User")]
         public async Task<IActionResult> GetAllOrders()
         {
-            var Orders = await _OrderService.GetAllOrdersAsync();
-            return Ok(Orders);
+            try
+            {
+                var orders = await _orderService.GetAllOrdersAsync();
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(string id, [FromBody] Order Order)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateOrder(string id, [FromBody] Order order)
         {
-            if (!Guid.TryParse(id, out var parsedId)) return BadRequest("Invalid Order ID format");
-            if (parsedId != Order.Id) return BadRequest("Order ID mismatch");
-            await _OrderService.UpdateOrderAsync(Order);
-            return NoContent();
+            try
+            {
+                if (!Guid.TryParse(id, out var parsedId))
+                    return BadRequest("Invalid order ID format.");
+
+                if (parsedId != order.Id)
+                    return BadRequest("Order ID mismatch.");
+
+                await _orderService.UpdateOrderAsync(order);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOrder(Guid id)
         {
-            await _OrderService.DeleteOrderAsync(id);
-            return NoContent();
+            try
+            {
+                await _orderService.DeleteOrderAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        [HttpGet("Order/{OrderId}")]
-        public async Task<IActionResult> GetOrdersByOrderId(Guid OrderId)
+        [HttpGet("order-code/{orderId}")]
+        [Authorize(Roles = "User,Manager,Admin")]
+        public async Task<IActionResult> GetOrdersByOrderId(Guid orderId)
         {
-            var Orders = await _OrderService.GetOrderByIdAsync(OrderId);
-            return Ok(Orders);
+            try
+            {
+                var order = await _orderService.GetOrderByIdAsync(orderId);
+                return Ok(order);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

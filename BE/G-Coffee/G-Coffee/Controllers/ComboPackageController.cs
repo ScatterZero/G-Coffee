@@ -1,66 +1,154 @@
-﻿using G_Cofee_Repositories.DTO;
-using G_Cofee_Repositories.Models;
+﻿using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace G_Coffee.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Yêu cầu xác thực cho toàn bộ controller
     public class ComboPackageController : ControllerBase
     {
-        private readonly IComboPackageService _ComboPackageService;
+        private readonly IComboPackageService _comboPackageService;
 
-        public ComboPackageController(IComboPackageService ComboPackageService)
+        public ComboPackageController(IComboPackageService comboPackageService)
         {
-            _ComboPackageService = ComboPackageService;
+            _comboPackageService = comboPackageService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateComboPackage([FromBody] ComboPackage ComboPackage)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> CreateComboPackage([FromBody] ComboPackage comboPackage)
         {
-            if (ComboPackage == null) return BadRequest("ComboPackage cannot be null");
-            var createdComboPackage = await _ComboPackageService.CreateComboPackageAsync(ComboPackage);
-            return CreatedAtAction(nameof(GetComboPackage), new { id = createdComboPackage.Id }, createdComboPackage);
+            try
+            {
+                if (comboPackage == null) return BadRequest("ComboPackage cannot be null");
+
+                var created = await _comboPackageService.CreateComboPackageAsync(comboPackage);
+                return CreatedAtAction(nameof(GetComboPackage), new { id = created.Id }, created);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> GetComboPackage(string id)
         {
-            var ComboPackage = await _ComboPackageService.GetComboPackageByIdAsync(id);
-            if (ComboPackage == null) return NotFound();
-            return Ok(ComboPackage);
+            try
+            {
+                var comboPackage = await _comboPackageService.GetComboPackageByIdAsync(id);
+                return Ok(comboPackage);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> GetAllComboPackages()
         {
-            var ComboPackages = await _ComboPackageService.GetAllComboPackagesAsync();
-            return Ok(ComboPackages);
+            try
+            {
+                var list = await _comboPackageService.GetAllComboPackagesAsync();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateComboPackage(string id, [FromBody] ComboPackage ComboPackage)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> UpdateComboPackage(string id, [FromBody] ComboPackage comboPackage)
         {
-            if (!Guid.TryParse(id, out var parsedId)) return BadRequest("Invalid ComboPackage ID format");
-            if (parsedId != ComboPackage.Id) return BadRequest("ComboPackage ID mismatch");
-            await _ComboPackageService.UpdateComboPackageAsync(ComboPackage);
-            return NoContent();
+            try
+            {
+                if (!Guid.TryParse(id, out var parsedId))
+                    return BadRequest("Invalid ComboPackage ID format");
+
+                if (parsedId != comboPackage.Id)
+                    return BadRequest("ComboPackage ID mismatch");
+
+                await _comboPackageService.UpdateComboPackageAsync(comboPackage);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteComboPackage(string id)
         {
-            await _ComboPackageService.DeleteComboPackageAsync(id);
-            return NoContent();
+            try
+            {
+                await _comboPackageService.DeleteComboPackageAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        [HttpGet("ComboPackage/{ComboPackageId}")]
-        public async Task<IActionResult> GetComboPackagesByComboPackageId(string ComboPackageId)
+        [HttpGet("ComboPackage/{comboPackageId}")]
+        [Authorize(Roles = "User,Manager,Admin")]
+        public async Task<IActionResult> GetComboPackagesByComboPackageId(string comboPackageId)
         {
-            var ComboPackages = await _ComboPackageService.GetComboPackageByIdAsync(ComboPackageId);
-            return Ok(ComboPackages);
+            try
+            {
+                var combo = await _comboPackageService.GetComboPackageByIdAsync(comboPackageId);
+                return Ok(combo);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

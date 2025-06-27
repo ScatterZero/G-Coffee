@@ -1,64 +1,152 @@
 ﻿using G_Cofee_Repositories.DTO;
 using G_Coffee_Services.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace G_Coffee.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // Toàn bộ controller yêu cầu xác thực JWT
     public class UnitOfMeasureController : ControllerBase
     {
-        private readonly IUnitOfMeasureService _UnitOfMeasureService;
+        private readonly IUnitOfMeasureService _unitOfMeasureService;
 
-        public UnitOfMeasureController(IUnitOfMeasureService UnitOfMeasureService)
+        public UnitOfMeasureController(IUnitOfMeasureService unitOfMeasureService)
         {
-            _UnitOfMeasureService = UnitOfMeasureService;
+            _unitOfMeasureService = unitOfMeasureService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUnitOfMeasure([FromBody] UnitOfMeasureDTO UnitOfMeasureDTO)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> CreateUnitOfMeasure([FromBody] UnitOfMeasureDTO dto)
         {
-            if (UnitOfMeasureDTO == null) return BadRequest("UnitOfMeasure cannot be null");
-            var createdUnitOfMeasure = await _UnitOfMeasureService.CreateUnitOfMeasureAsync(UnitOfMeasureDTO);
-            return CreatedAtAction(nameof(GetUnitOfMeasure), new { id = createdUnitOfMeasure.UnitOfMeasureId }, createdUnitOfMeasure);
+            try
+            {
+                if (dto == null)
+                    return BadRequest("UnitOfMeasure cannot be null");
+
+                var created = await _unitOfMeasureService.CreateUnitOfMeasureAsync(dto);
+                return CreatedAtAction(nameof(GetUnitOfMeasure), new { id = created.UnitOfMeasureId }, created);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> GetUnitOfMeasure(string id)
         {
-            var UnitOfMeasure = await _UnitOfMeasureService.GetUnitOfMeasureByIdAsync(id);
-            if (UnitOfMeasure == null) return NotFound();
-            return Ok(UnitOfMeasure);
+            try
+            {
+                var unit = await _unitOfMeasureService.GetUnitOfMeasureByIdAsync(id);
+                return Ok(unit);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> GetAllUnitOfMeasures()
         {
-            var UnitOfMeasures = await _UnitOfMeasureService.GetAllUnitOfMeasuresAsync();
-            return Ok(UnitOfMeasures);
+            try
+            {
+                var list = await _unitOfMeasureService.GetAllUnitOfMeasuresAsync();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUnitOfMeasure(string id, [FromBody] UnitOfMeasureDTO UnitOfMeasureDto)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> UpdateUnitOfMeasure(string id, [FromBody] UnitOfMeasureDTO dto)
         {
-            if (id != UnitOfMeasureDto.UnitOfMeasureId) return BadRequest("UnitOfMeasure ID mismatch");
-            await _UnitOfMeasureService.UpdateUnitOfMeasureAsync(UnitOfMeasureDto);
-            return NoContent();
+            try
+            {
+                if (id != dto.UnitOfMeasureId)
+                    return BadRequest("UnitOfMeasure ID mismatch");
+
+                await _unitOfMeasureService.UpdateUnitOfMeasureAsync(dto);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUnitOfMeasure(string id)
         {
-            await _UnitOfMeasureService.DeleteUnitOfMeasureAsync(id);
-            return NoContent();
+            try
+            {
+                await _unitOfMeasureService.DeleteUnitOfMeasureAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        [HttpGet("UnitOfMeasure/{UnitOfMeasureId}")]
-        public async Task<IActionResult> GetUnitOfMeasuresByUnitOfMeasureId(string UnitOfMeasureId)
+        [HttpGet("UnitOfMeasure/{unitOfMeasureId}")]
+        [Authorize(Roles = "User,Manager,Admin")]
+        public async Task<IActionResult> GetUnitOfMeasuresByUnitOfMeasureId(string unitOfMeasureId)
         {
-            var UnitOfMeasures = await _UnitOfMeasureService.GetUnitOfMeasureByIdAsync(UnitOfMeasureId);
-            return Ok(UnitOfMeasures);
+            try
+            {
+                var unit = await _unitOfMeasureService.GetUnitOfMeasureByIdAsync(unitOfMeasureId);
+                return Ok(unit);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

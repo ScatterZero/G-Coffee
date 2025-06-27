@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "G-Coffee API",
-    "version": "v1"
+    "title": "G-Coffee",
+    "version": "1.0"
   },
   "paths": {
     "/api/Account/login": {
@@ -189,14 +189,14 @@
         }
       }
     },
-    "/api/ComboPackage/ComboPackage/{ComboPackageId}": {
+    "/api/ComboPackage/ComboPackage/{comboPackageId}": {
       "get": {
         "tags": [
           "ComboPackage"
         ],
         "parameters": [
           {
-            "name": "ComboPackageId",
+            "name": "comboPackageId",
             "in": "path",
             "required": true,
             "schema": {
@@ -333,14 +333,14 @@
         }
       }
     },
-    "/api/Inventory/Inventory/{InventoryId}": {
+    "/api/Inventory/Inventory/{inventoryId}": {
       "get": {
         "tags": [
           "Inventory"
         ],
         "parameters": [
           {
-            "name": "InventoryId",
+            "name": "inventoryId",
             "in": "path",
             "required": true,
             "schema": {
@@ -479,14 +479,14 @@
         }
       }
     },
-    "/api/Order/Order/{OrderId}": {
+    "/api/Order/order-code/{orderId}": {
       "get": {
         "tags": [
           "Order"
         ],
         "parameters": [
           {
-            "name": "OrderId",
+            "name": "orderId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1215,14 +1215,14 @@
         }
       }
     },
-    "/api/UnitOfMeasure/UnitOfMeasure/{UnitOfMeasureId}": {
+    "/api/UnitOfMeasure/UnitOfMeasure/{unitOfMeasureId}": {
       "get": {
         "tags": [
           "UnitOfMeasure"
         ],
         "parameters": [
           {
-            "name": "UnitOfMeasureId",
+            "name": "unitOfMeasureId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1563,28 +1563,6 @@
           "supplierId": {
             "type": "string",
             "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "createdBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "updatedDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "updatedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1614,20 +1592,6 @@
           },
           "contactPerson": {
             "type": "string",
-            "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "updatedDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "isDisabled": {
-            "type": "boolean",
             "nullable": true
           }
         },
@@ -1884,10 +1848,10 @@
     },
     "securitySchemes": {
       "Bearer": {
-        "type": "apiKey",
-        "description": "Please enter JWT with Bearer into field",
-        "name": "Authorization",
-        "in": "header"
+        "type": "http",
+        "description": "Enter your JWT Access Token",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
       }
     }
   },

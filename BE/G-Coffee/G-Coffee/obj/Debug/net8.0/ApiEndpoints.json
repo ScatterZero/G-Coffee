@@ -40,7 +40,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ComboPackage",
+        "Name": "comboPackage",
         "Type": "G_Cofee_Repositories.Models.ComboPackage",
         "IsRequired": true
       }
@@ -87,7 +87,7 @@
         "IsRequired": true
       },
       {
-        "Name": "ComboPackage",
+        "Name": "comboPackage",
         "Type": "G_Cofee_Repositories.Models.ComboPackage",
         "IsRequired": true
       }
@@ -113,13 +113,13 @@
   {
     "ContainingType": "G_Coffee.Controllers.ComboPackageController",
     "Method": "GetComboPackagesByComboPackageId",
-    "RelativePath": "api/ComboPackage/ComboPackage/{ComboPackageId}",
+    "RelativePath": "api/ComboPackage/ComboPackage/{comboPackageId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "ComboPackageId",
+        "Name": "comboPackageId",
         "Type": "System.String",
         "IsRequired": true
       }
@@ -135,7 +135,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "InventoryDTO",
+        "Name": "dto",
         "Type": "G_Cofee_Repositories.DTO.InventoryDTO",
         "IsRequired": true
       }
@@ -182,7 +182,7 @@
         "IsRequired": true
       },
       {
-        "Name": "InventoryDto",
+        "Name": "dto",
         "Type": "G_Cofee_Repositories.DTO.InventoryDTO",
         "IsRequired": true
       }
@@ -208,13 +208,13 @@
   {
     "ContainingType": "G_Coffee.Controllers.InventoryController",
     "Method": "GetInventorysByInventoryId",
-    "RelativePath": "api/Inventory/Inventory/{InventoryId}",
+    "RelativePath": "api/Inventory/Inventory/{inventoryId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "InventoryId",
+        "Name": "inventoryId",
         "Type": "System.String",
         "IsRequired": true
       }
@@ -230,7 +230,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Order",
+        "Name": "orderDto",
         "Type": "G_Cofee_Repositories.DTO.OrderDTO",
         "IsRequired": true
       }
@@ -277,7 +277,7 @@
         "IsRequired": true
       },
       {
-        "Name": "Order",
+        "Name": "order",
         "Type": "G_Cofee_Repositories.Models.Order",
         "IsRequired": true
       }
@@ -303,13 +303,13 @@
   {
     "ContainingType": "G_Coffee.Controllers.OrderController",
     "Method": "GetOrdersByOrderId",
-    "RelativePath": "api/Order/Order/{OrderId}",
+    "RelativePath": "api/Order/order-code/{orderId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "OrderId",
+        "Name": "orderId",
         "Type": "System.Guid",
         "IsRequired": true
       }
@@ -524,7 +524,7 @@
         "IsRequired": true
       },
       {
-        "Name": "SupplierDto",
+        "Name": "supplierDto",
         "Type": "G_Cofee_Repositories.DTO.SupplierDTO",
         "IsRequired": true
       }
@@ -699,7 +699,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "UnitOfMeasureDTO",
+        "Name": "dto",
         "Type": "G_Cofee_Repositories.DTO.UnitOfMeasureDTO",
         "IsRequired": true
       }
@@ -746,7 +746,7 @@
         "IsRequired": true
       },
       {
-        "Name": "UnitOfMeasureDto",
+        "Name": "dto",
         "Type": "G_Cofee_Repositories.DTO.UnitOfMeasureDTO",
         "IsRequired": true
       }
@@ -772,13 +772,13 @@
   {
     "ContainingType": "G_Coffee.Controllers.UnitOfMeasureController",
     "Method": "GetUnitOfMeasuresByUnitOfMeasureId",
-    "RelativePath": "api/UnitOfMeasure/UnitOfMeasure/{UnitOfMeasureId}",
+    "RelativePath": "api/UnitOfMeasure/UnitOfMeasure/{unitOfMeasureId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "UnitOfMeasureId",
+        "Name": "unitOfMeasureId",
         "Type": "System.String",
         "IsRequired": true
       }

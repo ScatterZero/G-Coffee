@@ -1,6 +1,6 @@
 ﻿using G_Cofee_Repositories.DTO;
 using G_Coffee_Services.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace G_Coffee.Controllers
@@ -17,48 +17,139 @@ namespace G_Coffee.Controllers
         }
 
         [HttpPost]
+        [Authorize (Roles = "User,Manager")]
         public async Task<IActionResult> CreateSupplier([FromBody] SupplierDTO supplierDTO)
         {
-            if (supplierDTO == null) return BadRequest("Supplier cannot be null");
-            var createdSupplier = await  _supplierService.CreateSupplierAsync(supplierDTO);
-            return CreatedAtAction(nameof(GetSupplier), new { id = createdSupplier.SupplierId }, createdSupplier);
+            try
+            {
+                if (supplierDTO == null) return BadRequest("Supplier cannot be null");
+
+                var createdSupplier = await _supplierService.CreateSupplierAsync(supplierDTO);
+                return CreatedAtAction(nameof(GetSupplier), new { id = createdSupplier.SupplierId }, createdSupplier);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
+        [Authorize]
+
         public async Task<IActionResult> GetSupplier(string id)
         {
-            var Supplier = await _supplierService.GetSupplierByIdAsync(id);
-            if (Supplier == null) return NotFound();
-            return Ok(Supplier);
+            try
+            {
+                var supplier = await _supplierService.GetSupplierByIdAsync(id);
+                return Ok(supplier);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]
+        [Authorize]
+
         public async Task<IActionResult> GetAllSuppliers()
         {
-            var Suppliers = await _supplierService.GetAllSuppliersAsync();
-            return Ok(Suppliers);
+            try
+            {
+                var suppliers = await _supplierService.GetAllSuppliersAsync();
+                return Ok(suppliers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSupplier(string id, [FromBody] SupplierDTO SupplierDto)
+        [Authorize(Roles = "Manager")]
+
+        public async Task<IActionResult> UpdateSupplier(string id, [FromBody] SupplierDTO supplierDto)
         {
-            if (id != SupplierDto.SupplierId) return BadRequest("Supplier ID mismatch");
-            await _supplierService.UpdateSupplierAsync(SupplierDto);
-            return NoContent();
+            try
+            {
+                if (id != supplierDto.SupplierId)
+                    return BadRequest("Supplier ID mismatch");
+
+                await _supplierService.UpdateSupplierAsync(supplierDto);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
+
         public async Task<IActionResult> DeleteSupplier(string id)
         {
-            await _supplierService.DeleteSupplierAsync(id);
-            return NoContent();
+            try
+            {
+                await _supplierService.DeleteSupplierAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("supplier/{supplierId}")]
+        [Authorize(Roles = "User,Manager")]
+
         public async Task<IActionResult> GetSuppliersBySupplierId(string supplierId)
         {
-            var Suppliers = await _supplierService.GetSupplierByIdAsync(supplierId);
-            return Ok(Suppliers);
+            try
+            {
+                var supplier = await _supplierService.GetSupplierByIdAsync(supplierId);
+                return Ok(supplier);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

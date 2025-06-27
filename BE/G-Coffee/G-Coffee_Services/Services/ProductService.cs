@@ -5,10 +5,12 @@ using G_Cofee_Repositories.Helper;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // ... (các using giữ nguyên)
@@ -20,12 +22,15 @@ namespace G_Coffee_Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-
-        public ProductService(IUnitOfWork unitOfWork, IProductRepository productRepository, IMapper mapper)
+        private readonly ISupplierRepository _supplierRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public ProductService(IUnitOfWork unitOfWork, IProductRepository productRepository, IMapper mapper, ISupplierRepository supplierRepository, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _supplierRepository = supplierRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ProductDto> CreateProductAsync(ProductDto productDto)
@@ -38,6 +43,14 @@ namespace G_Coffee_Services.Services
                 if (string.IsNullOrEmpty(productDto.ShortName)) throw new ArgumentException("Short name is required");
                 if (productDto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
                 if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
+                var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                    throw new UnauthorizedAccessException("Không thể xác định người dùng từ token.");
+                bool supplierExists = await _supplierRepository.ExistsAsync(s => s.SupplierId == productDto.SupplierId);
+                if (!supplierExists)
+                    throw new KeyNotFoundException($"Supplier with ID {productDto.SupplierId} not found");
+
+
 
                 var math = new Caculate();
                 do

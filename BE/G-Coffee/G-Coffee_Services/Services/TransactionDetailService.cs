@@ -19,7 +19,6 @@ namespace G_Coffee_Services.Services
         private readonly IMapper _mapper;
         private readonly ILogger<TransactionDetailService> _logger;
 
-        // Khởi tạo service với các dependency
         public TransactionDetailService(
             ITransactionRepository transactionRepository,
             IUnitOfWork unitOfWork,
@@ -34,10 +33,8 @@ namespace G_Coffee_Services.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        // Tạo mới TransactionDetail
         public async Task<TransactionDetailDTO> CreateTransactionDetailAsync(TransactionDetailDTO transactionDetailDto)
         {
-            // Kiểm tra đầu vào
             if (transactionDetailDto == null)
             {
                 _logger.LogError("TransactionDetailDTO là null");
@@ -51,10 +48,8 @@ namespace G_Coffee_Services.Services
 
             try
             {
-                // Ghi log TransactionId để debug
                 _logger.LogInformation("Tạo TransactionDetail với TransactionId: {TransactionId}", transactionDetailDto.TransactionId);
 
-                // Kiểm tra TransactionId có tồn tại trong bảng Transactions
                 var transactionExists = await _transactionRepository.AnyAsync(t => t.TransactionId == transactionDetailDto.TransactionId);
                 if (!transactionExists)
                 {
@@ -62,19 +57,15 @@ namespace G_Coffee_Services.Services
                     throw new InvalidOperationException($"Không tìm thấy Transaction với ID {transactionDetailDto.TransactionId}.");
                 }
 
-                // Ánh xạ DTO sang entity
                 var transactionDetailEntity = _mapper.Map<TransactionDetail>(transactionDetailDto);
                 _logger.LogInformation("TransactionId sau ánh xạ: {TransactionId}", transactionDetailEntity.TransactionId);
 
-                // Thiết lập thời gian
                 transactionDetailEntity.CreatedDate = DateTime.UtcNow;
                 transactionDetailEntity.UpdatedDate = DateTime.UtcNow;
 
-                // Thêm vào repository và lưu thay đổi
                 await _transactionDetailRepository.AddAsync(transactionDetailEntity);
                 await _unitOfWork.SaveChangesAsync();
 
-                // Ánh xạ ngược lại DTO và trả về
                 var resultDto = _mapper.Map<TransactionDetailDTO>(transactionDetailEntity);
                 _logger.LogInformation("Đã tạo TransactionDetail thành công với TransactionDetailId: {TransactionDetailId}", resultDto.TransactionDetailId);
                 return resultDto;
@@ -91,7 +82,6 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        // Xóa TransactionDetail
         public async Task DeleteTransactionDetailAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -100,7 +90,6 @@ namespace G_Coffee_Services.Services
                 throw new ArgumentException("Yêu cầu TransactionDetail ID", nameof(id));
             }
 
-            // Chuyển đổi id sang Guid
             if (!Guid.TryParse(id, out Guid guidId))
             {
                 _logger.LogError("TransactionDetail ID không phải là Guid hợp lệ: {Id}", id);
@@ -128,7 +117,6 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        // Lấy tất cả TransactionDetails
         public async Task<IEnumerable<TransactionDetailDTO>> GetAllTransactionDetailsAsync()
         {
             try
@@ -146,7 +134,6 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        // Lấy TransactionDetail theo ID
         public async Task<TransactionDetailDTO> GetTransactionDetailByIdAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -155,7 +142,6 @@ namespace G_Coffee_Services.Services
                 throw new ArgumentException("Yêu cầu TransactionDetail ID", nameof(id));
             }
 
-            // Chuyển đổi id sang Guid
             if (!Guid.TryParse(id, out Guid guidId))
             {
                 _logger.LogError("TransactionDetail ID không phải là Guid hợp lệ: {Id}", id);
@@ -183,10 +169,8 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        // Cập nhật TransactionDetail
         public async Task UpdateTransactionDetailAsync(TransactionDetailDTO transactionDetailDto)
         {
-            // Kiểm tra đầu vào
             if (transactionDetailDto == null)
             {
                 _logger.LogError("TransactionDetailDTO là null");
@@ -208,7 +192,6 @@ namespace G_Coffee_Services.Services
                 _logger.LogInformation("Cập nhật TransactionDetail với TransactionDetailId: {Id}, TransactionId: {TransactionId}",
                     transactionDetailDto.TransactionDetailId, transactionDetailDto.TransactionId);
 
-                // Kiểm tra TransactionId có tồn tại
                 var transactionExists = await _transactionRepository.AnyAsync(t => t.TransactionId == transactionDetailDto.TransactionId);
                 if (!transactionExists)
                 {
@@ -216,7 +199,6 @@ namespace G_Coffee_Services.Services
                     throw new InvalidOperationException($"Không tìm thấy Transaction với ID {transactionDetailDto.TransactionId}.");
                 }
 
-                // Lấy TransactionDetail hiện tại
                 var transactionDetail = await _transactionDetailRepository.GetByIdAsync(transactionDetailDto.TransactionDetailId);
                 if (transactionDetail == null)
                 {
@@ -224,7 +206,6 @@ namespace G_Coffee_Services.Services
                     throw new KeyNotFoundException($"Không tìm thấy TransactionDetail với ID {transactionDetailDto.TransactionDetailId}");
                 }
 
-                // Ánh xạ và cập nhật
                 _mapper.Map(transactionDetailDto, transactionDetail);
                 transactionDetail.UpdatedDate = DateTime.UtcNow;
 

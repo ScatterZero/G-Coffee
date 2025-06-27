@@ -5,8 +5,6 @@ using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace G_Coffee_Services.Services
@@ -26,91 +24,58 @@ namespace G_Coffee_Services.Services
 
         public async Task<SupplierDTO> CreateSupplierAsync(SupplierDTO supplier)
         {
-            if (supplier == null) throw new ArgumentNullException(nameof(supplier));
+            if (supplier == null) throw new ArgumentException("Supplier data cannot be null");
 
-            try
-            {
-                // Correctly map SupplierDTO to Supplier before passing to AddAsync
-                var supplierEntity = _mapper.Map<Supplier>(supplier);
-                supplierEntity.CreatedDate = DateTime.UtcNow;
-                supplierEntity.UpdatedDate = DateTime.UtcNow;
+            var supplierEntity = _mapper.Map<Supplier>(supplier);
+            supplierEntity.CreatedDate = DateTime.UtcNow;
+            supplierEntity.UpdatedDate = DateTime.UtcNow;
 
-                await _supplierRepository.AddAsync(supplierEntity); // Fix: Pass the mapped Supplier entity
-                await _unitOfWork.SaveChangesAsync();
+            await _supplierRepository.AddAsync(supplierEntity);
+            await _unitOfWork.SaveChangesAsync();
 
-                return _mapper.Map<SupplierDTO>(supplierEntity); // Fix: Return the mapped SupplierDTO
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error creating supplier", ex);
-            }
+            return _mapper.Map<SupplierDTO>(supplierEntity);
         }
 
         public async Task DeleteSupplierAsync(string id)
         {
             if (string.IsNullOrEmpty(id)) throw new ArgumentException("Supplier ID is required");
 
-            try
-            {
-                var supplier = await _supplierRepository.GetByIdAsync(id);
-                if (supplier == null) throw new Exception($"Supplier with ID {id} not found");
+            var supplier = await _supplierRepository.GetByIdAsync(id);
+            if (supplier == null)
+                throw new KeyNotFoundException($"Supplier with ID {id} not found");
 
-                _supplierRepository.Remove(supplier);
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error deleting supplier with ID {id}", ex);
-            }
+            _supplierRepository.Remove(supplier);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<SupplierDTO>> GetAllSuppliersAsync()
         {
-            try
-            {
-                var suppliers = await _supplierRepository.GetAllAsync();
-                return _mapper.Map<IEnumerable<SupplierDTO>>(suppliers);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error retrieving all suppliers", ex);
-            }
+            var suppliers = await _supplierRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<SupplierDTO>>(suppliers);
         }
 
         public async Task<SupplierDTO> GetSupplierByIdAsync(string id)
         {
             if (string.IsNullOrEmpty(id)) throw new ArgumentException("Supplier ID is required");
 
-            try
-            {
-                var supplier = await _supplierRepository.GetByIdAsync(id);
-                if (supplier == null) throw new Exception($"Supplier with ID {id} not found");
+            var supplier = await _supplierRepository.GetByIdAsync(id);
+            if (supplier == null)
+                throw new KeyNotFoundException($"Supplier with ID {id} not found");
 
-                return _mapper.Map<SupplierDTO>(supplier);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving supplier with ID {id}", ex);
-            }
+            return _mapper.Map<SupplierDTO>(supplier);
         }
 
         public async Task UpdateSupplierAsync(SupplierDTO supplierDto)
         {
-            if (supplierDto == null) throw new ArgumentNullException(nameof(supplierDto));
+            if (supplierDto == null) throw new ArgumentException("Supplier data cannot be null");
 
-            try
-            {
-                var supplier = await _supplierRepository.GetByIdAsync(supplierDto.SupplierId);
-                if (supplier == null) throw new Exception($"Supplier with ID {supplierDto.SupplierId} not found");
+            var supplier = await _supplierRepository.GetByIdAsync(supplierDto.SupplierId);
+            if (supplier == null)
+                throw new KeyNotFoundException($"Supplier with ID {supplierDto.SupplierId} not found");
 
-                _mapper.Map(supplierDto, supplier);
-                _supplierRepository.Update(supplier); // Removed 'await' since Update is a void method.
-                await _unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error updating supplier with ID {supplierDto.SupplierId}", ex);
-            }
+            _mapper.Map(supplierDto, supplier);
+            _supplierRepository.Update(supplier);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

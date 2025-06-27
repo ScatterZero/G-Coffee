@@ -15,10 +15,10 @@ namespace G_Cofee_Repositories.DTO
         public string UnitOfMeasureId { get; set; }
         public decimal? UnitPrice { get; set; }
         public string? SupplierId { get; set; } // Thêm lại SupplierId
-        public DateTime? CreatedDate { get; set; }
-        public string? CreatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public string? UpdatedBy { get; set; }
-        public bool? IsDisabled { get; set; }
+        //public DateTime? CreatedDate { get; set; }
+        //public string? CreatedBy { get; set; }
+        //public DateTime? UpdatedDate { get; set; }
+        //public string? UpdatedBy { get; set; }
+        //public bool? IsDisabled { get; set; }
     }
 }

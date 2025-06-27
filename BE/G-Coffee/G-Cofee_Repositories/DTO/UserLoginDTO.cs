@@ -11,4 +11,10 @@ namespace G_Cofee_Repositories.DTO
         public string Username { get; set; } = null!;
         public string Password { get; set; } = null!;
     }
+    public class LoginResponseDTO
+    {
+        public string? Username { get; set; } = null!;
+        public string? AccessToken { get; set; } = null!;
+        public int ExpiresIn { get; set; }
+    }
 }
