@@ -89,8 +89,8 @@ namespace G_Coffee_Services.Services
             {
                 AccessToken = assertedToken,
                 Username = loginDto.Username,
-                ExpiresIn = (int)(tokenExpiryTimeStamp - DateTime.UtcNow).TotalSeconds
-
+                ExpiresIn = (int)(tokenExpiryTimeStamp - DateTime.UtcNow).TotalSeconds,
+                Role = user.Role.ToString() // Fix: Assign the RoleEnum directly instead of converting to string
             };
         }
         public async Task RegisterAsync(UserRegisterDTO registerDto)
