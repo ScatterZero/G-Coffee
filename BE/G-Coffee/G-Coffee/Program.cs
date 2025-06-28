@@ -165,6 +165,7 @@ app.UseStaticFiles();
     
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend"); // Sử dụng CORS với policy đã định nghĩa
 app.UseAuthentication(); // Thêm dòng này trước UseAuthorization
 app.UseAuthorization();
 app.MapControllers();
