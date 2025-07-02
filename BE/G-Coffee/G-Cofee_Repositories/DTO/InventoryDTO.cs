@@ -17,5 +17,8 @@ namespace G_Cofee_Repositories.DTO
         public decimal? Quantity { get; set; }
         public DateTime? LastUpdated { get; set; }
 
+        public int Min { get; set; }
+        public int Max { get; set; }
+
     }
 }

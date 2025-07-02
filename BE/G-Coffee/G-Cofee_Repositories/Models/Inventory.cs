@@ -14,6 +14,11 @@ public partial class Inventory
     public decimal? Quantity { get; set; }
 
     public DateTime? LastUpdated { get; set; }
+    public int Min { get; set; }
+
+    public int Max { get; set; }   
+
 
     public virtual Warehouse Warehouse { get; set; } = null!;
+
 }

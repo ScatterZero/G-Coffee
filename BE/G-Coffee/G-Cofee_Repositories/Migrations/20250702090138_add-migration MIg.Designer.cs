@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G_Cofee_Repositories.Migrations
 {
     [DbContext(typeof(GcoffeeDbContext))]
-    [Migration("20250625082044_MIGG")]
-    partial class MIGG
+    [Migration("20250702090138_add-migration MIg")]
+    partial class addmigrationMIg
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,6 +62,12 @@ namespace G_Cofee_Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<int>("Max")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Min")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProductId")
                         .IsRequired()

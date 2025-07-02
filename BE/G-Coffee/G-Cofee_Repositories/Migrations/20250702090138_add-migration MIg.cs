@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace G_Cofee_Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class MIGG : Migration
+    public partial class addmigrationMIg : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -242,7 +242,9 @@ namespace G_Cofee_Repositories.Migrations
                     WarehouseID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     ProductId = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValue: 0m),
-                    LastUpdated = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())")
+                    LastUpdated = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
+                    Min = table.Column<int>(type: "int", nullable: false),
+                    Max = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -60,6 +60,12 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<int>("Max")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Min")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProductId")
                         .IsRequired()
                         .HasMaxLength(13)
