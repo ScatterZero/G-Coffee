@@ -41,10 +41,6 @@ public class ComboPackageService : IComboPackageService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public Task DeleteComboPackageAsync(int id)
-    {
-        throw new NotImplementedException("Use DeleteComboPackageAsync(string id) instead.");
-    }
 
     public async Task<IEnumerable<ComboPackage>> GetAllComboPackagesAsync()
     {

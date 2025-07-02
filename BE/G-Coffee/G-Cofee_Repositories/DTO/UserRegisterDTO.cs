@@ -17,4 +17,17 @@ namespace G_Cofee_Repositories.DTO
         public string Role { get; set; } = null!;
 
     }
+    public class UserUpdateDTO
+    {
+        public string Username { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string? FullName { get; set; }
+        [EnumDataType(typeof(RoleEnum), ErrorMessage = "Role phải là 'User', 'Manager', hoặc 'Admin'.")]
+        public string Role { get; set; } = null!;
+        public bool? IsDisabled { get; set; }
+        public DateTime? UpdatedDate { get; set; } = DateTime.Now;
+
+
+    }
+
 }

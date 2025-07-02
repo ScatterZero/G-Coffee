@@ -23,6 +23,9 @@ public class MappingProfile : Profile
            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
            .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => true));
+        CreateMap<User, UserRegisterDTO>();
+        CreateMap<UserUpdateDTO, User>()
+            .ForMember(dest => dest.UserId, opt => opt.Ignore());// ✅ Không map UserId;
         CreateMap<SupplierDTO, Supplier>()
           .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
           .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))

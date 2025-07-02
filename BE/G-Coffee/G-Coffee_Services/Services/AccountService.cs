@@ -2,6 +2,7 @@
 using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
+using G_Cofee_Repositories.Repositories;
 using G_Coffee_Services.IServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -21,9 +22,11 @@ namespace G_Coffee_Services.Services
         private readonly IMapper _mapper;
         private readonly string _jwtSecret;
         private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, IConfiguration configuration)
+        public AccountService(IAccountRepository accountRepository, IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _accountRepository = accountRepository;
             _mapper = mapper;
@@ -31,28 +34,6 @@ namespace G_Coffee_Services.Services
 
 
         }
-
-        //public async Task<string> LoginAsync(UserLoginDTO loginDto)
-        //{
-        //    var user = await _accountRepository.GetUserByNameAsync(loginDto.Username);
-        //    if (user == null || user.Password != loginDto.Password) // Note: Use proper password hashing in production
-        //        throw new UnauthorizedAccessException("Invalid credentials");
-
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var key = Encoding.ASCII.GetBytes(_jwtSecret);
-        //    var tokenDescriptor = new SecurityTokenDescriptor
-        //    {
-        //        Subject = new ClaimsIdentity(new[]
-        //        {
-        //            new Claim(ClaimTypes.Name, user.Username),
-        //            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
-        //        }),
-        //        Expires = DateTime.UtcNow.AddHours(1),
-        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        //    };
-        //    var token = tokenHandler.CreateToken(tokenDescriptor);
-        //    return tokenHandler.WriteToken(token);
-        //}
 
         public async Task<LoginResponseDTO?> LoginAsync(UserLoginDTO loginDto)
         {
@@ -102,5 +83,53 @@ namespace G_Coffee_Services.Services
             var user = _mapper.Map<User>(registerDto);
             await _accountRepository.AddUserAsync(user);
         }
+
+        public async Task DeleteAccountAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Account ID is required");
+
+            var account = await _accountRepository.GetByIdAsync(id);
+            if (account == null)
+                throw new KeyNotFoundException($"Account with ID {id} not found");
+
+            _accountRepository.Remove(account);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllAccountsAsync()
+        {
+            var accounts = await _accountRepository.GetAllAsync();
+            if (accounts == null || !accounts.Any())
+                throw new KeyNotFoundException("No accounts found");
+
+            return accounts;
+        }
+
+        public async Task<User> GetAccountByIdAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Account ID is required");
+
+            var account = await _accountRepository.GetByIdAsync(id);
+            if (account == null)
+                throw new KeyNotFoundException($"Account with ID {id} not found");
+
+            return account;
+        }
+
+        public async Task UpdateAccountAsync(string id, UserUpdateDTO dto)
+        {
+            var existing = await _accountRepository.GetByIdAsync(id);
+            if (existing == null)
+                throw new KeyNotFoundException($"Account with ID {id} not found");
+
+            // Cập nhật thủ công hoặc dùng AutoMapper
+            _mapper.Map(dto, existing);
+
+            _accountRepository.Update(existing);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
+
 }

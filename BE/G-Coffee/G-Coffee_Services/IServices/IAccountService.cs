@@ -13,5 +13,10 @@ namespace G_Coffee_Services.IServices
     {
         Task<LoginResponseDTO?> LoginAsync(UserLoginDTO loginDto);
         Task RegisterAsync(UserRegisterDTO registerDto);
+        Task<User> GetAccountByIdAsync(string id);
+        Task<IEnumerable<User>> GetAllAccountsAsync();
+        Task UpdateAccountAsync(string id, UserUpdateDTO dt);
+        Task DeleteAccountAsync(string id);
+
     }
 }
