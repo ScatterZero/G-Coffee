@@ -24,17 +24,22 @@ public class PayOSService : IPayOSService
         request.CancelUrl ??= _config["PayOS:CancelUrl"];
         request.ReturnUrl ??= _config["PayOS:ReturnUrl"];
 
-        // Fix for CS7036: Provide a default value for the 'items' parameter
+        // ✅ Rút gọn description tối đa 25 ký tự
+        var desc = request.Description ?? $"DH {request.OrderCode}";
+        if (desc.Length > 25)
+        {
+            desc = desc.Substring(0, 25);
+        }
+
         var payOSRequest = new PaymentData(
             orderCode: request.OrderCode,
             amount: request.Amount,
-            description: request.Description,
+            description: desc, // sử dụng desc đã rút gọn
             items: new List<ItemData>(), // Default empty list for 'items'
             cancelUrl: request.CancelUrl,
             returnUrl: request.ReturnUrl
         );
 
-        // Fix for CS1061: Await the Task<CreatePaymentResult> to access its properties
         var paymentLinkResponse = await _payOS.createPaymentLink(payOSRequest);
 
         return new PaymentResponse
