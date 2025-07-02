@@ -2,7 +2,10 @@
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using Net.payOS;
 
 [Route("api/[controller]")]
@@ -20,7 +23,8 @@ public class PaymentController : ControllerBase
         _payOSService = payOSService;
         _orderService = orderService;
         _comboPackageService = comboPackageService;
-        _checksumKey = config["PayOS:ChecksumKey"];
+        _config = config;
+        _checksumKey = _config["PayOS:ChecksumKey"];
     }
 
     [HttpPost("create-payment-link/{orderId}")]
@@ -33,7 +37,6 @@ public class PaymentController : ControllerBase
         if (order.Status != "PENDING")
             return BadRequest(new { Message = "Chỉ xử lý đơn hàng PENDING" });
 
-        // Tạo orderCode nếu chưa có
         request.OrderCode = order.OrderCode != 0 ? order.OrderCode : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         request.Amount = order.Amount;
         request.Description ??= $"Thanh toán đơn hàng {orderId}";
@@ -45,8 +48,6 @@ public class PaymentController : ControllerBase
         if (string.IsNullOrEmpty(response.CheckoutUrl))
             return BadRequest(new { Message = "Không thể tạo checkout URL từ PayOS" });
 
-        // Cập nhật CheckoutUrl trong đơn hàng
-
         order.CheckoutUrl = response.CheckoutUrl;
         order.OrderCode = response.OrderCode;
         await _orderService.UpdateOrderAsync(order);
@@ -54,27 +55,35 @@ public class PaymentController : ControllerBase
         return Ok(new { CheckoutUrl = response.CheckoutUrl });
     }
 
-
     [HttpPost("webhook")]
     public async Task<IActionResult> Webhook([FromBody] WebhookData webhookData)
     {
         try
         {
-            // Xác minh chữ ký (giả lập cho đồ án)
             if (!VerifyWebhookSignature(webhookData, _checksumKey))
                 return BadRequest(new { Message = "Invalid signature" });
 
-            // Cập nhật trạng thái đơn hàng
             var order = await _orderService.GetOrderByOrderCodeAsync(webhookData.OrderCode);
             if (order != null)
             {
                 order.Status = webhookData.Status;
+
                 if (webhookData.Status == "PAID")
                 {
-                    // Kích hoạt gói combo (giả lập)
+                    var paymentDTO = new PaymentDTO
+                    {
+                        TransactionId = Guid.NewGuid(),
+                        Amount = webhookData.Amount,
+                        OrderCode = webhookData.OrderCode,
+                        PaymentMethod = "PayOS",
+                        PaymentDate = DateTime.Now,
+                        Status = "PAID"
+                    };
+
+                    await _payOSService.CreatePaymentAsync(paymentDTO);
                 }
+
                 await _orderService.UpdateOrderAsync(order);
-                // Removed the call to SaveChangesAsync as it is not part of IOrderService
             }
 
             return Ok(new { Message = "Webhook received" });
@@ -85,26 +94,55 @@ public class PaymentController : ControllerBase
         }
     }
 
-    private bool VerifyWebhookSignature(WebhookData data, string checksumKey)
+    [HttpGet("webhook")]
+    public IActionResult GetWebhook()
     {
-        // TODO: Thêm logic HMAC-SHA256 (xem https://docs.payos.vn)
-        return true; // Giả lập cho đồ án
+        return Ok(new { Message = "Webhook endpoint is alive!" });
     }
+
     [HttpGet("payment/cancel")]
     public IActionResult CancelPayment()
     {
         return new ViewResult
         {
             ViewName = "cancel"
-        }; // ASP.NET Core will automatically look for Views/Payment/cancel.cshtml
+        };
     }
+
     [HttpGet("payment/success")]
     public IActionResult SuccessPayment()
     {
         return new ViewResult
         {
             ViewName = "success"
-        }; // ASP.NET Core will automatically look for Views/Payment/cancel.cshtml
+        };
+    }
+
+    private bool VerifyWebhookSignature(WebhookData data, string secretKey)
+    {
+        // 1. Chuyển đối tượng WebhookData thành JSON
+        var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+
+        // 2. Tạo byte[] từ json và secretKey
+        var keyBytes = Encoding.UTF8.GetBytes(secretKey);
+        var messageBytes = Encoding.UTF8.GetBytes(json);
+
+        // 3. Tính toán HMAC SHA256
+        using var hmac = new HMACSHA256(keyBytes);
+        var hashBytes = hmac.ComputeHash(messageBytes);
+
+        // 4. Convert thành chuỗi hex (chữ thường)
+        var computedSignature = Convert.ToHexString(hashBytes).ToLower();
+
+        // 5. Lấy chữ ký từ header gửi kèm
+        var receivedSignature = Request.Headers["x-signature"].FirstOrDefault();
+
+        // 6. So sánh
+        return !string.IsNullOrEmpty(receivedSignature) &&
+               receivedSignature.Equals(computedSignature, StringComparison.OrdinalIgnoreCase);
     }
 
 }

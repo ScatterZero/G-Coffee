@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G_Cofee_Repositories.Migrations
 {
     [DbContext(typeof(GcoffeeDbContext))]
-    [Migration("20250702090138_add-migration MIg")]
-    partial class addmigrationMIg
+    [Migration("20250702103957_MIg")]
+    partial class MIg
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,6 +160,12 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<long>("OrderCode")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("PaymentDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
@@ -178,10 +184,7 @@ namespace G_Cofee_Repositories.Migrations
                         .HasDefaultValue("Pending");
 
                     b.Property<string>("SupplierId")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("SupplierID");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<Guid>("TransactionId")
                         .HasColumnType("uniqueidentifier")
@@ -199,6 +202,8 @@ namespace G_Cofee_Repositories.Migrations
                         .HasName("PK__Payments__9B556A5863035B0D");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("SupplierId");
 
@@ -677,10 +682,15 @@ namespace G_Cofee_Repositories.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK__Payments__Create__7A672E12");
 
-                    b.HasOne("G_Cofee_Repositories.Models.Supplier", "Supplier")
+                    b.HasOne("G_Cofee_Repositories.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("G_Cofee_Repositories.Models.Supplier", null)
                         .WithMany("Payments")
-                        .HasForeignKey("SupplierId")
-                        .HasConstraintName("FK__Payments__Suppli__797309D9");
+                        .HasForeignKey("SupplierId");
 
                     b.HasOne("G_Cofee_Repositories.Models.Transaction", "Transaction")
                         .WithMany("Payments")
@@ -695,7 +705,7 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.Navigation("CreatedByNavigation");
 
-                    b.Navigation("Supplier");
+                    b.Navigation("Order");
 
                     b.Navigation("Transaction");
 

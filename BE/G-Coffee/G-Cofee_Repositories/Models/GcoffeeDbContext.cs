@@ -104,10 +104,7 @@ public partial class GcoffeeDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasDefaultValue("Pending");
-            entity.Property(e => e.SupplierId)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("SupplierID");
+         
             entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
@@ -118,9 +115,7 @@ public partial class GcoffeeDbContext : DbContext
                 .HasForeignKey(d => d.CreatedBy)
                 .HasConstraintName("FK__Payments__Create__7A672E12");
 
-            entity.HasOne(d => d.Supplier).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.SupplierId)
-                .HasConstraintName("FK__Payments__Suppli__797309D9");
+    
 
             entity.HasOne(d => d.Transaction).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.TransactionId)

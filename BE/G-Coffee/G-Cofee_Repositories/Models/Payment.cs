@@ -9,13 +9,13 @@ public partial class Payment
 
     public Guid TransactionId { get; set; }
 
+    public long OrderCode { get; set; }
+
     public decimal Amount { get; set; }
 
     public string? PaymentMethod { get; set; }
 
     public DateTime? PaymentDate { get; set; }
-
-    public string? SupplierId { get; set; }
 
     public string? Status { get; set; }
 
@@ -29,9 +29,8 @@ public partial class Payment
 
     public virtual User? CreatedByNavigation { get; set; }
 
-    public virtual Supplier? Supplier { get; set; }
-
     public virtual Transaction Transaction { get; set; } = null!;
 
     public virtual User? UpdatedByNavigation { get; set; }
+    public virtual Order Order { get; set; } = null!;
 }

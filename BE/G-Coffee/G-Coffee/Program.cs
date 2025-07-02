@@ -40,7 +40,7 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionDetailRepository, TransactionDetailRepository>();
 builder.Services.AddScoped<IComboPackageRepository, ComboPackageRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 //
 builder.Services.AddScoped<IUnitOfMeasureRepository, UnitOfMeasureRepository>();

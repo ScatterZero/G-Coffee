@@ -69,6 +69,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore());
         CreateMap<Payment, PaymentWrapperResponse>();
         // Combopackage mapping
+        CreateMap<Payment, PaymentDTO>().ReverseMap();
    
 
 
