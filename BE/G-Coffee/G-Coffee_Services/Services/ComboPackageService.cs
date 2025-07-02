@@ -71,11 +71,8 @@ public class ComboPackageService : IComboPackageService
         if (comboPackage == null)
             throw new ArgumentNullException(nameof(comboPackage));
 
-        var existing = await _comboPackageRepository.GetByIdAsync(comboPackage.Id);
-        if (existing == null)
-            throw new KeyNotFoundException($"ComboPackage with ID {comboPackage.Id} not found");
-
         _comboPackageRepository.Update(comboPackage);
         await _unitOfWork.SaveChangesAsync();
     }
+
 }
