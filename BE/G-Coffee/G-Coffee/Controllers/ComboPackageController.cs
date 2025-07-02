@@ -39,7 +39,6 @@ namespace G_Coffee.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> GetComboPackage(string id)
         {
             try
@@ -62,7 +61,6 @@ namespace G_Coffee.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> GetAllComboPackages()
         {
             try
