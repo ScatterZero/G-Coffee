@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace G_Cofee_Repositories.Models;
 
@@ -8,6 +9,9 @@ public partial class Transaction
     public Guid TransactionId { get; set; }
 
     public string TransactionNumber { get; set; } = null!;
+
+    [ForeignKey("Order")]
+    public Guid? OrderId { get; set; }
 
     public DateOnly TransactionDate { get; set; }
 
@@ -38,4 +42,6 @@ public partial class Transaction
     public virtual ICollection<TransactionDetail> TransactionDetails { get; set; } = new List<TransactionDetail>();
 
     public virtual User? UpdatedByNavigation { get; set; }
+
+    public virtual Order? Order { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ namespace G_Cofee_Repositories.Models
         public Guid ComboPackageId { get; set; } // Liên kết với gói combo
         public int Amount { get; set; } // Giá gói
 
-        public string UserId { get; set; } // ID người dùng (liên kết với bảng người dùng)
+        [ForeignKey("User")]
+        public string UserId { get; set; }
         public required string Status { get; set; } // Pending, Paid, Cancelled
         public required string CheckoutUrl { get; set; } // URL thanh toán
         public DateTime CreatedAt { get; set; } // Thời gian tạo
