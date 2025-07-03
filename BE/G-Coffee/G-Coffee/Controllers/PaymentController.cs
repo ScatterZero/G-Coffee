@@ -63,7 +63,7 @@ public class PaymentController : ControllerBase
             if (!VerifyWebhookSignature(webhookData, _checksumKey))
                 return BadRequest(new { Message = "Invalid signature" });
 
-            var order = await _orderService.GetOrderByOrderCodeAsync(webhookData.OrderCode);
+            var order = await _orderService.GetOrderByIdAsync(webhookData.OrderId);
             if (order != null)
             {
                 order.Status = webhookData.Status;
@@ -72,9 +72,8 @@ public class PaymentController : ControllerBase
                 {
                     var paymentDTO = new PaymentDTO
                     {
-                        TransactionId = Guid.NewGuid(),
+                        OrderId = webhookData.OrderId,
                         Amount = webhookData.Amount,
-                        OrderCode = webhookData.OrderCode,
                         PaymentMethod = "PayOS",
                         PaymentDate = DateTime.Now,
                         Status = "PAID"
@@ -94,7 +93,7 @@ public class PaymentController : ControllerBase
         }
     }
 
-    [HttpGet("webhook")]
+    [HttpGet("webhook/Get")]
     public IActionResult GetWebhook()
     {
         return Ok(new { Message = "Webhook endpoint is alive!" });
