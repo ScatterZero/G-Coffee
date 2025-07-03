@@ -7,9 +7,7 @@ public partial class Payment
 {
     public Guid PaymentId { get; set; }
 
-    public Guid TransactionId { get; set; }
-
-    public long OrderCode { get; set; }
+    public Guid OrderId { get; set; }
 
     public decimal Amount { get; set; }
 
@@ -28,8 +26,6 @@ public partial class Payment
     public string? UpdatedBy { get; set; }
 
     public virtual User? CreatedByNavigation { get; set; }
-
-    public virtual Transaction Transaction { get; set; } = null!;
 
     public virtual User? UpdatedByNavigation { get; set; }
     public virtual Order Order { get; set; } = null!;

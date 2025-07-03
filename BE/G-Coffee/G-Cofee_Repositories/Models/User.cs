@@ -36,25 +36,9 @@ public partial class User
 
     public virtual ICollection<Product> ProductUpdatedByNavigations { get; set; } = new List<Product>();
 
-    public virtual ICollection<Supplier> SupplierCreatedByNavigations { get; set; } = new List<Supplier>();
-
-    public virtual ICollection<Supplier> SupplierUpdatedByNavigations { get; set; } = new List<Supplier>();
-
     public virtual ICollection<Transaction> TransactionCreatedByNavigations { get; set; } = new List<Transaction>();
-
-    public virtual ICollection<TransactionDetail> TransactionDetailCreatedByNavigations { get; set; } = new List<TransactionDetail>();
-
-    public virtual ICollection<TransactionDetail> TransactionDetailUpdatedByNavigations { get; set; } = new List<TransactionDetail>();
 
     public virtual ICollection<Transaction> TransactionUpdatedByNavigations { get; set; } = new List<Transaction>();
 
-    public virtual ICollection<UnitsOfMeasure> UnitsOfMeasureCreatedByNavigations { get; set; } = new List<UnitsOfMeasure>();
-
-    public virtual ICollection<UnitsOfMeasure> UnitsOfMeasureUpdatedByNavigations { get; set; } = new List<UnitsOfMeasure>();
-
-    public virtual ICollection<Warehouse> WarehouseCreatedByNavigations { get; set; } = new List<Warehouse>();
-
     public virtual ICollection<Warehouse> WarehouseManagers { get; set; } = new List<Warehouse>();
-
-    public virtual ICollection<Warehouse> WarehouseUpdatedByNavigations { get; set; } = new List<Warehouse>();
 }

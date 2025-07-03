@@ -8,7 +8,7 @@ namespace G_Cofee_Repositories.Models
 {
     public class WebhookData
     {
-        public long OrderCode { get; set; }
+        public Guid OrderId { get; set; }
         public string Status { get; set; } // PENDING, PAID, CANCELLED
         public int Amount { get; set; }
         public string Signature { get; set; } // Chữ ký xác minh

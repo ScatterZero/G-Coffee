@@ -21,13 +21,10 @@ public partial class Warehouse
 
     public string? UpdatedBy { get; set; }
 
-    public virtual User? CreatedByNavigation { get; set; }
-
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 
     public virtual User? Manager { get; set; }
 
     public virtual ICollection<TransactionDetail> TransactionDetails { get; set; } = new List<TransactionDetail>();
 
-    public virtual User? UpdatedByNavigation { get; set; }
 }

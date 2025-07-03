@@ -28,8 +28,6 @@ namespace G_Coffee_Services.Services
                 throw new ArgumentException("Unit of Measure data cannot be null");
 
             var entity = _mapper.Map<UnitsOfMeasure>(dto);
-            entity.CreatedDate = DateTime.UtcNow;
-            entity.UpdatedDate = DateTime.UtcNow;
 
             await _unitOfMeasureRepository.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();

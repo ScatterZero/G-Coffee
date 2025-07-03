@@ -27,13 +27,10 @@ public partial class Supplier
 
     public bool? IsDisabled { get; set; }
 
-    public virtual User? CreatedByNavigation { get; set; }
-
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-    public virtual User? UpdatedByNavigation { get; set; }
 }

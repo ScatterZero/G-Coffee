@@ -11,6 +11,8 @@ public partial class Product
 
     public string? ShortName { get; set; }
 
+    public string ManagerId { get; set; } = null!;
+
     public string UnitOfMeasureId { get; set; } = null!;
 
     public decimal? UnitPrice { get; set; }
@@ -34,6 +36,7 @@ public partial class Product
     public virtual ICollection<TransactionDetail> TransactionDetails { get; set; } = new List<TransactionDetail>();
 
     public virtual UnitsOfMeasure UnitOfMeasure { get; set; } = null!;
+    public virtual User Manager { get; set; } = null!;
 
     public virtual User? UpdatedByNavigation { get; set; }
 }

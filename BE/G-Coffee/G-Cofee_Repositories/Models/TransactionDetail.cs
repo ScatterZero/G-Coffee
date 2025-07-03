@@ -29,11 +29,7 @@ public partial class TransactionDetail
 
     public virtual Product BarcodeNavigation { get; set; } = null!;
 
-    public virtual User? CreatedByNavigation { get; set; }
-
     public virtual Transaction Transaction { get; set; } = null!;
-
-    public virtual User? UpdatedByNavigation { get; set; }
 
     public virtual Warehouse? Warehouse { get; set; }
 }

@@ -10,9 +10,7 @@ namespace G_Cofee_Repositories.DTO
     {
         public Guid PaymentId { get; set; }
 
-        public Guid TransactionId { get; set; }
-
-        public long OrderCode { get; set; }
+        public Guid OrderId { get; set; }
 
         public decimal Amount { get; set; }
 

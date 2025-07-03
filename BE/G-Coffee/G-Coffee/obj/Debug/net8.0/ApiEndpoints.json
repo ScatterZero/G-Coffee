@@ -439,7 +439,7 @@
   {
     "ContainingType": "PaymentController",
     "Method": "GetWebhook",
-    "RelativePath": "api/Payment/webhook",
+    "RelativePath": "api/Payment/webhook/Get",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

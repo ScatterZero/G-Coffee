@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace G_Cofee_Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class MIg : Migration
+    public partial class MIG : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,6 +23,39 @@ namespace G_Cofee_Repositories.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__ComboPackages__3214EC07", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suppliers",
+                columns: table => new
+                {
+                    SupplierID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    SupplierName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
+                    Phone = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    ContactPerson = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
+                    CreatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    IsDisabled = table.Column<bool>(type: "bit", nullable: true, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__Supplier__4BE66694DD378E29", x => x.SupplierID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnitsOfMeasure",
+                columns: table => new
+                {
+                    UnitOfMeasureID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    UnitName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__UnitsOfM__F36083115ED9A740", x => x.UnitOfMeasureID);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,15 +100,16 @@ namespace G_Cofee_Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Suppliers",
+                name: "Products",
                 columns: table => new
                 {
-                    SupplierID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    SupplierName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true),
-                    Phone = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    ContactPerson = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ProductID = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ShortName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ManagerId = table.Column<string>(type: "varchar(50)", nullable: false),
+                    UnitOfMeasureID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValue: 0m),
+                    SupplierID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
                     CreatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -84,73 +118,30 @@ namespace G_Cofee_Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Supplier__4BE66694DD378E29", x => x.SupplierID);
+                    table.PrimaryKey("PK__Products__177800D296728DEB", x => x.ProductID);
                     table.ForeignKey(
-                        name: "FK__Suppliers__Creat__440B1D61",
+                        name: "FK_Products_Users_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK__Products__Create__5165187F",
                         column: x => x.CreatedBy,
                         principalTable: "Users",
                         principalColumn: "UserID");
                     table.ForeignKey(
-                        name: "FK__Suppliers__Updat__44FF419A",
-                        column: x => x.UpdatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UnitsOfMeasure",
-                columns: table => new
-                {
-                    UnitOfMeasureID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    UnitName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
-                    CreatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__UnitsOfM__F36083115ED9A740", x => x.UnitOfMeasureID);
+                        name: "FK__Products__Suppli__4F7CD00D",
+                        column: x => x.SupplierID,
+                        principalTable: "Suppliers",
+                        principalColumn: "SupplierID");
                     table.ForeignKey(
-                        name: "FK__UnitsOfMe__Creat__48CFD27E",
-                        column: x => x.CreatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
+                        name: "FK__Products__UnitOf__5070F446",
+                        column: x => x.UnitOfMeasureID,
+                        principalTable: "UnitsOfMeasure",
+                        principalColumn: "UnitOfMeasureID");
                     table.ForeignKey(
-                        name: "FK__UnitsOfMe__Updat__49C3F6B7",
-                        column: x => x.UpdatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Warehouses",
-                columns: table => new
-                {
-                    WarehouseID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    WarehouseName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    ManagerID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
-                    CreatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__Warehous__2608AFD95DAF5031", x => x.WarehouseID);
-                    table.ForeignKey(
-                        name: "FK__Warehouse__Creat__3E52440B",
-                        column: x => x.CreatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK__Warehouse__Manag__3D5E1FD2",
-                        column: x => x.ManagerID,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK__Warehouse__Updat__3F466844",
+                        name: "FK__Products__Update__52593CB8",
                         column: x => x.UpdatedBy,
                         principalTable: "Users",
                         principalColumn: "UserID");
@@ -194,41 +185,71 @@ namespace G_Cofee_Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Warehouses",
                 columns: table => new
                 {
-                    ProductID = table.Column<string>(type: "varchar(13)", unicode: false, maxLength: 13, nullable: false),
-                    ProductName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ShortName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    UnitOfMeasureID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true, defaultValue: 0m),
-                    SupplierID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    WarehouseID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    WarehouseName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    ManagerID = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
+                    CreatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__Warehous__2608AFD95DAF5031", x => x.WarehouseID);
+                    table.ForeignKey(
+                        name: "FK__Warehouse__Manag__3D5E1FD2",
+                        column: x => x.ManagerID,
+                        principalTable: "Users",
+                        principalColumn: "UserID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Payments",
+                columns: table => new
+                {
+                    PaymentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    PaymentDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
+                    Status = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true, defaultValue: "Pending"),
                     CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
                     CreatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     UpdatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    IsDisabled = table.Column<bool>(type: "bit", nullable: true, defaultValue: false)
+                    SupplierId = table.Column<string>(type: "varchar(50)", nullable: true),
+                    TransactionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Products__177800D296728DEB", x => x.ProductID);
+                    table.PrimaryKey("PK__Payments__9B556A5863035B0D", x => x.PaymentID);
                     table.ForeignKey(
-                        name: "FK__Products__Create__5165187F",
+                        name: "FK_Payments_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Payments_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
+                        principalColumn: "SupplierID");
+                    table.ForeignKey(
+                        name: "FK_Payments_Transactions_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "Transactions",
+                        principalColumn: "TransactionID");
+                    table.ForeignKey(
+                        name: "FK__Payments__Create__7A672E12",
                         column: x => x.CreatedBy,
                         principalTable: "Users",
                         principalColumn: "UserID");
                     table.ForeignKey(
-                        name: "FK__Products__Suppli__4F7CD00D",
-                        column: x => x.SupplierID,
-                        principalTable: "Suppliers",
-                        principalColumn: "SupplierID");
-                    table.ForeignKey(
-                        name: "FK__Products__UnitOf__5070F446",
-                        column: x => x.UnitOfMeasureID,
-                        principalTable: "UnitsOfMeasure",
-                        principalColumn: "UnitOfMeasureID");
-                    table.ForeignKey(
-                        name: "FK__Products__Update__52593CB8",
+                        name: "FK__Payments__Update__7B5B524B",
                         column: x => x.UpdatedBy,
                         principalTable: "Users",
                         principalColumn: "UserID");
@@ -257,55 +278,6 @@ namespace G_Cofee_Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
-                columns: table => new
-                {
-                    PaymentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "(newid())"),
-                    TransactionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrderCode = table.Column<long>(type: "bigint", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    PaymentDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
-                    Status = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true, defaultValue: "Pending"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
-                    CreatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SupplierId = table.Column<string>(type: "varchar(50)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__Payments__9B556A5863035B0D", x => x.PaymentID);
-                    table.ForeignKey(
-                        name: "FK_Payments_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Payments_Suppliers_SupplierId",
-                        column: x => x.SupplierId,
-                        principalTable: "Suppliers",
-                        principalColumn: "SupplierID");
-                    table.ForeignKey(
-                        name: "FK__Payments__Create__7A672E12",
-                        column: x => x.CreatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
-                        name: "FK__Payments__Transa__787EE5A0",
-                        column: x => x.TransactionID,
-                        principalTable: "Transactions",
-                        principalColumn: "TransactionID");
-                    table.ForeignKey(
-                        name: "FK__Payments__Update__7B5B524B",
-                        column: x => x.UpdatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TransactionDetails",
                 columns: table => new
                 {
@@ -330,20 +302,10 @@ namespace G_Cofee_Repositories.Migrations
                         principalTable: "Products",
                         principalColumn: "ProductID");
                     table.ForeignKey(
-                        name: "FK__Transacti__Creat__6EF57B66",
-                        column: x => x.CreatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
-                    table.ForeignKey(
                         name: "FK__Transacti__Trans__6C190EBB",
                         column: x => x.TransactionID,
                         principalTable: "Transactions",
                         principalColumn: "TransactionID");
-                    table.ForeignKey(
-                        name: "FK__Transacti__Updat__6FE99F9F",
-                        column: x => x.UpdatedBy,
-                        principalTable: "Users",
-                        principalColumn: "UserID");
                     table.ForeignKey(
                         name: "FK__Transacti__Wareh__6E01572D",
                         column: x => x.WarehouseID,
@@ -382,9 +344,9 @@ namespace G_Cofee_Repositories.Migrations
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_TransactionID",
+                name: "IX_Payments_TransactionId",
                 table: "Payments",
-                column: "TransactionID");
+                column: "TransactionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_UpdatedBy",
@@ -402,6 +364,11 @@ namespace G_Cofee_Repositories.Migrations
                 column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_ManagerId",
+                table: "Products",
+                column: "ManagerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_SupplierID",
                 table: "Products",
                 column: "SupplierID");
@@ -417,21 +384,6 @@ namespace G_Cofee_Repositories.Migrations
                 column: "UpdatedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Suppliers_CreatedBy",
-                table: "Suppliers",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Suppliers_UpdatedBy",
-                table: "Suppliers",
-                column: "UpdatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TransactionDetails_CreatedBy",
-                table: "TransactionDetails",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TransactionDetails_ProductId",
                 table: "TransactionDetails",
                 column: "ProductId");
@@ -440,11 +392,6 @@ namespace G_Cofee_Repositories.Migrations
                 name: "IX_TransactionDetails_TransactionID",
                 table: "TransactionDetails",
                 column: "TransactionID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TransactionDetails_UpdatedBy",
-                table: "TransactionDetails",
-                column: "UpdatedBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TransactionDetails_WarehouseID",
@@ -478,35 +425,15 @@ namespace G_Cofee_Repositories.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UnitsOfMeasure_CreatedBy",
-                table: "UnitsOfMeasure",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UnitsOfMeasure_UpdatedBy",
-                table: "UnitsOfMeasure",
-                column: "UpdatedBy");
-
-            migrationBuilder.CreateIndex(
                 name: "UQ__Users__536C85E4BBCA6858",
                 table: "Users",
                 column: "Username",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Warehouses_CreatedBy",
-                table: "Warehouses",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Warehouses_ManagerID",
                 table: "Warehouses",
                 column: "ManagerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Warehouses_UpdatedBy",
-                table: "Warehouses",
-                column: "UpdatedBy");
         }
 
         /// <inheritdoc />

@@ -157,9 +157,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<long>("OrderCode")
-                        .HasColumnType("bigint");
-
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
@@ -183,9 +180,8 @@ namespace G_Cofee_Repositories.Migrations
                     b.Property<string>("SupplierId")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<Guid>("TransactionId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("TransactionID");
+                    b.Property<Guid?>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
@@ -233,6 +229,10 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("ManagerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -272,6 +272,8 @@ namespace G_Cofee_Repositories.Migrations
                         .HasName("PK__Products__177800D296728DEB");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ManagerId");
 
                     b.HasIndex("SupplierId");
 
@@ -340,10 +342,6 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.HasKey("SupplierId")
                         .HasName("PK__Supplier__4BE66694DD378E29");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Suppliers");
                 });
@@ -485,13 +483,9 @@ namespace G_Cofee_Repositories.Migrations
                     b.HasKey("TransactionDetailId")
                         .HasName("PK__Transact__F2B27FE63411FC08");
 
-                    b.HasIndex("CreatedBy");
-
                     b.HasIndex("ProductId");
 
                     b.HasIndex("TransactionId");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.HasIndex("WarehouseId");
 
@@ -511,35 +505,12 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("UnitOfMeasureID");
 
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
                     b.Property<string>("UnitName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UnitOfMeasureId")
                         .HasName("PK__UnitsOfM__F36083115ED9A740");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("UnitsOfMeasure", (string)null);
                 });
@@ -640,11 +611,7 @@ namespace G_Cofee_Repositories.Migrations
                     b.HasKey("WarehouseId")
                         .HasName("PK__Warehous__2608AFD95DAF5031");
 
-                    b.HasIndex("CreatedBy");
-
                     b.HasIndex("ManagerId");
-
-                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("Warehouses");
                 });
@@ -689,11 +656,9 @@ namespace G_Cofee_Repositories.Migrations
                         .WithMany("Payments")
                         .HasForeignKey("SupplierId");
 
-                    b.HasOne("G_Cofee_Repositories.Models.Transaction", "Transaction")
+                    b.HasOne("G_Cofee_Repositories.Models.Transaction", null)
                         .WithMany("Payments")
-                        .HasForeignKey("TransactionId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Payments__Transa__787EE5A0");
+                        .HasForeignKey("TransactionId");
 
                     b.HasOne("G_Cofee_Repositories.Models.User", "UpdatedByNavigation")
                         .WithMany("PaymentUpdatedByNavigations")
@@ -704,8 +669,6 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.Navigation("Order");
 
-                    b.Navigation("Transaction");
-
                     b.Navigation("UpdatedByNavigation");
                 });
 
@@ -715,6 +678,12 @@ namespace G_Cofee_Repositories.Migrations
                         .WithMany("ProductCreatedByNavigations")
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK__Products__Create__5165187F");
+
+                    b.HasOne("G_Cofee_Repositories.Models.User", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("G_Cofee_Repositories.Models.Supplier", "Supplier")
                         .WithMany("Products")
@@ -734,26 +703,11 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.Navigation("CreatedByNavigation");
 
+                    b.Navigation("Manager");
+
                     b.Navigation("Supplier");
 
                     b.Navigation("UnitOfMeasure");
-
-                    b.Navigation("UpdatedByNavigation");
-                });
-
-            modelBuilder.Entity("G_Cofee_Repositories.Models.Supplier", b =>
-                {
-                    b.HasOne("G_Cofee_Repositories.Models.User", "CreatedByNavigation")
-                        .WithMany("SupplierCreatedByNavigations")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK__Suppliers__Creat__440B1D61");
-
-                    b.HasOne("G_Cofee_Repositories.Models.User", "UpdatedByNavigation")
-                        .WithMany("SupplierUpdatedByNavigations")
-                        .HasForeignKey("UpdatedBy")
-                        .HasConstraintName("FK__Suppliers__Updat__44FF419A");
-
-                    b.Navigation("CreatedByNavigation");
 
                     b.Navigation("UpdatedByNavigation");
                 });
@@ -784,11 +738,6 @@ namespace G_Cofee_Repositories.Migrations
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.TransactionDetail", b =>
                 {
-                    b.HasOne("G_Cofee_Repositories.Models.User", "CreatedByNavigation")
-                        .WithMany("TransactionDetailCreatedByNavigations")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK__Transacti__Creat__6EF57B66");
-
                     b.HasOne("G_Cofee_Repositories.Models.Product", "BarcodeNavigation")
                         .WithMany("TransactionDetails")
                         .HasForeignKey("ProductId")
@@ -801,11 +750,6 @@ namespace G_Cofee_Repositories.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__Transacti__Trans__6C190EBB");
 
-                    b.HasOne("G_Cofee_Repositories.Models.User", "UpdatedByNavigation")
-                        .WithMany("TransactionDetailUpdatedByNavigations")
-                        .HasForeignKey("UpdatedBy")
-                        .HasConstraintName("FK__Transacti__Updat__6FE99F9F");
-
                     b.HasOne("G_Cofee_Repositories.Models.Warehouse", "Warehouse")
                         .WithMany("TransactionDetails")
                         .HasForeignKey("WarehouseId")
@@ -813,54 +757,19 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.Navigation("BarcodeNavigation");
 
-                    b.Navigation("CreatedByNavigation");
-
                     b.Navigation("Transaction");
-
-                    b.Navigation("UpdatedByNavigation");
 
                     b.Navigation("Warehouse");
                 });
 
-            modelBuilder.Entity("G_Cofee_Repositories.Models.UnitsOfMeasure", b =>
-                {
-                    b.HasOne("G_Cofee_Repositories.Models.User", "CreatedByNavigation")
-                        .WithMany("UnitsOfMeasureCreatedByNavigations")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK__UnitsOfMe__Creat__48CFD27E");
-
-                    b.HasOne("G_Cofee_Repositories.Models.User", "UpdatedByNavigation")
-                        .WithMany("UnitsOfMeasureUpdatedByNavigations")
-                        .HasForeignKey("UpdatedBy")
-                        .HasConstraintName("FK__UnitsOfMe__Updat__49C3F6B7");
-
-                    b.Navigation("CreatedByNavigation");
-
-                    b.Navigation("UpdatedByNavigation");
-                });
-
             modelBuilder.Entity("G_Cofee_Repositories.Models.Warehouse", b =>
                 {
-                    b.HasOne("G_Cofee_Repositories.Models.User", "CreatedByNavigation")
-                        .WithMany("WarehouseCreatedByNavigations")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK__Warehouse__Creat__3E52440B");
-
                     b.HasOne("G_Cofee_Repositories.Models.User", "Manager")
                         .WithMany("WarehouseManagers")
                         .HasForeignKey("ManagerId")
                         .HasConstraintName("FK__Warehouse__Manag__3D5E1FD2");
 
-                    b.HasOne("G_Cofee_Repositories.Models.User", "UpdatedByNavigation")
-                        .WithMany("WarehouseUpdatedByNavigations")
-                        .HasForeignKey("UpdatedBy")
-                        .HasConstraintName("FK__Warehouse__Updat__3F466844");
-
-                    b.Navigation("CreatedByNavigation");
-
                     b.Navigation("Manager");
-
-                    b.Navigation("UpdatedByNavigation");
                 });
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Product", b =>
@@ -899,27 +808,11 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.Navigation("ProductUpdatedByNavigations");
 
-                    b.Navigation("SupplierCreatedByNavigations");
-
-                    b.Navigation("SupplierUpdatedByNavigations");
-
                     b.Navigation("TransactionCreatedByNavigations");
-
-                    b.Navigation("TransactionDetailCreatedByNavigations");
-
-                    b.Navigation("TransactionDetailUpdatedByNavigations");
 
                     b.Navigation("TransactionUpdatedByNavigations");
 
-                    b.Navigation("UnitsOfMeasureCreatedByNavigations");
-
-                    b.Navigation("UnitsOfMeasureUpdatedByNavigations");
-
-                    b.Navigation("WarehouseCreatedByNavigations");
-
                     b.Navigation("WarehouseManagers");
-
-                    b.Navigation("WarehouseUpdatedByNavigations");
                 });
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Warehouse", b =>
