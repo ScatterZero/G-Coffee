@@ -380,7 +380,23 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PaymentController",
+    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
+    "Method": "CalculateSignature",
+    "RelativePath": "api/Payment/calculate-signature",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "G_Coffee_API.Controllers.PaymentController\u002BSignatureRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
     "Method": "CreatePaymentLink",
     "RelativePath": "api/Payment/create-payment-link/{orderId}",
     "HttpMethod": "POST",
@@ -401,7 +417,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PaymentController",
+    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
     "Method": "CancelPayment",
     "RelativePath": "api/Payment/payment/cancel",
     "HttpMethod": "GET",
@@ -411,7 +427,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PaymentController",
+    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
     "Method": "SuccessPayment",
     "RelativePath": "api/Payment/payment/success",
     "HttpMethod": "GET",
@@ -421,23 +437,17 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PaymentController",
+    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
     "Method": "Webhook",
     "RelativePath": "api/Payment/webhook",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "webhookData",
-        "Type": "G_Cofee_Repositories.Models.WebhookData",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PaymentController",
+    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
     "Method": "GetWebhook",
     "RelativePath": "api/Payment/webhook/Get",
     "HttpMethod": "GET",

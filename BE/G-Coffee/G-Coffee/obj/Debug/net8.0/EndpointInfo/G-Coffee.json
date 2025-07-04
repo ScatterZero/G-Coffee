@@ -644,25 +644,6 @@
         "tags": [
           "Payment"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WebhookData"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WebhookData"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/WebhookData"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -699,6 +680,37 @@
         "tags": [
           "Payment"
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Payment/calculate-signature": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignatureRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignatureRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignatureRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1653,6 +1665,10 @@
             "type": "integer",
             "format": "int64"
           },
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
           "comboPackageId": {
             "type": "string",
             "format": "uuid"
@@ -1875,6 +1891,20 @@
         "type": "integer",
         "format": "int32"
       },
+      "SignatureRequest": {
+        "type": "object",
+        "properties": {
+          "dataToSign": {
+            "type": "string",
+            "nullable": true
+          },
+          "checksumKey": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Supplier": {
         "type": "object",
         "properties": {
@@ -1989,6 +2019,11 @@
             "type": "string",
             "nullable": true
           },
+          "orderId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "transactionDate": {
             "type": "string",
             "format": "date"
@@ -2055,6 +2090,9 @@
           },
           "updatedByNavigation": {
             "$ref": "#/components/schemas/User"
+          },
+          "order": {
+            "$ref": "#/components/schemas/Order"
           }
         },
         "additionalProperties": false
@@ -2520,28 +2558,6 @@
             "nullable": true
           },
           "updatedBy": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "WebhookData": {
-        "type": "object",
-        "properties": {
-          "orderId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "signature": {
             "type": "string",
             "nullable": true
           }

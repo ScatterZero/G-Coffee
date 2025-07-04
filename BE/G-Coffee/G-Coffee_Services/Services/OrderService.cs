@@ -3,6 +3,7 @@ using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,25 +15,58 @@ namespace G_Coffee_Services.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOrderRepository _orderRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IComboPackageRepository _comboPackageRepository;
         private readonly IMapper _mapper;
 
-        public OrderService(IUnitOfWork unitOfWork, IOrderRepository orderRepository, IMapper mapper)
+        public OrderService(IUnitOfWork unitOfWork, IOrderRepository orderRepository, IMapper mapper, IAccountRepository accountRepository, IComboPackageRepository comboPackageRepository)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _accountRepository = accountRepository;
+            _comboPackageRepository = comboPackageRepository;
         }
 
+        //public async Task<OrderDTO> CreateOrderAsync(OrderDTO dto)
+        //{
+        //    order.User = await _context.Users.FindAsync(dto.UserId);
+        //    order.ComboPackage = await _context.ComboPackages.FindAsync(dto.ComboPackageId);
+
+        //    if (dto == null)
+        //        throw new ArgumentNullException(nameof(dto));
+
+        //    var entity = _mapper.Map<Order>(dto);
+        //    await _orderRepository.AddAsync(entity);
+        //    await _unitOfWork.SaveChangesAsync();
+        //    return _mapper.Map<OrderDTO>(entity);
+        //}
         public async Task<OrderDTO> CreateOrderAsync(OrderDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
+            // Lấy dữ liệu liên kết từ repository
+            var user = await _accountRepository.GetByIdAsync(dto.UserId);
+            var combo = await _comboPackageRepository.GetByIdAsync(dto.ComboPackageId);
+
+            if (user == null || combo == null)
+                throw new KeyNotFoundException("User hoặc ComboPackage không tồn tại.");
+
+            // Map DTO sang entity
             var entity = _mapper.Map<Order>(dto);
+
+            // Gán navigation để tránh lỗi required
+            entity.User = user;
+            entity.ComboPackage = combo;
+            entity.CreatedAt = DateTime.UtcNow;
+
             await _orderRepository.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
+
             return _mapper.Map<OrderDTO>(entity);
         }
+
 
         public async Task DeleteOrderAsync(Guid id)
         {
