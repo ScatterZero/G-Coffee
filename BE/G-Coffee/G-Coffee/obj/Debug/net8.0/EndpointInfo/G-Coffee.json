@@ -687,7 +687,7 @@
         }
       }
     },
-    "/api/Payment/calculate-signature": {
+    "/api/Payment/test-signature": {
       "post": {
         "tags": [
           "Payment"
@@ -696,17 +696,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SignatureRequest"
+                "$ref": "#/components/schemas/SignatureTestRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SignatureRequest"
+                "$ref": "#/components/schemas/SignatureTestRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SignatureRequest"
+                "$ref": "#/components/schemas/SignatureTestRequest"
               }
             }
           }
@@ -1891,7 +1891,7 @@
         "type": "integer",
         "format": "int32"
       },
-      "SignatureRequest": {
+      "SignatureTestRequest": {
         "type": "object",
         "properties": {
           "dataToSign": {

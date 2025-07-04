@@ -381,22 +381,6 @@
   },
   {
     "ContainingType": "G_Coffee_API.Controllers.PaymentController",
-    "Method": "CalculateSignature",
-    "RelativePath": "api/Payment/calculate-signature",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "G_Coffee_API.Controllers.PaymentController\u002BSignatureRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
     "Method": "CreatePaymentLink",
     "RelativePath": "api/Payment/create-payment-link/{orderId}",
     "HttpMethod": "POST",
@@ -434,6 +418,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
+    "Method": "TestSignature",
+    "RelativePath": "api/Payment/test-signature",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "G_Coffee_API.Controllers.PaymentController\u002BSignatureTestRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
