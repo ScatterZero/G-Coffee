@@ -17,7 +17,7 @@ namespace G_Cofee_Repositories.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public required string Status { get; set; } // Pending, Paid, Cancelled
-        public required string CheckoutUrl { get; set; } // URL thanh toán
+        public  string? CheckoutUrl { get; set; }  // URL thanh toán
         public DateTime CreatedAt { get; set; } // Thời gian tạo
         public required ComboPackage ComboPackage { get; set; } // Quan hệ với gói combo
 
