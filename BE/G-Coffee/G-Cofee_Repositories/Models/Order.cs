@@ -9,7 +9,7 @@ namespace G_Cofee_Repositories.Models
 {
     public class Order
     {
-        public Guid Id { get; set; } // ID tự tăng
+        public Guid Id { get; set; } = new Guid(); // ID tự tăng 
         public long OrderCode { get; set; } // Mã giao dịch (đồng bộ với PayOS)
         public Guid ComboPackageId { get; set; } // Liên kết với gói combo
         public int Amount { get; set; } // Giá gói
