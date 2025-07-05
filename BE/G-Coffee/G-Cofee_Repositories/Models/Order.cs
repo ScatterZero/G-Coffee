@@ -15,12 +15,12 @@ namespace G_Cofee_Repositories.Models
         public int Amount { get; set; } // Giá gói
 
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public required string Status { get; set; } // Pending, Paid, Cancelled
         public  string? CheckoutUrl { get; set; }  // URL thanh toán
         public DateTime CreatedAt { get; set; } // Thời gian tạo
-        public required ComboPackage ComboPackage { get; set; } // Quan hệ với gói combo
+        public ComboPackage? ComboPackage { get; set; } // Quan hệ với gói combo
 
-        public required User User { get; set; } // Quan hệ với người dùng
+        public  User? User { get; set; } // Quan hệ với người dùng
     }
 }
