@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("23e31113-dfb7-4559-ad3f-d7cf1472b166")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("G-Coffee")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+afbff2ac56a36cb7f7bb6995923845d2165d763f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1faf8e8efb8ee53fc449c6960b02bd834a5aad77")]
 [assembly: System.Reflection.AssemblyProductAttribute("G-Coffee")]
 [assembly: System.Reflection.AssemblyTitleAttribute("G-Coffee")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

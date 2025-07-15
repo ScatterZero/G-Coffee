@@ -17,6 +17,8 @@ namespace G_Cofee_Repositories.IRepositories
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
         Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+        Task<TEntity> GetByPropertyAsync(Expression<Func<TEntity, bool>>? filter = null, bool tracked = true, string? includeProperties = null);
+
         void Update(TEntity entity);
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);

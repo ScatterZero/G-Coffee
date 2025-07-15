@@ -1901,6 +1901,10 @@
           "checksumKey": {
             "type": "string",
             "nullable": true
+          },
+          "expectedSignature": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -15,6 +15,10 @@ namespace G_Coffee_Services.IServices
         Task<PaymentDTO> GetPaymentByIdAsync(string id);
         Task<IEnumerable<PaymentDTO>> GetAllPaymentsAsync();
         Task UpdatePaymentAsync(PaymentDTO Payment);
-        Task DeletePaymentAsync(string id);  
+        Task DeletePaymentAsync(string id);
+        //Task<string> CheckOut(Guid orderId);
+        //Task<bool> HandleWebhook(PayOSWebhookRequest payload);
+        //bool IsValidData(string transaction, string transactionSignature);
+
     }
 }

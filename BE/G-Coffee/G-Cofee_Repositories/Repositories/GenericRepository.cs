@@ -49,7 +49,28 @@ namespace G_Cofee_Repositories.Repositories
         {
             await _dbSet.AddRangeAsync(entities, cancellationToken);
         }
+        public async Task<TEntity> GetByPropertyAsync(Expression<Func<TEntity, bool>>? filter = null, bool tracked = true, string? includeProperties = null)
+        {
+            IQueryable<TEntity> query = _dbSet;
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
 
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp.Trim());
+                }
+            }
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.FirstOrDefaultAsync();
+        }
         public void Update(TEntity entity)
         {
             _dbSet.Update(entity);

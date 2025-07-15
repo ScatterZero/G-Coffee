@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,7 @@ namespace G_Cofee_Repositories.IRepositories
     {
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+        Task<IDbContextTransaction> BeginTransactionAsync();
+
     }
 }

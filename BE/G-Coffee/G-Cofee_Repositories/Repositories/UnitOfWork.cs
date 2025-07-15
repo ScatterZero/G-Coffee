@@ -1,11 +1,12 @@
-﻿using System;
+﻿using G_Cofee_Repositories.IRepositories;
+using G_Cofee_Repositories.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using G_Cofee_Repositories.IRepositories;
-using G_Cofee_Repositories.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace G_Cofee_Repositories.Repositories
 {
@@ -36,6 +37,11 @@ namespace G_Cofee_Repositories.Repositories
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
 
         public void Dispose()
