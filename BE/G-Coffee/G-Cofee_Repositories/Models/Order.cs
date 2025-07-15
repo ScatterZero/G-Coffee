@@ -9,18 +9,18 @@ namespace G_Cofee_Repositories.Models
 {
     public class Order
     {
-        public Guid Id { get; set; } // ID tự tăng
+        public Guid Id { get; set; } = new Guid(); // ID tự tăng 
         public long OrderCode { get; set; } // Mã giao dịch (đồng bộ với PayOS)
         public Guid ComboPackageId { get; set; } // Liên kết với gói combo
         public int Amount { get; set; } // Giá gói
 
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public required string Status { get; set; } // Pending, Paid, Cancelled
-        public required string CheckoutUrl { get; set; } // URL thanh toán
+        public  string? CheckoutUrl { get; set; }  // URL thanh toán
         public DateTime CreatedAt { get; set; } // Thời gian tạo
-        public required ComboPackage ComboPackage { get; set; } // Quan hệ với gói combo
+        public ComboPackage? ComboPackage { get; set; } // Quan hệ với gói combo
 
-        public required User User { get; set; } // Quan hệ với người dùng
+        public  User? User { get; set; } // Quan hệ với người dùng
     }
 }
