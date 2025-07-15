@@ -24,13 +24,17 @@ public class PayOSService : IPayOSService
     private readonly static string _checksumKey = Environment.GetEnvironmentVariable("PAYOS_CHECKSUM")
     ?? throw new InvalidOperationException("PAYOS_CHECKSUM environment variable is not set.");
 
-    public PayOSService(IConfiguration config,IMapper mapper, IUnitOfWork unitOfWork, IPaymentRepository paymentRepository, PayOS payOS)
+    public PayOSService(IConfiguration config,IMapper mapper, IUnitOfWork unitOfWork, IGenericRepository<User> userRepository, IGenericRepository<Product> productRepository, PayOS payOS, IGenericRepository<Order> orderRepository, IPaymentRepository paymentRepository)
     {
         _config = config;
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _paymentRepository = paymentRepository ?? throw new ArgumentNullException(nameof(paymentRepository));
         _payOS = payOS;
+        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+        _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
+
 
     }
 

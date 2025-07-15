@@ -56,6 +56,7 @@ builder.Services.AddScoped<IGenericRepository<ComboPackage>, GenericRepository<C
 builder.Services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
 
 
+
 // Đăng ký Services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
@@ -67,7 +68,14 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionDetailService, TransactionDetailService>();
 builder.Services.AddScoped<IComboPackageService, ComboPackageService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IPayOSService, PayOSService>();
+builder.Services.AddScoped<Net.payOS.PayOS>(provider => new Net.payOS.PayOS(
+    "050f13c4-fb28-412f-86c2-79a58f22e5a6", // ClientId
+    "b7fe6d3c-78c6-4f17-9aff-3bbe01c3e3b5", // ApiKey
+    "b1773e45a2acf29661323ae567b946d7cc7b0dd60ab90ddd5f096d5c9dba33cc", // ChecksumKey
+    "https://api-merchant.payos.vn" // BaseUrl
+));
+builder.Services.AddScoped<IPayOSService, PayOSService>(); builder.Services.AddScoped<IPayOSService, PayOSService>();
+
 
 
 // Đăng ký AutoMapper

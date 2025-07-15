@@ -639,18 +639,6 @@
         }
       }
     },
-    "/api/Payment/webhook": {
-      "post": {
-        "tags": [
-          "Payment"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Payment/webhook/Get": {
       "get": {
         "tags": [
@@ -1606,10 +1594,7 @@
       },
       "Order": {
         "required": [
-          "checkoutUrl",
-          "comboPackage",
-          "status",
-          "user"
+          "status"
         ],
         "type": "object",
         "properties": {
@@ -1698,6 +1683,10 @@
           "orderId": {
             "type": "string",
             "format": "uuid"
+          },
+          "orderCode": {
+            "type": "integer",
+            "format": "int64"
           },
           "amount": {
             "type": "number",

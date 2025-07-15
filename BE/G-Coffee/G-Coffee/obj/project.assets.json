@@ -1648,7 +1648,8 @@
         "dependencies": {
           "G-Cofee_Repositories": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.2",
-          "System.IdentityModel.Tokens.Jwt": "8.12.0"
+          "System.IdentityModel.Tokens.Jwt": "8.12.0",
+          "payOS": "1.0.9"
         },
         "compile": {
           "bin/placeholder/G-Coffee_Services.dll": {}
