@@ -43,33 +43,38 @@ namespace G_Coffee_API.Controllers
             }
         }
 
-        [HttpPost("create-payment-link/{orderId}")]
-        public async Task<IActionResult> CreatePaymentLink(Guid orderId, [FromBody] PaymentRequest request)
+        //[HttpPost("create-payment-link/{orderId}")]
+        //public async Task<IActionResult> CreatePaymentLink(Guid orderId, [FromBody] PaymentRequest request)
+        //{
+        //    var order = await _orderService.GetOrderByIdAsync(orderId);
+        //    if (order == null) return NotFound();
+        //    if (order.Status != "PENDING") return BadRequest(new { Message = "Chỉ xử lý đơn hàng PENDING" });
+
+        //    request.OrderCode = order.OrderCode != 0
+        //        ? order.OrderCode
+        //        : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        //    request.Amount = order.Amount;
+        //    request.Description ??= $"Thanh toán đơn hàng {orderId}";
+        //    request.CancelUrl ??= _config["PayOS:CancelUrl"];
+        //    request.ReturnUrl ??= _config["PayOS:ReturnUrl"];
+
+        //    var response = await _payOSService.CreatePaymentLink(request);
+        //    if (string.IsNullOrEmpty(response.CheckoutUrl))
+        //        return BadRequest(new { Message = "Không thể tạo checkout URL từ PayOS" });
+
+        //    order.CheckoutUrl = response.CheckoutUrl;
+        //    order.OrderCode = response.OrderCode;
+        //    await _orderService.UpdateOrderAsync(order);
+
+        //    return Ok(new { CheckoutUrl = response.CheckoutUrl });
+        //}
+        [HttpPost("create-link/{orderId}")]
+        public async Task<IActionResult> CreatePaymentLink([FromRoute] int orderId)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null) return NotFound();
-            if (order.Status != "PENDING") return BadRequest(new { Message = "Chỉ xử lý đơn hàng PENDING" });
-
-            request.OrderCode = order.OrderCode != 0
-                ? order.OrderCode
-                : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-            request.Amount = order.Amount;
-            request.Description ??= $"Thanh toán đơn hàng {orderId}";
-            request.CancelUrl ??= _config["PayOS:CancelUrl"];
-            request.ReturnUrl ??= _config["PayOS:ReturnUrl"];
-
-            var response = await _payOSService.CreatePaymentLink(request);
-            if (string.IsNullOrEmpty(response.CheckoutUrl))
-                return BadRequest(new { Message = "Không thể tạo checkout URL từ PayOS" });
-
-            order.CheckoutUrl = response.CheckoutUrl;
-            order.OrderCode = response.OrderCode;
-            await _orderService.UpdateOrderAsync(order);
-
-            return Ok(new { CheckoutUrl = response.CheckoutUrl });
+            var paymentLink = await _payOSService.CreatePaymentLink(orderId);
+            return Ok(paymentLink);
         }
-
         [HttpGet("payment/cancel")]
         public IActionResult CancelPayment()
         {

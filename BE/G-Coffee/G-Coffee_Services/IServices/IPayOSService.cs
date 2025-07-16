@@ -11,12 +11,14 @@ namespace G_Coffee_Services.IServices
 {
     public interface IPayOSService
     {
-        Task<PaymentResponse> CreatePaymentLink(PaymentRequest request);
-        Task<PaymentDTO> CreatePaymentAsync(PaymentDTO Payment);
-        Task<PaymentDTO> GetPaymentByIdAsync(string id);
-        Task<IEnumerable<PaymentDTO>> GetAllPaymentsAsync();
-        Task UpdatePaymentAsync(PaymentDTO Payment);
-        Task DeletePaymentAsync(string id);
+        Task<object> CreatePaymentLink(int orderID);
+
+        //Task<PaymentResponse> CreatePaymentLink(PaymentRequest request);
+        //Task<PaymentDTO> CreatePaymentAsync(PaymentDTO Payment);
+        //Task<PaymentDTO> GetPaymentByIdAsync(string id);
+        //Task<IEnumerable<PaymentDTO>> GetAllPaymentsAsync();
+        //Task UpdatePaymentAsync(PaymentDTO Payment);
+        //Task DeletePaymentAsync(string id);
 
         Task HandlePaymentWebhook(WebhookType webhookData);
 

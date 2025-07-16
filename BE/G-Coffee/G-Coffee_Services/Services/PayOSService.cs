@@ -40,141 +40,193 @@ public class PayOSService : IPayOSService
 
 
     }
-
-    public async Task<PaymentResponse> CreatePaymentLink(PaymentRequest request)
+    public async Task<object> CreatePaymentLink(int orderID)
     {
-        request.CancelUrl ??= _config["PayOS:CancelUrl"];
-        request.ReturnUrl ??= _config["PayOS:ReturnUrl"];
-
-        // ✅ Rút gọn description tối đa 25 ký tự
-        var desc = request.Description ?? $"DH {request.OrderCode}";
-        if (desc.Length > 25)
-        {
-            desc = desc.Substring(0, 25);
-        }
-
-        var payOSRequest = new PaymentData(
-            orderCode: request.OrderCode,
-            amount: request.Amount,
-            description: desc, // sử dụng desc đã rút gọn
-            items: new List<ItemData>(), // Default empty list for 'items'
-            cancelUrl: request.CancelUrl,
-            returnUrl: request.ReturnUrl
-        );
-
-        var paymentLinkResponse = await _payOS.createPaymentLink(payOSRequest);
-
-        return new PaymentResponse
-        {
-            CheckoutUrl = paymentLinkResponse.checkoutUrl,
-            OrderCode = paymentLinkResponse.orderCode,
-            Amount = request.Amount,
-            Status = "PENDING"
-        };
-    }
-
-    public async Task<PaymentDTO> CreatePaymentAsync(PaymentDTO dto)
-    {
-        if (dto == null)
-            throw new ArgumentException("Payment data cannot be null");
-
-        // Map PaymentDTO to Payment entity instead of UnitsOfMeasure
-        var entity = _mapper.Map<Payment>(dto);
-
-        await _paymentRepository.AddAsync(entity);
-        await _unitOfWork.SaveChangesAsync();
-
-        return _mapper.Map<PaymentDTO>(entity);
-    }
-
-    public async Task DeletePaymentAsync(string id)
-    {
-        if (string.IsNullOrWhiteSpace(id))
-            throw new ArgumentException("Unit of Measure ID is required");
-
-        var unit = await _paymentRepository.GetByIdAsync(id);
-        if (unit == null)
-            throw new KeyNotFoundException($"Unit of Measure with ID {id} not found");
-
-        _paymentRepository.Remove(unit);
-        await _unitOfWork.SaveChangesAsync();
-    }
-
-    public async Task<IEnumerable<PaymentDTO>> GetAllPaymentsAsync()
-    {
-        var entities = await _paymentRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<PaymentDTO>>(entities);
-    }
-
-    public async Task<PaymentDTO> GetPaymentByIdAsync(string id)
-    {
-        if (string.IsNullOrWhiteSpace(id))
-            throw new ArgumentException("Unit of Measure ID is required");
-
-        var unit = await _paymentRepository.GetByIdAsync(id);
-        if (unit == null)
-            throw new KeyNotFoundException($"Unit of Measure with ID {id} not found");
-
-        return _mapper.Map<PaymentDTO>(unit);
-    }
-
-    public async Task UpdatePaymentAsync(PaymentDTO dto)
-    {
-        if (dto == null)
-            throw new ArgumentException("Unit of Measure data cannot be null");
-
-        var existing = await _paymentRepository.GetByIdAsync(dto.PaymentId);
-        if (existing == null)
-            throw new KeyNotFoundException($"Unit of Measure with ID {dto.PaymentId} not found");
-
-        _mapper.Map(dto, existing);
-        _paymentRepository.Update(existing);
-        await _unitOfWork.SaveChangesAsync();
-    }
-
-
-    public bool IsValidData(string transaction, string transactionSignature)
-    {
+        using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            JObject jsonObject = JObject.Parse(transaction);
+            var orderRepo = new GenericRepository<Order>(_context);
+            var order = await orderRepo.GetByIdAsync(orderID);
 
-            var sortedKeys = jsonObject.Properties()
-                                       .Select(p => p.Name)
-                                       .OrderBy(k => k, StringComparer.Ordinal)
-                                       .ToList();
-
-            var sb = new StringBuilder();
-            for (int i = 0; i < sortedKeys.Count; i++)
+            if (order == null)
             {
-                var key = sortedKeys[i];
-                var value = jsonObject[key]?.ToString();
-                sb.Append($"{key}={value}");
-                if (i < sortedKeys.Count - 1)
-                    sb.Append("&");
+                throw new ArgumentException("Order not found");
             }
 
-            string computedSignature = ComputeHmacSHA256(sb.ToString(), _checksumKey);
-            return computedSignature.Equals(transactionSignature, StringComparison.OrdinalIgnoreCase);
+            var description = "Thanh toán đơn hàng" + " " + order.OrderCode;
+            long orderCode = long.Parse(DateTimeOffset.Now.ToString("ffffff"));
+
+            var baseUrl = "http://localhost:3000";
+            //var baseUrl = "https://exe-201-home.vercel.app";
+            var returnSuccessUrl = $"{baseUrl}/success.html?orderCode={orderCode}";
+            var returnCancelledUrl = $"{baseUrl}/cancel.html?orderCode={orderCode}";
+
+            List<ItemData> emptyItems = new List<ItemData>();
+
+            var paymentData = new PaymentData(
+                orderCode,
+                order.Amount,
+                description,
+                emptyItems,
+                returnCancelledUrl,
+                returnSuccessUrl
+            );
+
+            var createPayment = await _payOS.createPaymentLink(paymentData);
+
+            // Cập nhật OrderCode
+            order.OrderCode = orderCode;
+            await orderRepo.UpdateAsync(order);
+
+            await transaction.CommitAsync();
+
+            return new
+            {
+                checkout = createPayment.checkoutUrl
+            };
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine("Error: " + ex.Message);
-            return false;
+            await transaction.RollbackAsync();
+            throw;
         }
     }
 
-    private string ComputeHmacSHA256(string message, string key)
-    {
-        byte[] keyBytes = Encoding.UTF8.GetBytes(key);
-        byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
-        using (var hmac = new HMACSHA256(keyBytes))
-        {
-            byte[] hash = hmac.ComputeHash(messageBytes);
-            return BitConverter.ToString(hash).Replace("-", "").ToLower();
-        }
-    }
+    //public async Task<PaymentResponse> CreatePaymentLink(PaymentRequest request)
+    //{
+    //    request.CancelUrl ??= _config["PayOS:CancelUrl"];
+    //    request.ReturnUrl ??= _config["PayOS:ReturnUrl"];
+
+    //    // ✅ Rút gọn description tối đa 25 ký tự
+    //    var desc = request.Description ?? $"DH {request.OrderCode}";
+    //    if (desc.Length > 25)
+    //    {
+    //        desc = desc.Substring(0, 25);
+    //    }
+
+    //    var payOSRequest = new PaymentData(
+    //        orderCode: request.OrderCode,
+    //        amount: request.Amount,
+    //        description: desc, // sử dụng desc đã rút gọn
+    //        items: new List<ItemData>(), // Default empty list for 'items'
+    //        cancelUrl: request.CancelUrl,
+    //        returnUrl: request.ReturnUrl
+    //    );
+
+    //    var paymentLinkResponse = await _payOS.createPaymentLink(payOSRequest);
+
+    //    return new PaymentResponse
+    //    {
+    //        CheckoutUrl = paymentLinkResponse.checkoutUrl,
+    //        OrderCode = paymentLinkResponse.orderCode,
+    //        Amount = request.Amount,
+    //        Status = "PENDING"
+    //    };
+    //}
+
+    //public async Task<PaymentDTO> CreatePaymentAsync(PaymentDTO dto)
+    //{
+    //    if (dto == null)
+    //        throw new ArgumentException("Payment data cannot be null");
+
+    //    // Map PaymentDTO to Payment entity instead of UnitsOfMeasure
+    //    var entity = _mapper.Map<Payment>(dto);
+
+    //    await _paymentRepository.AddAsync(entity);
+    //    await _unitOfWork.SaveChangesAsync();
+
+    //    return _mapper.Map<PaymentDTO>(entity);
+    //}
+
+    //public async Task DeletePaymentAsync(string id)
+    //{
+    //    if (string.IsNullOrWhiteSpace(id))
+    //        throw new ArgumentException("Unit of Measure ID is required");
+
+    //    var unit = await _paymentRepository.GetByIdAsync(id);
+    //    if (unit == null)
+    //        throw new KeyNotFoundException($"Unit of Measure with ID {id} not found");
+
+    //    _paymentRepository.Remove(unit);
+    //    await _unitOfWork.SaveChangesAsync();
+    //}
+
+    //public async Task<IEnumerable<PaymentDTO>> GetAllPaymentsAsync()
+    //{
+    //    var entities = await _paymentRepository.GetAllAsync();
+    //    return _mapper.Map<IEnumerable<PaymentDTO>>(entities);
+    //}
+
+    //public async Task<PaymentDTO> GetPaymentByIdAsync(string id)
+    //{
+    //    if (string.IsNullOrWhiteSpace(id))
+    //        throw new ArgumentException("Unit of Measure ID is required");
+
+    //    var unit = await _paymentRepository.GetByIdAsync(id);
+    //    if (unit == null)
+    //        throw new KeyNotFoundException($"Unit of Measure with ID {id} not found");
+
+    //    return _mapper.Map<PaymentDTO>(unit);
+    //}
+
+    //public async Task UpdatePaymentAsync(PaymentDTO dto)
+    //{
+    //    if (dto == null)
+    //        throw new ArgumentException("Unit of Measure data cannot be null");
+
+    //    var existing = await _paymentRepository.GetByIdAsync(dto.PaymentId);
+    //    if (existing == null)
+    //        throw new KeyNotFoundException($"Unit of Measure with ID {dto.PaymentId} not found");
+
+    //    _mapper.Map(dto, existing);
+    //    _paymentRepository.Update(existing);
+    //    await _unitOfWork.SaveChangesAsync();
+    //}
+
+
+    //public bool IsValidData(string transaction, string transactionSignature)
+    //{
+    //    try
+    //    {
+    //        JObject jsonObject = JObject.Parse(transaction);
+
+    //        var sortedKeys = jsonObject.Properties()
+    //                                   .Select(p => p.Name)
+    //                                   .OrderBy(k => k, StringComparer.Ordinal)
+    //                                   .ToList();
+
+    //        var sb = new StringBuilder();
+    //        for (int i = 0; i < sortedKeys.Count; i++)
+    //        {
+    //            var key = sortedKeys[i];
+    //            var value = jsonObject[key]?.ToString();
+    //            sb.Append($"{key}={value}");
+    //            if (i < sortedKeys.Count - 1)
+    //                sb.Append("&");
+    //        }
+
+    //        string computedSignature = ComputeHmacSHA256(sb.ToString(), _checksumKey);
+    //        return computedSignature.Equals(transactionSignature, StringComparison.OrdinalIgnoreCase);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine("Error: " + ex.Message);
+    //        return false;
+    //    }
+    //}
+
+    //private string ComputeHmacSHA256(string message, string key)
+    //{
+    //    byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+    //    byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+
+    //    using (var hmac = new HMACSHA256(keyBytes))
+    //    {
+    //        byte[] hash = hmac.ComputeHash(messageBytes);
+    //        return BitConverter.ToString(hash).Replace("-", "").ToLower();
+    //    }
+    //}
 
     public async Task HandlePaymentWebhook(WebhookType webhookData)
     {
