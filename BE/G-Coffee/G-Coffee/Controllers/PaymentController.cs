@@ -70,7 +70,7 @@ namespace G_Coffee_API.Controllers
         //    return Ok(new { CheckoutUrl = response.CheckoutUrl });
         //}
         [HttpPost("create-link/{orderId}")]
-        public async Task<IActionResult> CreatePaymentLink([FromRoute] int orderId)
+        public async Task<IActionResult> CreatePaymentLink([FromRoute] Guid orderId)
         {
             var paymentLink = await _payOSService.CreatePaymentLink(orderId);
             return Ok(paymentLink);

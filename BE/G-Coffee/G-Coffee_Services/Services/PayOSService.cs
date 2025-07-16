@@ -40,7 +40,7 @@ public class PayOSService : IPayOSService
 
 
     }
-    public async Task<object> CreatePaymentLink(int orderID)
+    public async Task<object> CreatePaymentLink(Guid orderID)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try

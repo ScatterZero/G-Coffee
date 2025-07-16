@@ -11,7 +11,7 @@ namespace G_Coffee_Services.IServices
 {
     public interface IPayOSService
     {
-        Task<object> CreatePaymentLink(int orderID);
+        Task<object> CreatePaymentLink(Guid orderID);
 
         //Task<PaymentResponse> CreatePaymentLink(PaymentRequest request);
         //Task<PaymentDTO> CreatePaymentAsync(PaymentDTO Payment);
