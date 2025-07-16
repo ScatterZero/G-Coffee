@@ -382,7 +382,7 @@
   {
     "ContainingType": "G_Coffee_API.Controllers.PaymentController",
     "Method": "CreatePaymentLink",
-    "RelativePath": "api/Payment/create-payment-link/{orderId}",
+    "RelativePath": "api/Payment/create-link/{orderId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -390,11 +390,6 @@
       {
         "Name": "orderId",
         "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "request",
-        "Type": "G_Cofee_Repositories.Models.PaymentRequest",
         "IsRequired": true
       }
     ],
@@ -422,29 +417,25 @@
   },
   {
     "ContainingType": "G_Coffee_API.Controllers.PaymentController",
-    "Method": "TestSignature",
-    "RelativePath": "api/Payment/test-signature",
+    "Method": "HandleWebhook",
+    "RelativePath": "api/Payment/webhook",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "G_Coffee_API.Controllers.PaymentController\u002BSignatureTestRequest",
+        "Name": "webhookData",
+        "Type": "Net.payOS.Types.WebhookType",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "G_Coffee_API.Controllers.PaymentController",
-    "Method": "GetWebhook",
-    "RelativePath": "api/Payment/webhook/Get",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "G_Coffee.Controllers.ProductsController",

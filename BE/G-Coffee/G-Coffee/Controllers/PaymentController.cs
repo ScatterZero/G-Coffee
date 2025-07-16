@@ -33,8 +33,8 @@ namespace G_Coffee_API.Controllers
             _orderService = orderService;
             _comboPackageService = comboPackageService;
             _config = config ?? throw new ArgumentNullException(nameof(config));
-            _checksumKey = _config.GetValue<string>("PayOS:ChecksumKey")
-                           ?? throw new KeyNotFoundException("PayOS:ChecksumKey not found in config");
+            //_checksumKey = _config.GetValue<string>("PayOS:ChecksumKey")
+            //               ?? throw new KeyNotFoundException("PayOS:ChecksumKey not found in config");
 
             // Log cấu hình hiện tại để debug
             foreach (var kvp in _config.AsEnumerable())

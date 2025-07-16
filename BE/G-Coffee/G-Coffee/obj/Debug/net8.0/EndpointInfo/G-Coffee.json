@@ -597,7 +597,7 @@
         }
       }
     },
-    "/api/Payment/create-payment-link/{orderId}": {
+    "/api/Payment/create-link/{orderId}": {
       "post": {
         "tags": [
           "Payment"
@@ -612,37 +612,6 @@
               "format": "uuid"
             }
           }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PaymentRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PaymentRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PaymentRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Payment/webhook/Get": {
-      "get": {
-        "tags": [
-          "Payment"
         ],
         "responses": {
           "200": {
@@ -675,7 +644,7 @@
         }
       }
     },
-    "/api/Payment/test-signature": {
+    "/api/Payment/webhook": {
       "post": {
         "tags": [
           "Payment"
@@ -684,17 +653,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SignatureTestRequest"
+                "$ref": "#/components/schemas/WebhookType"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SignatureTestRequest"
+                "$ref": "#/components/schemas/WebhookType"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SignatureTestRequest"
+                "$ref": "#/components/schemas/WebhookType"
               }
             }
           }
@@ -1735,32 +1704,6 @@
         },
         "additionalProperties": false
       },
-      "PaymentRequest": {
-        "type": "object",
-        "properties": {
-          "orderCode": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "cancelUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "returnUrl": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "Product": {
         "type": "object",
         "properties": {
@@ -1773,10 +1716,6 @@
             "nullable": true
           },
           "shortName": {
-            "type": "string",
-            "nullable": true
-          },
-          "managerId": {
             "type": "string",
             "nullable": true
           },
@@ -1831,9 +1770,6 @@
           "unitOfMeasure": {
             "$ref": "#/components/schemas/UnitsOfMeasure"
           },
-          "manager": {
-            "$ref": "#/components/schemas/User"
-          },
           "updatedByNavigation": {
             "$ref": "#/components/schemas/User"
           }
@@ -1879,24 +1815,6 @@
         ],
         "type": "integer",
         "format": "int32"
-      },
-      "SignatureTestRequest": {
-        "type": "object",
-        "properties": {
-          "dataToSign": {
-            "type": "string",
-            "nullable": true
-          },
-          "checksumKey": {
-            "type": "string",
-            "nullable": true
-          },
-          "expectedSignature": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
       },
       "Supplier": {
         "type": "object",
@@ -2551,6 +2469,100 @@
             "nullable": true
           },
           "updatedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WebhookData": {
+        "type": "object",
+        "properties": {
+          "orderCode": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionDateTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentLinkId": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "desc": {
+            "type": "string",
+            "nullable": true
+          },
+          "counterAccountBankId": {
+            "type": "string",
+            "nullable": true
+          },
+          "counterAccountBankName": {
+            "type": "string",
+            "nullable": true
+          },
+          "counterAccountName": {
+            "type": "string",
+            "nullable": true
+          },
+          "counterAccountNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "virtualAccountName": {
+            "type": "string",
+            "nullable": true
+          },
+          "virtualAccountNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WebhookType": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "desc": {
+            "type": "string",
+            "nullable": true
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/WebhookData"
+          },
+          "signature": {
             "type": "string",
             "nullable": true
           }
