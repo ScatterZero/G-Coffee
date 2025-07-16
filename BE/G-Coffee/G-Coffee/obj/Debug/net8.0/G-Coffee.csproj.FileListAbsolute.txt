@@ -435,3 +435,4 @@ C:\Users\tnqt3\Desktop\CodeFix\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\G-
 C:\Users\tnqt3\Desktop\CodeFix\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.csproj.Up2Date
 C:\Users\tnqt3\Desktop\CodeFix\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\G-Coffee.genruntimeconfig.cache
 C:\Users\tnqt3\Desktop\CodeFix\G-Coffee\BE\G-Coffee\G-Coffee\obj\Debug\net8.0\ref\G-Coffee.dll
+C:\Users\tnqt3\Desktop\CodeFix\G-Coffee\BE\G-Coffee\G-Coffee\bin\Debug\net8.0\G-Coffee.staticwebassets.runtime.json

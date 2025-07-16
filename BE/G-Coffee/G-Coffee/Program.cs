@@ -1,13 +1,17 @@
-﻿using G_Cofee_Repositories.IRepositories;
+﻿using G_Cofee_Repositories.Helper;
+using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Cofee_Repositories.Repositories;
 using G_Coffee_Services.IServices;
 using G_Coffee_Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Net.payOS;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,13 +72,28 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionDetailService, TransactionDetailService>();
 builder.Services.AddScoped<IComboPackageService, ComboPackageService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<Net.payOS.PayOS>(provider => new Net.payOS.PayOS(
-    "050f13c4-fb28-412f-86c2-79a58f22e5a6", // ClientId
-    "b7fe6d3c-78c6-4f17-9aff-3bbe01c3e3b5", // ApiKey
-    "b1773e45a2acf29661323ae567b946d7cc7b0dd60ab90ddd5f096d5c9dba33cc", // ChecksumKey
-    "https://api-merchant.payos.vn" // BaseUrl
-));
 builder.Services.AddScoped<IPayOSService, PayOSService>(); builder.Services.AddScoped<IPayOSService, PayOSService>();
+builder.Services.Configure<PayOSSettings>(
+    builder.Configuration.GetSection("PayOSSettings"));
+builder.Services.AddSingleton(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<PayOSSettings>>().Value;
+    if (string.IsNullOrEmpty(settings.ClientId) ||
+        string.IsNullOrEmpty(settings.ApiKey) ||
+        string.IsNullOrEmpty(settings.ChecksumKey))
+    {
+        throw new InvalidOperationException("PayOS configuration is missing or incomplete");
+    }
+    return new PayOS(settings.ClientId, settings.ApiKey, settings.ChecksumKey);
+});
+
+
+//builder.Services.Configure<Pa>(builder.Configuration.GetSection("PayOSOptions"));
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+});
 
 
 

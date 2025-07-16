@@ -23,8 +23,7 @@ public class PayOSService : IPayOSService
     private readonly IGenericRepository<Product> _productRepository;
     private readonly IGenericRepository<Order> _orderRepository;
     private readonly GcoffeeDbContext _context;
-    private readonly static string _checksumKey = Environment.GetEnvironmentVariable("PAYOS_CHECKSUM")
-    ?? throw new InvalidOperationException("PAYOS_CHECKSUM environment variable is not set.");
+
 
     public PayOSService(IConfiguration config, IMapper mapper, IUnitOfWork unitOfWork, IGenericRepository<User> userRepository, IGenericRepository<Product> productRepository, PayOS payOS, IGenericRepository<Order> orderRepository, IPaymentRepository paymentRepository, GcoffeeDbContext context)
     {
