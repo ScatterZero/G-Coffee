@@ -15,11 +15,13 @@ namespace G_Cofee_Repositories.IRepositories
                         CancellationToken cancellationToken = default);
         Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
         Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
         Task<TEntity> GetByPropertyAsync(Expression<Func<TEntity, bool>>? filter = null, bool tracked = true, string? includeProperties = null);
 
         void Update(TEntity entity);
+        Task<int> UpdateAsync(TEntity entity);
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);

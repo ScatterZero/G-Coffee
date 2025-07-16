@@ -44,7 +44,10 @@ namespace G_Cofee_Repositories.Repositories
         {
             await _dbSet.AddAsync(entity, cancellationToken);
         }
-
+        public async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        }
         public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
             await _dbSet.AddRangeAsync(entities, cancellationToken);
@@ -74,6 +77,15 @@ namespace G_Cofee_Repositories.Repositories
         public void Update(TEntity entity)
         {
             _dbSet.Update(entity);
+        }
+        public async Task<int> UpdateAsync(TEntity entity)
+        {
+            //// Turning off Tracking for UpdateAsync in Entity Framework
+            _context.ChangeTracker.Clear();
+            var tracker = _context.Attach(entity);
+            tracker.State = EntityState.Modified;
+            return await _context.SaveChangesAsync();
+
         }
 
         public void Remove(TEntity entity)

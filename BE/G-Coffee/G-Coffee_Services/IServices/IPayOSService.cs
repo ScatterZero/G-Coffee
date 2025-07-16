@@ -1,5 +1,6 @@
 ﻿using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.Models;
+using Net.payOS.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,9 @@ namespace G_Coffee_Services.IServices
         Task<IEnumerable<PaymentDTO>> GetAllPaymentsAsync();
         Task UpdatePaymentAsync(PaymentDTO Payment);
         Task DeletePaymentAsync(string id);
+
+        Task HandlePaymentWebhook(WebhookType webhookData);
+
         //Task<string> CheckOut(Guid orderId);
         //Task<bool> HandleWebhook(PayOSWebhookRequest payload);
         //bool IsValidData(string transaction, string transactionSignature);
