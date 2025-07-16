@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("G-Coffee")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a9e7edbf5a7513f5c9aed42b7b88277a56ffe5b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+796296dac742baf88a2c8422e12915133dcde984")]
 [assembly: System.Reflection.AssemblyProductAttribute("G-Coffee")]
 [assembly: System.Reflection.AssemblyTitleAttribute("G-Coffee")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
