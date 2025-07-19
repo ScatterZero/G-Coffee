@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/nT1rKPSoZw=",
+  "dgSpecHash": "DpEqBI9aQMo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\tnqt3\\Desktop\\CodeFix\\G-Coffee\\BE\\G-Coffee\\G-Coffee\\G-Coffee.csproj",
+  "projectFilePath": "D:\\Github\\G-CofeeNew\\G-Coffee\\BE\\G-Coffee\\G-Coffee\\G-Coffee.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tnqt3\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\tnqt3\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

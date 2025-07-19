@@ -17,7 +17,6 @@ namespace G_Coffee.Controllers
         {
             _orderService = orderService;
         }
-
         [HttpPost]
         [Authorize(Roles = "User,Manager")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO orderDto)
@@ -38,7 +37,7 @@ namespace G_Coffee.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
+        
         [HttpGet("{id}")]
         [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> GetOrder(Guid id)

@@ -41,30 +41,30 @@ namespace G_Coffee_Services.Services
         //    await _unitOfWork.SaveChangesAsync();
         //    return _mapper.Map<OrderDTO>(entity);
         //}
-        public async Task<OrderDTO> CreateOrderAsync(OrderDTO dto)
+        public async Task<Order> CreateOrderAsync(OrderDTO dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            // Lấy dữ liệu liên kết từ repository
             var user = await _accountRepository.GetByIdAsync(dto.UserId);
             var combo = await _comboPackageRepository.GetByIdAsync(dto.ComboPackageId);
 
             if (user == null || combo == null)
                 throw new KeyNotFoundException("User hoặc ComboPackage không tồn tại.");
 
-            // Map DTO sang entity
             var entity = _mapper.Map<Order>(dto);
-
-            // Gán navigation để tránh lỗi required
             entity.User = user;
             entity.ComboPackage = combo;
+            entity.OrderCode = new Random().Next(100000, 999999);
             entity.CreatedAt = DateTime.UtcNow;
+            entity.Status = "PENDING";
+            entity.Amount = combo.Price;
+            entity.CheckoutUrl = "default-url";
 
             await _orderRepository.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<OrderDTO>(entity);
+            return entity;
         }
 
 

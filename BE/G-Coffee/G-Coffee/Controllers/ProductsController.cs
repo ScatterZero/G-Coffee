@@ -111,7 +111,7 @@ namespace G_Coffee.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> DeleteProduct(string id)
         {
             try

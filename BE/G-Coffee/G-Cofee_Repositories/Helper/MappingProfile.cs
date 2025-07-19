@@ -61,7 +61,11 @@ public class MappingProfile : Profile
         CreateMap<TransactionDetail, TransactionDetailDTO>();
         // Order
         CreateMap<OrderDTO, Order>();
-        CreateMap<Order, OrderDTO>();
+        CreateMap<Order, OrderDTO>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.UserId)) // Map UserId from User entity
+            .ForMember(dest => dest.ComboPackageId, opt => opt.MapFrom(src => src.ComboPackage.Id));
+        // Map ComboPackageId from ComboPackage entity
+        
         // payment mapping
         CreateMap<PaymentWrapperResponse, Payment>()
             .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))

@@ -10,7 +10,7 @@ namespace G_Coffee_Services.IServices
 {
     public interface IOrderService
     {
-        Task<OrderDTO> CreateOrderAsync(OrderDTO Order);
+        Task<Order> CreateOrderAsync(OrderDTO Order);
         Task<Order> GetOrderByIdAsync(Guid id);
         Task<Order> GetOrderByOrderCodeAsync(long id);
         Task<IEnumerable<Order>> GetAllOrdersAsync();

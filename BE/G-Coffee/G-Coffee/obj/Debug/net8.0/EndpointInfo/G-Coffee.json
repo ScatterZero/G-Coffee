@@ -1611,14 +1611,6 @@
       "OrderDTO": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "orderCode": {
-            "type": "integer",
-            "format": "int64"
-          },
           "userId": {
             "type": "string",
             "nullable": true
@@ -1626,18 +1618,6 @@
           "comboPackageId": {
             "type": "string",
             "format": "uuid"
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "checkoutUrl": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
