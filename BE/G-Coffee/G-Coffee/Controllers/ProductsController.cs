@@ -1,4 +1,5 @@
 ﻿using G_Cofee_Repositories.DTO;
+using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -82,23 +83,18 @@ namespace G_Coffee.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> UpdateProduct(string id, [FromBody] ProductDto productDto)
+        public async Task<IActionResult> UpdateProduct(string id, [FromBody] Product product)
         {
-            if (id != productDto.ProductID)
-                return BadRequest("Product ID mismatch");
-
+            if (product == null || product.ProductID != id)
+                return BadRequest("Product data is invalid.");
             try
             {
-                await _productService.UpdateProductAsync(productDto);
-                return NoContent();
+                var updatedProduct = await _productService.UpdateProductAsync(product);
+                return Ok(updatedProduct);
             }
             catch (KeyNotFoundException ex)
             {
                 return NotFound(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -109,6 +105,7 @@ namespace G_Coffee.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Manager,Admin")]

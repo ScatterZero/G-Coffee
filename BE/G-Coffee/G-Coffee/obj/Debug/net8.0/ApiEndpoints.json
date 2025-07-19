@@ -246,7 +246,7 @@
       },
       {
         "Name": "dto",
-        "Type": "G_Cofee_Repositories.DTO.InventoryDTO",
+        "Type": "G_Cofee_Repositories.Models.Inventory",
         "IsRequired": true
       }
     ],
@@ -493,8 +493,8 @@
         "IsRequired": true
       },
       {
-        "Name": "productDto",
-        "Type": "G_Cofee_Repositories.DTO.ProductDto",
+        "Name": "product",
+        "Type": "G_Cofee_Repositories.Models.Product",
         "IsRequired": true
       }
     ],

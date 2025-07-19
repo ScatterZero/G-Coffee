@@ -8,8 +8,6 @@ namespace G_Cofee_Repositories.DTO
 {
     public class InventoryDTO
     {
-        public Guid InventoryId { get; set; }
-
         public string WarehouseId { get; set; } = null!;
 
         public string ProductID { get; set; } = null!;

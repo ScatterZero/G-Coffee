@@ -1,4 +1,5 @@
 ﻿using G_Cofee_Repositories.DTO;
+using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -79,7 +80,7 @@ namespace G_Coffee.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> UpdateInventory(string id, [FromBody] InventoryDTO dto)
+        public async Task<IActionResult> UpdateInventory(string id, [FromBody] Inventory dto)
         {
             try
             {

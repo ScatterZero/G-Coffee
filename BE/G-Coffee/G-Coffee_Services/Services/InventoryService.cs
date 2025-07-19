@@ -22,7 +22,7 @@ namespace G_Coffee_Services.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<InventoryDTO> CreateInventoryAsync(InventoryDTO inventoryDto)
+        public async Task<Inventory> CreateInventoryAsync(InventoryDTO inventoryDto)
         {
             if (inventoryDto == null)
                 throw new ArgumentException("Inventory DTO cannot be null");
@@ -30,8 +30,8 @@ namespace G_Coffee_Services.Services
             var entity = _mapper.Map<Inventory>(inventoryDto);
             await _inventoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
+            return entity;
 
-            return _mapper.Map<InventoryDTO>(entity);
         }
 
         public async Task DeleteInventoryAsync(string id)
@@ -50,13 +50,15 @@ namespace G_Coffee_Services.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<InventoryDTO>> GetAllInventorysAsync()
+        public async Task<IEnumerable<Inventory>> GetAllInventorysAsync()
         {
             var inventories = await _inventoryRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<InventoryDTO>>(inventories);
+            if (inventories == null || !inventories.Any())
+                throw new KeyNotFoundException("No inventories found");
+            return inventories;
         }
 
-        public async Task<InventoryDTO> GetInventoryByIdAsync(string id)
+        public async Task<Inventory> GetInventoryByIdAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentException("Inventory ID is required");
@@ -67,22 +69,24 @@ namespace G_Coffee_Services.Services
             var inventory = await _inventoryRepository.GetByIdAsync(guidId);
             if (inventory == null)
                 throw new KeyNotFoundException($"Inventory with ID {id} not found");
+            return inventory;
 
-            return _mapper.Map<InventoryDTO>(inventory);
         }
 
-        public async Task UpdateInventoryAsync(InventoryDTO inventoryDto)
+        public async Task<Inventory> UpdateInventoryAsync(Inventory inventory)
         {
-            if (inventoryDto == null)
-                throw new ArgumentException("Inventory DTO cannot be null");
-
-            var inventory = await _inventoryRepository.GetByIdAsync(inventoryDto.InventoryId);
             if (inventory == null)
-                throw new KeyNotFoundException($"Inventory with ID {inventoryDto.InventoryId} not found");
-
-            _mapper.Map(inventoryDto, inventory);
-            _inventoryRepository.Update(inventory);
+                throw new ArgumentException("Inventory cannot be null");
+            if (string.IsNullOrWhiteSpace(inventory.InventoryId.ToString()))
+                throw new ArgumentException("Inventory ID is required");
+            var existingInventory = await _inventoryRepository.GetByIdAsync(inventory.InventoryId);
+            if (existingInventory == null)
+                throw new KeyNotFoundException($"Inventory with ID {inventory.InventoryId} not found");
+            _mapper.Map(inventory, existingInventory);
+            _inventoryRepository.Update(existingInventory);
             await _unitOfWork.SaveChangesAsync();
+            return existingInventory;
+
         }
     }
 }

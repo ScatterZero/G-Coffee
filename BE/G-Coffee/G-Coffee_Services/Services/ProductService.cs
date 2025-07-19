@@ -33,7 +33,7 @@ namespace G_Coffee_Services.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ProductDto> CreateProductAsync(ProductDto productDto)
+        public async Task<Product> CreateProductAsync(ProductDto productDto)
         {
             try
             {
@@ -51,21 +51,20 @@ namespace G_Coffee_Services.Services
                     throw new KeyNotFoundException($"Supplier with ID {productDto.SupplierId} not found");
 
 
+                var product = _mapper.Map<Product>(productDto);
 
                 var math = new Caculate();
                 do
                 {
-                    productDto.ProductID = math.GenerateEan13Barcode();
-                } while (await _productRepository.ExistsAsync(p => p.ProductID == productDto.ProductID));
+                    product.ProductID = math.GenerateEan13Barcode();
+                } while (await _productRepository.ExistsAsync(p => p.ProductID == product.ProductID));
 
-                var product = _mapper.Map<Product>(productDto);
                 product.CreatedDate = DateTime.UtcNow;
                 product.UpdatedDate = DateTime.UtcNow;
 
                 await _productRepository.AddAsync(product);
                 await _unitOfWork.SaveChangesAsync();
-
-                return _mapper.Map<ProductDto>(product);
+                return product;
             }
             catch (DbUpdateException ex)
             {
@@ -77,7 +76,7 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        public async Task<ProductDto> GetProductByIdAsync(string id)
+        public async Task<Product> GetProductByIdAsync(string id)
         {
             try
             {
@@ -86,7 +85,7 @@ namespace G_Coffee_Services.Services
                 var product = await _productRepository.GetByIdAsync(id);
                 if (product == null) throw new KeyNotFoundException($"Product with ID {id} not found");
 
-                return _mapper.Map<ProductDto>(product);
+                return _mapper.Map<Product>(product);
             }
             catch (Exception ex)
             {
@@ -107,24 +106,24 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        public async Task UpdateProductAsync(ProductDto productDto)
+        public async Task<Product> UpdateProductAsync(Product product)
         {
             try
             {
-                if (productDto == null) throw new ArgumentNullException(nameof(productDto));
-                if (string.IsNullOrEmpty(productDto.ProductID)) throw new ArgumentException("Product ID is required");
-                if (string.IsNullOrEmpty(productDto.ProductName)) throw new ArgumentException("Product name is required");
-                if (string.IsNullOrEmpty(productDto.UnitOfMeasureId)) throw new ArgumentException("Unit of measure is required");
-                if (productDto.UnitPrice == null || productDto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
-
-                var product = await _productRepository.GetByIdAsync(productDto.ProductID);
-                if (product == null) throw new KeyNotFoundException("Product not found");
-
-                _mapper.Map(productDto, product);
-                product.UpdatedDate = DateTime.UtcNow;
-
-                _productRepository.Update(product);
+                if (product == null) throw new ArgumentNullException(nameof(product));
+                if (string.IsNullOrEmpty(product.ProductID)) throw new ArgumentException("Product ID is required");
+                var existingProduct = await _productRepository.GetByIdAsync(product.ProductID);
+                if (existingProduct == null) throw new KeyNotFoundException($"Product with ID {product.ProductID} not found");
+                // Update properties
+                existingProduct.ProductName = product.ProductName;
+                existingProduct.UnitOfMeasureId = product.UnitOfMeasureId;
+                existingProduct.ShortName = product.ShortName;
+                existingProduct.SupplierId = product.SupplierId;
+                existingProduct.UnitPrice = product.UnitPrice;
+                existingProduct.UpdatedDate = DateTime.UtcNow;
+                _productRepository.Update(existingProduct);
                 await _unitOfWork.SaveChangesAsync();
+                return existingProduct;
             }
             catch (DbUpdateException ex)
             {
@@ -134,6 +133,8 @@ namespace G_Coffee_Services.Services
             {
                 throw new Exception("Unexpected error while updating product", ex);
             }
+
+
         }
 
         public async Task DeleteProductAsync(string id)
@@ -191,12 +192,8 @@ namespace G_Coffee_Services.Services
                     if (dto.SupplierId == null) throw new ArgumentException("Supplier ID is required");
                     if (dto.UnitPrice == null || dto.UnitPrice < 0) throw new ArgumentException("Unit price must be non-negative");
 
-                    do
-                    {
-                        dto.ProductID = math.GenerateEan13Barcode();
-                    } while (await _productRepository.ExistsAsync(p => p.ProductID == dto.ProductID));
-
                     var product = _mapper.Map<Product>(dto);
+                    product.ProductID = math.GenerateEan13Barcode();
                     product.CreatedDate = DateTime.UtcNow;
                     product.UpdatedDate = DateTime.UtcNow;
                     productsToAdd.Add(product);

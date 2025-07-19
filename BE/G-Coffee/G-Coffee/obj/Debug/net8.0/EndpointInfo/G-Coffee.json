@@ -386,17 +386,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InventoryDTO"
+                "$ref": "#/components/schemas/Inventory"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/InventoryDTO"
+                "$ref": "#/components/schemas/Inventory"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/InventoryDTO"
+                "$ref": "#/components/schemas/Inventory"
               }
             }
           }
@@ -755,17 +755,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductDto"
+                "$ref": "#/components/schemas/Product"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductDto"
+                "$ref": "#/components/schemas/Product"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ProductDto"
+                "$ref": "#/components/schemas/Product"
               }
             }
           }
@@ -1528,10 +1528,6 @@
       "InventoryDTO": {
         "type": "object",
         "properties": {
-          "inventoryId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "warehouseId": {
             "type": "string",
             "nullable": true
@@ -1759,10 +1755,6 @@
       "ProductDto": {
         "type": "object",
         "properties": {
-          "productID": {
-            "type": "string",
-            "nullable": true
-          },
           "productName": {
             "type": "string",
             "nullable": true

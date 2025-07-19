@@ -5,7 +5,7 @@ namespace G_Cofee_Repositories.Models;
 
 public partial class Inventory
 {
-    public Guid InventoryId { get; set; }
+    public Guid InventoryId { get; set; } = new Guid();
 
     public string WarehouseId { get; set; } = null!;
 

@@ -10,10 +10,10 @@ namespace G_Coffee_Services.IServices
 {
     public interface IInventoryService 
     {
-        Task<InventoryDTO> CreateInventoryAsync(InventoryDTO inventory);
-        Task<InventoryDTO> GetInventoryByIdAsync(string id);
-        Task<IEnumerable<InventoryDTO>> GetAllInventorysAsync();
-        Task UpdateInventoryAsync(InventoryDTO inventory);
+        Task<Inventory> CreateInventoryAsync(InventoryDTO inventory);
+        Task<Inventory> GetInventoryByIdAsync(string id);
+        Task<IEnumerable<Inventory>> GetAllInventorysAsync();
+        Task<Inventory> UpdateInventoryAsync(Inventory inventory);
         Task DeleteInventoryAsync(string id);
     }
 }

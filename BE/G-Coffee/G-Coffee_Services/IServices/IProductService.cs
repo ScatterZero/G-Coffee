@@ -10,10 +10,10 @@ namespace G_Coffee_Services.IServices
 {
     public interface IProductService
     {
-        Task<ProductDto> CreateProductAsync(ProductDto productDto);
-        Task<ProductDto> GetProductByIdAsync(string id);
+        Task<Product> CreateProductAsync(ProductDto productDto);
+        Task<Product> GetProductByIdAsync(string id);
         Task<IEnumerable<ProductDto>> GetAllProductsAsync();
-        Task UpdateProductAsync(ProductDto productDto);
+        Task<Product> UpdateProductAsync(Product productid);
         Task DeleteProductAsync(string id);
         Task<IEnumerable<ProductDto>> GetProductsBySupplierIdAsync(string supplierId);
     }
