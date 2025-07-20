@@ -62,7 +62,7 @@ namespace G_Coffee.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager,User")]
+        [Authorize(Roles = "Manager,User,Admin")]
         public async Task<IActionResult> GetAllOrders()
         {
             try
@@ -77,7 +77,7 @@ namespace G_Coffee.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> UpdateOrder(string id, [FromBody] Order order)
         {
             try
@@ -106,7 +106,7 @@ namespace G_Coffee.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "User,Manager,Admin")]
         public async Task<IActionResult> DeleteOrder(Guid id)
         {
             try

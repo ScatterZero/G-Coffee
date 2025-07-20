@@ -83,7 +83,7 @@ namespace G_Coffee_Services.Services
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            return await _orderRepository.GetAllAsync();
+            return await _orderRepository.GetAllOrderAsync();
         }
 
         public async Task<Order> GetOrderByIdAsync(Guid id)
@@ -91,11 +91,7 @@ namespace G_Coffee_Services.Services
             if (id == Guid.Empty)
                 throw new ArgumentException("Order ID is required");
 
-            var order = await _orderRepository.GetByIdAsync(id);
-            if (order == null)
-                throw new KeyNotFoundException($"Order with ID {id} not found");
-
-            return order;
+            return await _orderRepository.GetByOrderIdAsync(id);
         }
 
         public async Task<Order> GetOrderByOrderCodeAsync(long orderCode)
@@ -103,7 +99,7 @@ namespace G_Coffee_Services.Services
             if (orderCode <= 0)
                 throw new ArgumentException("Order code must be greater than zero");
 
-            var order = (await _orderRepository.FindAsync(o => o.OrderCode == orderCode)).FirstOrDefault();
+            var order = (await _orderRepository.FindOrderAsync(o => o.OrderCode == orderCode)).FirstOrDefault();
             if (order == null)
                 throw new KeyNotFoundException($"Order with code {orderCode} not found");
 
@@ -115,7 +111,7 @@ namespace G_Coffee_Services.Services
             if (string.IsNullOrWhiteSpace(checkoutUrl))
                 throw new ArgumentException("Checkout URL is required");
 
-            var order = (await _orderRepository.FindAsync(o => o.CheckoutUrl == checkoutUrl)).FirstOrDefault();
+            var order = (await _orderRepository.FindOrderAsync(o => o.CheckoutUrl == checkoutUrl)).FirstOrDefault();
             if (order == null)
                 throw new KeyNotFoundException($"Order with checkout URL {checkoutUrl} not found");
 

@@ -11,6 +11,8 @@ namespace G_Cofee_Repositories.Models
     {
         public Guid Id { get; set; } = new Guid(); // ID tự tăng 
         public long OrderCode { get; set; }
+        [ForeignKey("ComboPackage")]
+
         public Guid ComboPackageId { get; set; } // Liên kết với gói combo
         public int Amount { get; set; } // Giá gói
 
@@ -19,8 +21,8 @@ namespace G_Cofee_Repositories.Models
         public required string Status { get; set; } 
         public  string? CheckoutUrl { get; set; }  // URL thanh toán
         public DateTime CreatedAt { get; set; } // Thời gian tạo
-        public ComboPackage? ComboPackage { get; set; } // Quan hệ với gói combo
+        public virtual ComboPackage? ComboPackage { get; set; } // Quan hệ với gói combo
 
-        public  User? User { get; set; } // Quan hệ với người dùng
+        public virtual User? User { get; set; } // Quan hệ với người dùng
     }
 }

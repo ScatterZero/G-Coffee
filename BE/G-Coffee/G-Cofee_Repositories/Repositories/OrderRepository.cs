@@ -13,15 +13,43 @@ namespace G_Cofee_Repositories.Repositories
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         private readonly GcoffeeDbContext _context;
+
         public OrderRepository(GcoffeeDbContext context) : base(context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task<bool> ExistsAsync(Expression<Func<Order, bool>> predicate)
+
+
+        public async Task<Order> GetByOrderIdAsync(object id, CancellationToken cancellationToken = default)
         {
-            // Corrected to use the Suppliers DbSet instead of Products
-            return await _context.Orders.AnyAsync(predicate);
+            return await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.ComboPackage)
+                .FirstOrDefaultAsync(o => o.Id == (Guid)id, cancellationToken);
+        }
+
+        public async Task<IEnumerable<Order>> GetAllOrderAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.ComboPackage)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<Order>> FindOrderAsync(Expression<Func<Order, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.ComboPackage)
+                .Where(predicate)
+                .ToListAsync(cancellationToken);
+        }
+
+        public Task<bool> ExistsAsync(Expression<Func<Order, bool>> value)
+        {
+            return _context.Orders.AnyAsync(value);
         }
     }
- 
 }
+ 
+

@@ -11,7 +11,10 @@ namespace G_Cofee_Repositories.IRepositories
     public interface IOrderRepository : IGenericRepository<Order>
     {
         Task<bool> ExistsAsync(Expression<Func<Order, bool>> value);
+        Task<IEnumerable<Order>> FindOrderAsync(Expression<Func<Order, bool>> predicate, CancellationToken cancellationToken = default);
 
+        Task<IEnumerable<Order>> GetAllOrderAsync(CancellationToken cancellationToken = default);
+        Task<Order> GetByOrderIdAsync(object id, CancellationToken cancellationToken = default);
     }
 
 
