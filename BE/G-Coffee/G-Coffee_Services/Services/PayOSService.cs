@@ -52,7 +52,7 @@ public class PayOSService : IPayOSService
                 throw new ArgumentException("Order not found");
             }
 
-            var description = "Thanh toán đơn hàng" + " " + order.OrderCode;
+            var description = "Thanh toan" + order.OrderCode.ToString().Substring(0, 5);
             long orderCode = long.Parse(DateTimeOffset.Now.ToString("ffffff"));
 
             var baseUrl = "http://localhost:3000";
