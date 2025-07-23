@@ -93,12 +93,12 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             try
             {
                 var products = await _productRepository.GetAllAsync();
-                return _mapper.Map<IEnumerable<ProductDto>>(products);
+                return _mapper.Map<IEnumerable<Product>>(products);
             }
             catch (Exception ex)
             {
