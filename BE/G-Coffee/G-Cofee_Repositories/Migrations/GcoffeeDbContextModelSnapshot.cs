@@ -66,7 +66,7 @@ namespace G_Cofee_Repositories.Migrations
                     b.Property<int>("Min")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductId")
+                    b.Property<string>("ProductID")
                         .IsRequired()
                         .HasMaxLength(13)
                         .IsUnicode(false)
@@ -89,7 +89,7 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.HasIndex("WarehouseId");
 
-                    b.HasIndex(new[] { "ProductId" }, "IDX_Inventory_ProductID");
+                    b.HasIndex(new[] { "ProductID" }, "IDX_Inventory_ProductID");
 
                     b.ToTable("Inventory", (string)null);
                 });
@@ -104,7 +104,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("CheckoutUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .IsUnicode(false)
                         .HasColumnType("varchar(500)");
@@ -129,7 +128,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasDefaultValue("Pending");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id")
@@ -162,6 +160,9 @@ namespace G_Cofee_Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<long>("OrderCode")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
@@ -235,10 +236,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("ManagerId")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -278,8 +275,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasName("PK__Products__177800D296728DEB");
 
                     b.HasIndex("CreatedBy");
-
-                    b.HasIndex("ManagerId");
 
                     b.HasIndex("SupplierId");
 
@@ -649,9 +644,7 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.HasOne("G_Cofee_Repositories.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ComboPackage");
 
@@ -698,12 +691,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK__Products__Create__5165187F");
 
-                    b.HasOne("G_Cofee_Repositories.Models.User", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("G_Cofee_Repositories.Models.Supplier", "Supplier")
                         .WithMany("Products")
                         .HasForeignKey("SupplierId")
@@ -721,8 +708,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasConstraintName("FK__Products__Update__52593CB8");
 
                     b.Navigation("CreatedByNavigation");
-
-                    b.Navigation("Manager");
 
                     b.Navigation("Supplier");
 

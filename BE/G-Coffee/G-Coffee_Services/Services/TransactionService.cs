@@ -63,7 +63,7 @@ namespace G_Coffee_Services.Services
                     inventory = new Inventory
                     {
                         InventoryId = Guid.NewGuid(),
-                        ProductId = detailDto.ProductId,
+                        ProductID = detailDto.ProductId,
                         WarehouseId = detailDto.WarehouseId,
                         Quantity = 0,
                         LastUpdated = DateTime.Now
@@ -74,7 +74,7 @@ namespace G_Coffee_Services.Services
                 inventory.LastUpdated = DateTime.Now;
 
                 var exists = await _inventoryRepository.ExistsAsync(i =>
-                    i.ProductId == detailDto.ProductId &&
+                    i.ProductID == detailDto.ProductId &&
                     i.WarehouseId == detailDto.WarehouseId);
 
                 if (!exists)

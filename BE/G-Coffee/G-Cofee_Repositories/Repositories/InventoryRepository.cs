@@ -27,7 +27,7 @@ namespace G_Cofee_Repositories.Repositories
             if (string.IsNullOrEmpty(productId) || string.IsNullOrEmpty(warehouseId))
                 throw new ArgumentException("ProductId and WarehouseId cannot be null or empty.");
 
-            return await GetByStringIdAsync(i => i.ProductId == productId && i.WarehouseId == warehouseId, cancellationToken);
+            return await GetByStringIdAsync(i => i.ProductID == productId && i.WarehouseId == warehouseId, cancellationToken);
         }
 
     }

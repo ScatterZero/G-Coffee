@@ -55,12 +55,12 @@ public partial class GcoffeeDbContext : DbContext
 
             entity.ToTable("Inventory");
 
-            entity.HasIndex(e => e.ProductId, "IDX_Inventory_ProductID");
+            entity.HasIndex(e => e.ProductID, "IDX_Inventory_ProductID");
 
             entity.Property(e => e.InventoryId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("InventoryID");
-            entity.Property(e => e.ProductId)
+            entity.Property(e => e.ProductID)
                 .HasMaxLength(13)
                 .IsUnicode(false);
             entity.Property(e => e.LastUpdated)
