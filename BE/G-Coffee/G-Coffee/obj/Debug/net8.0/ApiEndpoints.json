@@ -246,7 +246,7 @@
       },
       {
         "Name": "dto",
-        "Type": "G_Cofee_Repositories.Models.Inventory",
+        "Type": "G_Cofee_Repositories.DTO.InventoryUpdateDTO",
         "IsRequired": true
       }
     ],

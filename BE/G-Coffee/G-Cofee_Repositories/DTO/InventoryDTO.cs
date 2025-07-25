@@ -19,4 +19,15 @@ namespace G_Cofee_Repositories.DTO
         public int Max { get; set; }
 
     }
+    public class InventoryUpdateDTO
+    {
+        public Guid InventoryId { get; set; }
+        public string WarehouseId { get; set; } = null!;
+        public string ProductID { get; set; } = null!;
+        public decimal? Quantity { get; set; }
+        public DateTime? LastUpdated { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
+    }
+
 }

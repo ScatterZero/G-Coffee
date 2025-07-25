@@ -13,7 +13,7 @@ namespace G_Coffee_Services.IServices
         Task<Inventory> CreateInventoryAsync(InventoryDTO inventory);
         Task<Inventory> GetInventoryByIdAsync(string id);
         Task<IEnumerable<Inventory>> GetAllInventorysAsync();
-        Task<Inventory> UpdateInventoryAsync(Inventory inventory);
+        Task<InventoryUpdateDTO> UpdateInventoryAsync(InventoryUpdateDTO inventory);
         Task DeleteInventoryAsync(string id);
     }
 }

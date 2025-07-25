@@ -80,18 +80,18 @@ namespace G_Coffee.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> UpdateInventory(string id, [FromBody] Inventory dto)
+        public async Task<IActionResult> UpdateInventory(string id, [FromBody] InventoryUpdateDTO dto)
         {
             try
             {
                 if (!Guid.TryParse(id, out var parsedId))
                     return BadRequest("Invalid Inventory ID format");
+                if (dto == null)
+                    return BadRequest("Inventory data cannot be null");
 
-                if (parsedId != dto.InventoryId)
-                    return BadRequest("Inventory ID mismatch");
 
-                await _inventoryService.UpdateInventoryAsync(dto);
-                return NoContent();
+                 var result = await _inventoryService.UpdateInventoryAsync(dto);
+                return Ok(result);
             }
             catch (ArgumentException ex)
             {

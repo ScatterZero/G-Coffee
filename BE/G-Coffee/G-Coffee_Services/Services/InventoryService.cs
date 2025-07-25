@@ -73,7 +73,7 @@ namespace G_Coffee_Services.Services
 
         }
 
-        public async Task<Inventory> UpdateInventoryAsync(Inventory inventory)
+        public async Task<InventoryUpdateDTO> UpdateInventoryAsync(InventoryUpdateDTO inventory)
         {
             if (inventory == null)
                 throw new ArgumentException("Inventory cannot be null");
@@ -82,10 +82,16 @@ namespace G_Coffee_Services.Services
             var existingInventory = await _inventoryRepository.GetByIdAsync(inventory.InventoryId);
             if (existingInventory == null)
                 throw new KeyNotFoundException($"Inventory with ID {inventory.InventoryId} not found");
+            existingInventory.WarehouseId = inventory.WarehouseId ?? existingInventory.WarehouseId;
+            existingInventory.ProductID = inventory.ProductID ?? existingInventory.ProductID;
+            existingInventory.Quantity = inventory.Quantity ?? existingInventory.Quantity;
+            existingInventory.LastUpdated = inventory.LastUpdated ?? existingInventory.LastUpdated;
+            existingInventory.Min = inventory.Min != 0 ? inventory.Min : existingInventory.Min;
+            existingInventory.Max = inventory.Max != 0 ? inventory.Max : existingInventory.Max;
             _mapper.Map(inventory, existingInventory);
             _inventoryRepository.Update(existingInventory);
             await _unitOfWork.SaveChangesAsync();
-            return existingInventory;
+            return _mapper.Map<InventoryUpdateDTO>(existingInventory);
 
         }
     }

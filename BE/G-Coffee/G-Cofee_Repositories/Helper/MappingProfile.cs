@@ -40,8 +40,10 @@ public class MappingProfile : Profile
         CreateMap<InventoryDTO, Inventory>()
             .ForMember(dest => dest.InventoryId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()));
         CreateMap<Inventory, InventoryDTO>().ReverseMap();
+        CreateMap<Inventory, InventoryUpdateDTO>();
+        CreateMap<InventoryUpdateDTO, Inventory>();
         // Warehouse mapping
-            CreateMap<WarehouseDTO, Warehouse>()
+        CreateMap<WarehouseDTO, Warehouse>()
                 .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.WarehouseId))
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
