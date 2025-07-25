@@ -39,9 +39,9 @@ public class MappingProfile : Profile
         CreateMap<UnitsOfMeasure, UnitOfMeasureDTO>();
         CreateMap<InventoryDTO, Inventory>()
             .ForMember(dest => dest.InventoryId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()));
-        CreateMap<Inventory, InventoryDTO>().ReverseMap();
-        CreateMap<Inventory, InventoryUpdateDTO>();
-        CreateMap<InventoryUpdateDTO, Inventory>();
+        CreateMap<Inventory, InventoryDTO>()
+            .ForMember(dest => dest.ProductID, opt => opt.MapFrom(src => src.Product.ProductID))
+            .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.Warehouse.WarehouseId.ToString()));
         // Warehouse mapping
         CreateMap<WarehouseDTO, Warehouse>()
                 .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.WarehouseId))

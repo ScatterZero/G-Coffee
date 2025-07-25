@@ -21,7 +21,7 @@ public partial class Warehouse
 
     public string? UpdatedBy { get; set; }
 
-    public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
+    //public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 
     public virtual User? Manager { get; set; }
 

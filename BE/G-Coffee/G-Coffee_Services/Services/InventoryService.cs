@@ -14,20 +14,38 @@ namespace G_Coffee_Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IMapper _mapper;
+        private readonly IProductRepository _productRepository;
+        private readonly IWarehouseRepository _warehouseRepository;
 
-        public InventoryService(IUnitOfWork unitOfWork, IInventoryRepository inventoryRepository, IMapper mapper)
+        public InventoryService(IUnitOfWork unitOfWork, IInventoryRepository inventoryRepository, IMapper mapper, IProductRepository productRepository, IWarehouseRepository warehouseRepository)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _productRepository = productRepository;
+            _warehouseRepository = warehouseRepository;
         }
 
         public async Task<Inventory> CreateInventoryAsync(InventoryDTO inventoryDto)
         {
             if (inventoryDto == null)
                 throw new ArgumentException("Inventory DTO cannot be null");
+            var existingProduct = await _productRepository.GetByIdAsync(inventoryDto.ProductID);
+            if (existingProduct == null)
+                throw new KeyNotFoundException($"Product with ID {inventoryDto.ProductID} not found");
+            var existingWarehouse = await _warehouseRepository.GetByIdAsync(inventoryDto.WarehouseId);
+            if (existingWarehouse == null)
+                throw new KeyNotFoundException($"Warehouse with ID {inventoryDto.WarehouseId} not found");
 
             var entity = _mapper.Map<Inventory>(inventoryDto);
+            entity.InventoryId = Guid.NewGuid();
+            entity.LastUpdated = DateTime.UtcNow;
+            entity.Min = inventoryDto.Min != 0 ? inventoryDto.Min : 0;
+            entity.Max = inventoryDto.Max != 0 ? inventoryDto.Max : 0;
+            entity.WarehouseId = inventoryDto.WarehouseId;
+            entity.ProductID = inventoryDto.ProductID;
+
+
             await _inventoryRepository.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
             return entity;
@@ -52,10 +70,10 @@ namespace G_Coffee_Services.Services
 
         public async Task<IEnumerable<Inventory>> GetAllInventorysAsync()
         {
-            var inventories = await _inventoryRepository.GetAllAsync();
+            var inventories = await _inventoryRepository.GetAllInventory();
             if (inventories == null || !inventories.Any())
                 throw new KeyNotFoundException("No inventories found");
-            return inventories;
+            return _mapper.Map<IEnumerable<Inventory>>(inventories);
         }
 
         public async Task<Inventory> GetInventoryByIdAsync(string id)
@@ -66,10 +84,10 @@ namespace G_Coffee_Services.Services
             if (!Guid.TryParse(id, out var guidId))
                 throw new ArgumentException("Invalid Inventory ID format");
 
-            var inventory = await _inventoryRepository.GetByIdAsync(guidId);
+            var inventory = await _inventoryRepository.GetByInventoryIdAsync(guidId);
             if (inventory == null)
                 throw new KeyNotFoundException($"Inventory with ID {id} not found");
-            return inventory;
+            return _mapper.Map<Inventory>(inventory);
 
         }
 

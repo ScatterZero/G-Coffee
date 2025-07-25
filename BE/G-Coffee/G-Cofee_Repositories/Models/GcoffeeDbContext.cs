@@ -74,10 +74,10 @@ public partial class GcoffeeDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("WarehouseID");
 
-            entity.HasOne(d => d.Warehouse).WithMany(p => p.Inventories)
-                .HasForeignKey(d => d.WarehouseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Inventory__Wareh__59FA5E80");
+            //entity.HasOne(d => d.Warehouse).WithMany(p => p.Inventories)
+            //    .HasForeignKey(d => d.WarehouseId)
+            //    .OnDelete(DeleteBehavior.ClientSetNull)
+            //    .HasConstraintName("FK__Inventory__Wareh__59FA5E80");
         });
 
         modelBuilder.Entity<Payment>(entity =>

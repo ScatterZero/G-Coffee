@@ -1486,45 +1486,6 @@
         },
         "additionalProperties": false
       },
-      "Inventory": {
-        "type": "object",
-        "properties": {
-          "inventoryId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "warehouseId": {
-            "type": "string",
-            "nullable": true
-          },
-          "productID": {
-            "type": "string",
-            "nullable": true
-          },
-          "quantity": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "lastUpdated": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "min": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "max": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "warehouse": {
-            "$ref": "#/components/schemas/Warehouse"
-          }
-        },
-        "additionalProperties": false
-      },
       "InventoryDTO": {
         "type": "object",
         "properties": {
@@ -2456,13 +2417,6 @@
           },
           "updatedBy": {
             "type": "string",
-            "nullable": true
-          },
-          "inventories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Inventory"
-            },
             "nullable": true
           },
           "manager": {

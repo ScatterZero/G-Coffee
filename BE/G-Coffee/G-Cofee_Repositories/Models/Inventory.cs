@@ -20,5 +20,6 @@ public partial class Inventory
 
 
     public virtual Warehouse Warehouse { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 
 }

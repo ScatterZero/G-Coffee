@@ -1,6 +1,7 @@
 ﻿using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,25 @@ namespace G_Cofee_Repositories.Repositories
 
             return await GetByStringIdAsync(i => i.ProductID == productId && i.WarehouseId == warehouseId, cancellationToken);
         }
+        public async Task<Inventory> GetByInventoryIdAsync(Guid Id, CancellationToken cancellationToken = default)
+        {
+         
+            if (Id == Guid.Empty)
+                throw new ArgumentException("Inventory ID cannot be empty.", nameof(Id));
+            return await _context.Inventories
+                .Include(i => i.Warehouse)
+                .Include(i => i.Product)
+                .FirstOrDefaultAsync(i => i.InventoryId == Id, cancellationToken);
+        }
 
+
+        public async Task<IEnumerable<Inventory>> GetAllInventory()
+        {
+            return await _context.Inventories
+                .Include(i => i.Warehouse)
+                .Include(i => i.Product)
+                .ToListAsync();
+        }
     }
 
 }
