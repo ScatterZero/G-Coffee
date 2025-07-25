@@ -13,7 +13,7 @@ namespace G_Coffee_Services.IServices
         Task<Product> CreateProductAsync(ProductDto productDto);
         Task<Product> GetProductByIdAsync(string id);
         Task<IEnumerable<Product>> GetAllProductsAsync();
-        Task<Product> UpdateProductAsync(Product productid);
+        Task<ReponseUpdateProductDto> UpdateProductAsync(ReponseUpdateProductDto productid);
         Task DeleteProductAsync(string id);
         Task<IEnumerable<ProductDto>> GetProductsBySupplierIdAsync(string supplierId);
     }

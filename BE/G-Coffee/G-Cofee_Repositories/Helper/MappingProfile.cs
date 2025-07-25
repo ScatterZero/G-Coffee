@@ -12,6 +12,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => src.SupplierId))
            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
            .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+        CreateMap<Product, ReponseUpdateProductDto>();
+
 
         // Ánh xạ Product -> ProductDto
         CreateMap<Product, ProductDto>()
@@ -22,14 +24,14 @@ public class MappingProfile : Profile
         CreateMap<UserRegisterDTO, User>()
            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
            .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
-           .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => true));
+           .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => false));
         CreateMap<User, UserRegisterDTO>();
         CreateMap<UserUpdateDTO, User>()
             .ForMember(dest => dest.UserId, opt => opt.Ignore());// ✅ Không map UserId;
         CreateMap<SupplierDTO, Supplier>()
           .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
           .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow))
-          .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => true))
+          .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => false))
           .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
         CreateMap<Supplier, SupplierDTO>(); // If reverse mapping is needed
         CreateMap<UnitOfMeasureDTO, UnitsOfMeasure>()

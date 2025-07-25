@@ -25,7 +25,7 @@ public partial class Product
 
     public string? UpdatedBy { get; set; }
 
-    public bool? IsDisabled { get; set; }
+    public bool? IsDisabled { get; set; } 
 
     public virtual User? CreatedByNavigation { get; set; }
 

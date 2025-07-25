@@ -83,7 +83,7 @@ namespace G_Coffee.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> UpdateProduct(string id, [FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct(string id, [FromBody] ReponseUpdateProductDto product)
         {
             if (product == null || product.ProductID != id)
                 return BadRequest("Product data is invalid.");

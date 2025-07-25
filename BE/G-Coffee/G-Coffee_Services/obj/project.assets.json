@@ -2679,11 +2679,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Github\\G-CofeeNew\\G-Coffee\\BE\\G-Coffee\\G-Coffee_Services\\G-Coffee_Services.csproj",
+      "projectUniqueName": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Coffee_Services\\G-Coffee_Services.csproj",
       "projectName": "G-Coffee_Services",
-      "projectPath": "D:\\Github\\G-CofeeNew\\G-Coffee\\BE\\G-Coffee\\G-Coffee_Services\\G-Coffee_Services.csproj",
+      "projectPath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Coffee_Services\\G-Coffee_Services.csproj",
       "packagesPath": "C:\\Users\\tnqt3\\.nuget\\packages\\",
-      "outputPath": "D:\\Github\\G-CofeeNew\\G-Coffee\\BE\\G-Coffee\\G-Coffee_Services\\obj\\",
+      "outputPath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Coffee_Services\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2705,8 +2705,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Github\\G-CofeeNew\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj": {
-              "projectPath": "D:\\Github\\G-CofeeNew\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj"
+            "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj": {
+              "projectPath": "D:\\Github\\Coffee\\G-Coffee\\BE\\G-Coffee\\G-Cofee_Repositories\\G-Cofee_Repositories.csproj"
             }
           }
         }

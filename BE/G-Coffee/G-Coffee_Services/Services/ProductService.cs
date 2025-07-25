@@ -4,6 +4,7 @@ using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.Helper;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
+using G_Cofee_Repositories.Repositories;
 using G_Coffee_Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -24,13 +25,15 @@ namespace G_Coffee_Services.Services
         private readonly IMapper _mapper;
         private readonly ISupplierRepository _supplierRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public ProductService(IUnitOfWork unitOfWork, IProductRepository productRepository, IMapper mapper, ISupplierRepository supplierRepository, IHttpContextAccessor httpContextAccessor)
+        private readonly IUnitOfMeasureRepository _unitOfMeasureRepository;
+        public ProductService(IUnitOfWork unitOfWork, IProductRepository productRepository, IMapper mapper, ISupplierRepository supplierRepository, IHttpContextAccessor httpContextAccessor, IUnitOfMeasureRepository unitOfMeasureRepository)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _supplierRepository = supplierRepository;
             _httpContextAccessor = httpContextAccessor;
+            _unitOfMeasureRepository = unitOfMeasureRepository;
         }
 
         public async Task<Product> CreateProductAsync(ProductDto productDto)
@@ -106,7 +109,7 @@ namespace G_Coffee_Services.Services
             }
         }
 
-        public async Task<Product> UpdateProductAsync(Product product)
+        public async Task<ReponseUpdateProductDto> UpdateProductAsync(ReponseUpdateProductDto product)
         {
             try
             {
@@ -114,6 +117,10 @@ namespace G_Coffee_Services.Services
                 if (string.IsNullOrEmpty(product.ProductID)) throw new ArgumentException("Product ID is required");
                 var existingProduct = await _productRepository.GetByIdAsync(product.ProductID);
                 if (existingProduct == null) throw new KeyNotFoundException($"Product with ID {product.ProductID} not found");
+                var supplierExists = await _supplierRepository.ExistsAsync(s => s.SupplierId == product.SupplierId);
+                if (!supplierExists) throw new ArgumentException($"Supplier with ID {product.SupplierId} not found");
+                var uomExists = await _unitOfMeasureRepository.ExistsAsync(u => u.UnitOfMeasureId == product.UnitOfMeasureId);
+                if (!uomExists) throw new ArgumentException($"UnitOfMeasure with ID {product.UnitOfMeasureId} not found");
                 // Update properties
                 existingProduct.ProductName = product.ProductName;
                 existingProduct.UnitOfMeasureId = product.UnitOfMeasureId;
@@ -121,9 +128,11 @@ namespace G_Coffee_Services.Services
                 existingProduct.SupplierId = product.SupplierId;
                 existingProduct.UnitPrice = product.UnitPrice;
                 existingProduct.UpdatedDate = DateTime.UtcNow;
+                existingProduct.UpdatedBy = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+                existingProduct.IsDisabled = product.IsDisabled ?? false;
                 _productRepository.Update(existingProduct);
                 await _unitOfWork.SaveChangesAsync();
-                return existingProduct;
+                return _mapper.Map<ReponseUpdateProductDto>(existingProduct);
             }
             catch (DbUpdateException ex)
             {

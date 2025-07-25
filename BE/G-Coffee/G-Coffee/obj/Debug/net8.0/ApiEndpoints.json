@@ -494,7 +494,7 @@
       },
       {
         "Name": "product",
-        "Type": "G_Cofee_Repositories.Models.Product",
+        "Type": "G_Cofee_Repositories.DTO.ReponseUpdateProductDto",
         "IsRequired": true
       }
     ],
