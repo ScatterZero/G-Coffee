@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G_Cofee_Repositories.Migrations
 {
     [DbContext(typeof(GcoffeeDbContext))]
-    [Migration("20250703121442_MIG")]
-    partial class MIG
+    [Migration("20250726102940_MIGG12")]
+    partial class MIGG12
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,7 +69,7 @@ namespace G_Cofee_Repositories.Migrations
                     b.Property<int>("Min")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductId")
+                    b.Property<string>("ProductID")
                         .IsRequired()
                         .HasMaxLength(13)
                         .IsUnicode(false)
@@ -92,7 +92,7 @@ namespace G_Cofee_Repositories.Migrations
 
                     b.HasIndex("WarehouseId");
 
-                    b.HasIndex(new[] { "ProductId" }, "IDX_Inventory_ProductID");
+                    b.HasIndex(new[] { "ProductID" }, "IDX_Inventory_ProductID");
 
                     b.ToTable("Inventory", (string)null);
                 });
@@ -107,7 +107,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("CheckoutUrl")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .IsUnicode(false)
                         .HasColumnType("varchar(500)");
@@ -131,10 +130,15 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("varchar(50)")
                         .HasDefaultValue("Pending");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(50)");
+
                     b.HasKey("Id")
                         .HasName("PK__Orders__3214EC07");
 
                     b.HasIndex("ComboPackageId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -160,6 +164,9 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<long>("OrderCode")
+                        .HasColumnType("bigint");
+
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
@@ -180,12 +187,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("varchar(50)")
                         .HasDefaultValue("Pending");
 
-                    b.Property<string>("SupplierId")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<Guid?>("TransactionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -200,10 +201,6 @@ namespace G_Cofee_Repositories.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("SupplierId");
-
-                    b.HasIndex("TransactionId");
 
                     b.HasIndex("UpdatedBy");
 
@@ -231,10 +228,6 @@ namespace G_Cofee_Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<string>("ManagerId")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -275,8 +268,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasName("PK__Products__177800D296728DEB");
 
                     b.HasIndex("CreatedBy");
-
-                    b.HasIndex("ManagerId");
 
                     b.HasIndex("SupplierId");
 
@@ -351,9 +342,9 @@ namespace G_Cofee_Repositories.Migrations
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Transaction", b =>
                 {
-                    b.Property<Guid>("TransactionId")
+                    b.Property<string>("TransactionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("TransactionID")
                         .HasDefaultValueSql("(newid())");
 
@@ -366,6 +357,15 @@ namespace G_Cofee_Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("CustomerAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerPhone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .ValueGeneratedOnAdd()
@@ -385,19 +385,8 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("decimal(18, 2)")
                         .HasDefaultValue(0m);
 
-                    b.Property<decimal?>("TotalQuantity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18, 2)")
-                        .HasDefaultValue(0m);
-
                     b.Property<DateOnly>("TransactionDate")
                         .HasColumnType("date");
-
-                    b.Property<string>("TransactionNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("TransactionType")
                         .IsRequired()
@@ -421,11 +410,6 @@ namespace G_Cofee_Repositories.Migrations
                     b.HasIndex("SupplierId");
 
                     b.HasIndex("UpdatedBy");
-
-                    b.HasIndex(new[] { "TransactionNumber" }, "IDX_Transactions_TransactionNumber");
-
-                    b.HasIndex(new[] { "TransactionNumber" }, "UQ__Transact__E733A2BFD789BA6C")
-                        .IsUnique();
 
                     b.ToTable("Transactions");
                 });
@@ -462,8 +446,9 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("decimal(18, 2)")
                         .HasDefaultValue(0m);
 
-                    b.Property<Guid>("TransactionId")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("TransactionID");
 
                     b.Property<decimal>("UnitPrice")
@@ -598,6 +583,9 @@ namespace G_Cofee_Repositories.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("ManagerID");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -621,11 +609,19 @@ namespace G_Cofee_Repositories.Migrations
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Inventory", b =>
                 {
+                    b.HasOne("G_Cofee_Repositories.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("G_Cofee_Repositories.Models.Warehouse", "Warehouse")
-                        .WithMany("Inventories")
+                        .WithMany()
                         .HasForeignKey("WarehouseId")
-                        .IsRequired()
-                        .HasConstraintName("FK__Inventory__Wareh__59FA5E80");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
 
                     b.Navigation("Warehouse");
                 });
@@ -639,7 +635,13 @@ namespace G_Cofee_Repositories.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__Orders__ComboPackageID__12345678");
 
+                    b.HasOne("G_Cofee_Repositories.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("ComboPackage");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Payment", b =>
@@ -654,14 +656,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("G_Cofee_Repositories.Models.Supplier", null)
-                        .WithMany("Payments")
-                        .HasForeignKey("SupplierId");
-
-                    b.HasOne("G_Cofee_Repositories.Models.Transaction", null)
-                        .WithMany("Payments")
-                        .HasForeignKey("TransactionId");
 
                     b.HasOne("G_Cofee_Repositories.Models.User", "UpdatedByNavigation")
                         .WithMany("PaymentUpdatedByNavigations")
@@ -682,12 +676,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("FK__Products__Create__5165187F");
 
-                    b.HasOne("G_Cofee_Repositories.Models.User", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("G_Cofee_Repositories.Models.Supplier", "Supplier")
                         .WithMany("Products")
                         .HasForeignKey("SupplierId")
@@ -705,8 +693,6 @@ namespace G_Cofee_Repositories.Migrations
                         .HasConstraintName("FK__Products__Update__52593CB8");
 
                     b.Navigation("CreatedByNavigation");
-
-                    b.Navigation("Manager");
 
                     b.Navigation("Supplier");
 
@@ -782,8 +768,6 @@ namespace G_Cofee_Repositories.Migrations
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Supplier", b =>
                 {
-                    b.Navigation("Payments");
-
                     b.Navigation("Products");
 
                     b.Navigation("Transactions");
@@ -791,8 +775,6 @@ namespace G_Cofee_Repositories.Migrations
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Transaction", b =>
                 {
-                    b.Navigation("Payments");
-
                     b.Navigation("TransactionDetails");
                 });
 
@@ -820,8 +802,6 @@ namespace G_Cofee_Repositories.Migrations
 
             modelBuilder.Entity("G_Cofee_Repositories.Models.Warehouse", b =>
                 {
-                    b.Navigation("Inventories");
-
                     b.Navigation("TransactionDetails");
                 });
 #pragma warning restore 612, 618

@@ -3,6 +3,7 @@ using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
+using System;
 
 namespace G_Coffee_Services.Services
 {
@@ -41,9 +42,9 @@ namespace G_Coffee_Services.Services
 
             if (transaction.TransactionDetails == null || !transaction.TransactionDetails.Any())
                 throw new ArgumentException("Transaction must have at least one detail.");
-
+            var random = new Random();
             var transactionEntity = _mapper.Map<Transaction>(transaction);
-            transactionEntity.TransactionId = Guid.NewGuid();
+            transactionEntity.TransactionId = transactionEntity.TransactionId = "IP" + random.Next(100000, 999999) + ""; 
             transactionEntity.CreatedDate = DateTime.Now;
             transactionEntity.Status = "Completed";
 
@@ -106,9 +107,9 @@ namespace G_Coffee_Services.Services
 
             if (transaction.TransactionDetails == null || !transaction.TransactionDetails.Any())
                 throw new ArgumentException("Transaction must contain at least one detail.");
-
+            var random = new Random();
             var transactionEntity = _mapper.Map<Transaction>(transaction);
-            transactionEntity.TransactionId = Guid.NewGuid();
+            transactionEntity.TransactionId = "EP" + random.Next(100000, 999999) + "";
             transactionEntity.CreatedDate = DateTime.Now;
             transactionEntity.Status = "Completed";
             transactionEntity.TransactionDetails = new List<TransactionDetail>();
@@ -145,6 +146,18 @@ namespace G_Coffee_Services.Services
             await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<TransactionDTO>(transactionEntity);
+        }
+
+        public Task<Transaction> GetTransactionByIdAsync(string transactionId)
+        {
+            if (string.IsNullOrEmpty(transactionId))
+                throw new ArgumentNullException(nameof(transactionId));
+            return _transactionRepository.GetTransactionByIdAsync(transactionId);
+        }
+
+        public Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
+        {
+            return _transactionRepository.GetAllTransactionsAsync();
         }
     }
 }

@@ -6,24 +6,27 @@ namespace G_Cofee_Repositories.Models;
 
 public partial class Transaction
 {
-    public Guid TransactionId { get; set; }
+    public string TransactionId { get; set; }
 
-    public string TransactionNumber { get; set; } = null!;
+    //public string TransactionNumber { get; set; } = null!;
 
-    [ForeignKey("Order")]
-    public Guid? OrderId { get; set; }
+    //[ForeignKey("Order")]
+    //public Guid? OrderId { get; set; }
 
     public DateOnly TransactionDate { get; set; }
 
     public string? SupplierId { get; set; }
 
-    public decimal? TotalQuantity { get; set; }
+    //public decimal? TotalQuantity { get; set; }
 
     public decimal? TotalAmount { get; set; }
 
     public string TransactionType { get; set; } = null!;
 
     public string? Status { get; set; }
+    public string? CustomerName { get; set; }
+    public string ? CustomerPhone { get; set; }
+    public string? CustomerAddress { get; set; }
 
     public DateTime? CreatedDate { get; set; }
 
@@ -35,7 +38,7 @@ public partial class Transaction
 
     public virtual User? CreatedByNavigation { get; set; }
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    //public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Supplier? Supplier { get; set; }
 
@@ -43,5 +46,5 @@ public partial class Transaction
 
     public virtual User? UpdatedByNavigation { get; set; }
 
-    public virtual Order? Order { get; set; }
+    //public virtual Product? Product { get; set; }
 }

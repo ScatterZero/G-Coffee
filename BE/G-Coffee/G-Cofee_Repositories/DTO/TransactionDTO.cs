@@ -8,7 +8,7 @@ namespace G_Cofee_Repositories.DTO
 {
     public class TransactionDTO
     {
-        public Guid TransactionId { get; set; }
+        public string TransactionId { get; set; }
 
         public string TransactionNumber { get; set; } = null!;
 
@@ -23,7 +23,9 @@ namespace G_Cofee_Repositories.DTO
         public string TransactionType { get; set; } = null!;
 
         public string? Status { get; set; }
-
+        public string? CustomerName { get; set; }
+        public string? CustomerPhone { get; set; }
+        public string? CustomerAddress { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public string? CreatedBy { get; set; }

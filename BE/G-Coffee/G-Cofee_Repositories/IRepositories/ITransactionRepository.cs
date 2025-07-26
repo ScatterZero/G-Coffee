@@ -12,6 +12,8 @@ namespace G_Cofee_Repositories.IRepositories
     public interface ITransactionRepository : IGenericRepository<Transaction>
     {
         Task<bool> ExistsAsync(Expression<Func<Transaction, bool>> value);
+        Task<Transaction> GetTransactionByIdAsync(string transactionId);
+        Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
 
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace G_Cofee_Repositories.Repositories
@@ -21,6 +22,28 @@ namespace G_Cofee_Repositories.Repositories
         public async Task<bool> ExistsAsync(Expression<Func<Transaction, bool>> value)
         {
             return await _context.Transactions.AnyAsync(value);
+        }
+
+        public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
+        {
+            return await _context.Transactions
+                         .Include(i => i.Supplier)
+                         .Include(i => i.TransactionDetails)
+                             .ThenInclude(td => td.Warehouse)
+                         .Include(i => i.TransactionDetails)
+                             .ThenInclude(td => td.Product)
+                           .ToListAsync();
+        }
+
+        public async Task<Transaction> GetTransactionByIdAsync(string transactionId)
+        {
+                        return await _context.Transactions
+                         .Include(i => i.Supplier)
+                         .Include(i => i.TransactionDetails)
+                             .ThenInclude(td => td.Warehouse)
+                         .Include(i => i.TransactionDetails)
+                             .ThenInclude(td => td.Product)
+                         .FirstOrDefaultAsync(i => i.TransactionId == transactionId);
         }
     }
 }

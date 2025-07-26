@@ -40,11 +40,12 @@ namespace G_Coffee_Services.Services
                 _logger.LogError("TransactionDetailDTO là null");
                 throw new ArgumentNullException(nameof(transactionDetailDto));
             }
-            if (transactionDetailDto.TransactionId == Guid.Empty)
+            if (transactionDetailDto.TransactionDetailId != Guid.Empty)
             {
-                _logger.LogError("TransactionId không hợp lệ: Guid.Empty");
-                throw new ArgumentException("TransactionId không hợp lệ. Phải là một GUID hợp lệ.", nameof(transactionDetailDto.TransactionId));
+                _logger.LogError("TransactionDetailId không được cung cấp khi tạo mới: {TransactionDetailId}", transactionDetailDto.TransactionDetailId);
+                throw new ArgumentException("TransactionDetailId không được cung cấp khi tạo mới.", nameof(transactionDetailDto.TransactionDetailId));
             }
+
 
             try
             {
@@ -181,11 +182,8 @@ namespace G_Coffee_Services.Services
                 _logger.LogError("TransactionDetailId không hợp lệ: Guid.Empty");
                 throw new ArgumentException("Yêu cầu TransactionDetail ID hợp lệ", nameof(transactionDetailDto.TransactionDetailId));
             }
-            if (transactionDetailDto.TransactionId == Guid.Empty)
-            {
-                _logger.LogError("TransactionId không hợp lệ: Guid.Empty");
-                throw new ArgumentException("TransactionId không hợp lệ. Phải là một GUID hợp lệ.", nameof(transactionDetailDto.TransactionId));
-            }
+
+        
 
             try
             {

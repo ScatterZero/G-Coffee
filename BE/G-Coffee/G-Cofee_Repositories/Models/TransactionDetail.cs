@@ -7,7 +7,7 @@ public partial class TransactionDetail
 {
     public Guid TransactionDetailId { get; set; }
 
-    public Guid TransactionId { get; set; }
+    public string TransactionId { get; set; }
 
     public string ProductId { get; set; } = null!;
 
@@ -27,7 +27,7 @@ public partial class TransactionDetail
 
     public string? UpdatedBy { get; set; }
 
-    public virtual Product BarcodeNavigation { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 
     public virtual Transaction Transaction { get; set; } = null!;
 

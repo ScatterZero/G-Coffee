@@ -1025,6 +1025,40 @@
         }
       }
     },
+    "/api/Transaction/get-all-transactions": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Transaction/get-transaction-by-id/{transactionId}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/TransactionDetail": {
       "post": {
         "tags": [
@@ -1869,20 +1903,6 @@
             "type": "boolean",
             "nullable": true
           },
-          "payments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Payment"
-            },
-            "nullable": true
-          },
-          "products": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Product"
-            },
-            "nullable": true
-          },
           "transactions": {
             "type": "array",
             "items": {
@@ -1928,15 +1948,6 @@
         "properties": {
           "transactionId": {
             "type": "string",
-            "format": "uuid"
-          },
-          "transactionNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "orderId": {
-            "type": "string",
-            "format": "uuid",
             "nullable": true
           },
           "transactionDate": {
@@ -1945,11 +1956,6 @@
           },
           "supplierId": {
             "type": "string",
-            "nullable": true
-          },
-          "totalQuantity": {
-            "type": "number",
-            "format": "double",
             "nullable": true
           },
           "totalAmount": {
@@ -1962,6 +1968,18 @@
             "nullable": true
           },
           "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerAddress": {
             "type": "string",
             "nullable": true
           },
@@ -1986,13 +2004,6 @@
           "createdByNavigation": {
             "$ref": "#/components/schemas/User"
           },
-          "payments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Payment"
-            },
-            "nullable": true
-          },
           "supplier": {
             "$ref": "#/components/schemas/Supplier"
           },
@@ -2005,9 +2016,6 @@
           },
           "updatedByNavigation": {
             "$ref": "#/components/schemas/User"
-          },
-          "order": {
-            "$ref": "#/components/schemas/Order"
           }
         },
         "additionalProperties": false
@@ -2017,7 +2025,7 @@
         "properties": {
           "transactionId": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           },
           "transactionNumber": {
             "type": "string",
@@ -2046,6 +2054,18 @@
             "nullable": true
           },
           "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerAddress": {
             "type": "string",
             "nullable": true
           },
@@ -2086,7 +2106,7 @@
           },
           "transactionId": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           },
           "productId": {
             "type": "string",
@@ -2127,7 +2147,7 @@
             "type": "string",
             "nullable": true
           },
-          "barcodeNavigation": {
+          "product": {
             "$ref": "#/components/schemas/Product"
           },
           "transaction": {
@@ -2148,7 +2168,7 @@
           },
           "transactionId": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           },
           "productId": {
             "type": "string",
@@ -2400,6 +2420,9 @@
           "managerId": {
             "type": "string",
             "nullable": true
+          },
+          "status": {
+            "type": "boolean"
           },
           "createdDate": {
             "type": "string",

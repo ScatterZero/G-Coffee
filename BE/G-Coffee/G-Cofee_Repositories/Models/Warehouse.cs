@@ -12,6 +12,7 @@ public partial class Warehouse
     public string? Address { get; set; }
 
     public string? ManagerId { get; set; }
+    public bool Status { get; set; } 
 
     public DateTime? CreatedDate { get; set; }
 

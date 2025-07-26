@@ -72,5 +72,35 @@ namespace G_Coffee_API.Controllers
                 return StatusCode(500, new { Message = "❌ Internal Server Error while exporting transaction.", Error = ex.Message });
             }
         }
+        [HttpGet("get-all-transactions")]
+        public async Task<IActionResult> GetAllTransactions()
+        {
+            try
+            {
+                var transactions = await _transactionService.GetAllTransactionsAsync();
+                return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "❌ Internal Server Error while fetching transactions.", Error = ex.Message });
+            }
+        }
+        [HttpGet("get-transaction-by-id/{transactionId}")]
+        public async Task<IActionResult> GetTransactionById(string transactionId)
+        {
+            if (string.IsNullOrEmpty(transactionId))
+                return BadRequest(new { Message = "Transaction ID cannot be null or empty." });
+            try
+            {
+                var transaction = await _transactionService.GetTransactionByIdAsync(transactionId);
+                if (transaction == null)
+                    return NotFound(new { Message = "Transaction not found." });
+                return Ok(transaction);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "❌ Internal Server Error while fetching transaction.", Error = ex.Message });
+            }
+        }
     }
 }

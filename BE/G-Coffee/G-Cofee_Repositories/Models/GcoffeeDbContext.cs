@@ -160,9 +160,6 @@ public partial class GcoffeeDbContext : DbContext
                 .HasForeignKey(d => d.CreatedBy)
                 .HasConstraintName("FK__Products__Create__5165187F");
 
-            entity.HasOne(d => d.Supplier).WithMany(p => p.Products)
-                .HasForeignKey(d => d.SupplierId)
-                .HasConstraintName("FK__Products__Suppli__4F7CD00D");
 
             entity.HasOne(d => d.UnitOfMeasure).WithMany(p => p.Products)
                 .HasForeignKey(d => d.UnitOfMeasureId)
@@ -208,9 +205,7 @@ public partial class GcoffeeDbContext : DbContext
         {
             entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A4BF0A9ADB7");
 
-            entity.HasIndex(e => e.TransactionNumber, "IDX_Transactions_TransactionNumber");
 
-            entity.HasIndex(e => e.TransactionNumber, "UQ__Transact__E733A2BFD789BA6C").IsUnique();
 
             entity.Property(e => e.TransactionId)
                 .HasDefaultValueSql("(newid())")
@@ -232,12 +227,6 @@ public partial class GcoffeeDbContext : DbContext
             entity.Property(e => e.TotalAmount)
                 .HasDefaultValue(0m)
                 .HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.TotalQuantity)
-                .HasDefaultValue(0m)
-                .HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.TransactionNumber)
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.TransactionType)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -292,7 +281,7 @@ public partial class GcoffeeDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("WarehouseID");
 
-            entity.HasOne(d => d.BarcodeNavigation).WithMany(p => p.TransactionDetails)
+            entity.HasOne(d => d.Product).WithMany(p => p.TransactionDetails)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Transacti__Barco__6D0D32F4");
