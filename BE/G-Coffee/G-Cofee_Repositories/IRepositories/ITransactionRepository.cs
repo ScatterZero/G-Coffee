@@ -13,7 +13,7 @@ namespace G_Cofee_Repositories.IRepositories
     {
         Task<bool> ExistsAsync(Expression<Func<Transaction, bool>> value);
         Task<Transaction> GetTransactionByIdAsync(string transactionId);
-        Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
+        Task<IEnumerable<Transaction>> GetAllTransactionsAsync(string id);
 
     }
 }

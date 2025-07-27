@@ -1,4 +1,5 @@
 ﻿using G_Cofee_Repositories.DTO;
+using G_Cofee_Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace G_Coffee_Services.IServices
     {
         Task<TransactionDetailDTO> CreateTransactionDetailAsync(TransactionDetailDTO TransactionDetail);
         Task<TransactionDetailDTO> GetTransactionDetailByIdAsync(string id);
-        Task<IEnumerable<TransactionDetailDTO>> GetAllTransactionDetailsAsync();
+        Task<IEnumerable<TransactionDetail>> GetAllTransactionDetailsAsync();
         Task UpdateTransactionDetailAsync(TransactionDetailDTO productDto);
         Task DeleteTransactionDetailAsync(string id);
     }

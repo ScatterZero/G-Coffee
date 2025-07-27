@@ -26,6 +26,14 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         return await _context.Products.AnyAsync(predicate);
     }
 
+    public async Task<IEnumerable<Product>> GetAllProductsAsync(string id)
+    {
+        return await _context.Products.Where(t => t.TenantID == id)
+            .Include(p => p.Supplier)
+            .ToListAsync();
+    }
+
+
     public async Task<IEnumerable<Product>> GetProductsBySupplierIdAsync(string supplierId)
     {
         return await FindAsync(p => p.SupplierId == supplierId);

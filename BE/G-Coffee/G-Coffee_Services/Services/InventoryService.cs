@@ -3,8 +3,10 @@ using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace G_Coffee_Services.Services
@@ -16,18 +18,22 @@ namespace G_Coffee_Services.Services
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
         private readonly IWarehouseRepository _warehouseRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public InventoryService(IUnitOfWork unitOfWork, IInventoryRepository inventoryRepository, IMapper mapper, IProductRepository productRepository, IWarehouseRepository warehouseRepository)
+        public InventoryService(IUnitOfWork unitOfWork, IInventoryRepository inventoryRepository, IMapper mapper, IProductRepository productRepository, IWarehouseRepository warehouseRepository, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _productRepository = productRepository;
             _warehouseRepository = warehouseRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Inventory> CreateInventoryAsync(InventoryDTO inventoryDto)
         {
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+
             if (inventoryDto == null)
                 throw new ArgumentException("Inventory DTO cannot be null");
             var existingProduct = await _productRepository.GetByIdAsync(inventoryDto.ProductID);
@@ -38,6 +44,7 @@ namespace G_Coffee_Services.Services
                 throw new KeyNotFoundException($"Warehouse with ID {inventoryDto.WarehouseId} not found");
 
             var entity = _mapper.Map<Inventory>(inventoryDto);
+            entity.TenantID = tenantId ?? throw new InvalidOperationException("Tenant ID is required");
             entity.InventoryId = Guid.NewGuid();
             entity.LastUpdated = DateTime.UtcNow;
             entity.Min = inventoryDto.Min != 0 ? inventoryDto.Min : 0;
@@ -70,7 +77,9 @@ namespace G_Coffee_Services.Services
 
         public async Task<IEnumerable<Inventory>> GetAllInventorysAsync()
         {
-            var inventories = await _inventoryRepository.GetAllInventory();
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+
+            var inventories = await _inventoryRepository.GetAllInventory(tenantId);
             if (inventories == null || !inventories.Any())
                 throw new KeyNotFoundException("No inventories found");
             return _mapper.Map<IEnumerable<Inventory>>(inventories);

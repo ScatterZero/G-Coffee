@@ -11,7 +11,7 @@ public partial class Warehouse
 
     public string? Address { get; set; }
 
-    public string? ManagerId { get; set; }
+    public string? TenantID { get; set; } = null!;
     public bool Status { get; set; } 
 
     public DateTime? CreatedDate { get; set; }
@@ -24,7 +24,7 @@ public partial class Warehouse
 
     //public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 
-    public virtual User? Manager { get; set; }
+    public virtual User? Tenant { get; set; }
 
     public virtual ICollection<TransactionDetail> TransactionDetails { get; set; } = new List<TransactionDetail>();
 

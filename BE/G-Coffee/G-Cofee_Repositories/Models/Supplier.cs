@@ -24,6 +24,8 @@ public partial class Supplier
     public DateTime? UpdatedDate { get; set; }
 
     public string? UpdatedBy { get; set; }
+    public string? TenantID { get; set; } = null!;
+    public virtual User Tent { get; set; } = null!;
 
     public bool? IsDisabled { get; set; }
 

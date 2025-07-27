@@ -53,6 +53,7 @@ namespace G_Coffee_Services.Services
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim("TenantID", user.TenantID), // Gán default nếu null
                     new Claim(ClaimTypes.Role, user.Role.ToString()) // Assuming User has a Role property
                 }),
                 Expires = tokenExpiryTimeStamp,
@@ -71,7 +72,7 @@ namespace G_Coffee_Services.Services
                 AccessToken = assertedToken,
                 Username = loginDto.Username,
                 ExpiresIn = (int)(tokenExpiryTimeStamp - DateTime.UtcNow).TotalSeconds,
-                Role = user.Role.ToString() // Fix: Assign the RoleEnum directly instead of converting to string
+                Role = user.Role.ToString(), // Fix: Assign the RoleEnum directly instead of converting to string
             };
         }
         public async Task RegisterAsync(UserRegisterDTO registerDto)
@@ -81,6 +82,7 @@ namespace G_Coffee_Services.Services
                 throw new Exception("Username already exists");
 
             var user = _mapper.Map<User>(registerDto);
+            user.TenantID = user.UserId;
             await _accountRepository.AddUserAsync(user);
         }
 

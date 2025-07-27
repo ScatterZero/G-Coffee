@@ -13,7 +13,7 @@ namespace G_Cofee_Repositories.IRepositories
         Task<bool> ExistsAsync(Expression<Func<Inventory, bool>> value);
         Task<Inventory> GetByProductAndWarehouseAsync(string productId, string warehouseId, CancellationToken cancellationToken = default);
         Task<Inventory> GetByInventoryIdAsync(Guid productId, CancellationToken cancellationToken = default);
-        Task<IEnumerable<Inventory>> GetAllInventory();
+        Task<IEnumerable<Inventory>> GetAllInventory(string id);
 
 
     }

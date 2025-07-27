@@ -43,8 +43,11 @@ public partial class Transaction
     public virtual Supplier? Supplier { get; set; }
 
     public virtual ICollection<TransactionDetail> TransactionDetails { get; set; } = new List<TransactionDetail>();
+    public string? TenantID { get; set; } = null!;
 
     public virtual User? UpdatedByNavigation { get; set; }
+    public virtual User Tent { get; set; } = null!;
+
 
     //public virtual Product? Product { get; set; }
 }

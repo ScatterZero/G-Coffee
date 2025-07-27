@@ -14,5 +14,6 @@ namespace G_Cofee_Repositories.IRepositories
         //Task AddAsync(SupplierDTO entity);
         //Task DeleteAsync(Supplier supplier);
         Task<bool> ExistsAsync(Expression<Func<Supplier, bool>> value);
+        Task<IEnumerable<Supplier>> GetAllSupplierAsync(string id);
     }
 }

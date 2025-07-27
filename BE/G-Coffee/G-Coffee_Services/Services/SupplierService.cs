@@ -3,8 +3,10 @@ using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace G_Coffee_Services.Services
@@ -13,20 +15,25 @@ namespace G_Coffee_Services.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ISupplierRepository _supplierRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
 
-        public SupplierService(IUnitOfWork unitOfWork, ISupplierRepository supplierRepository, IMapper mapper)
+        public SupplierService(IUnitOfWork unitOfWork, ISupplierRepository supplierRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _supplierRepository = supplierRepository ?? throw new ArgumentNullException(nameof(supplierRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
         public async Task<SupplierDTO> CreateSupplierAsync(SupplierDTO supplier)
         {
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+
             if (supplier == null) throw new ArgumentException("Supplier data cannot be null");
 
             var supplierEntity = _mapper.Map<Supplier>(supplier);
+            supplierEntity.TenantID = tenantId ?? throw new InvalidOperationException("Tenant ID is required");
             supplierEntity.CreatedDate = DateTime.UtcNow;
             supplierEntity.UpdatedDate = DateTime.UtcNow;
 
@@ -50,7 +57,8 @@ namespace G_Coffee_Services.Services
 
         public async Task<IEnumerable<SupplierDTO>> GetAllSuppliersAsync()
         {
-            var suppliers = await _supplierRepository.GetAllAsync();
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+            var suppliers = await _supplierRepository.GetAllSupplierAsync(tenantId);
             return _mapper.Map<IEnumerable<SupplierDTO>>(suppliers);
         }
 

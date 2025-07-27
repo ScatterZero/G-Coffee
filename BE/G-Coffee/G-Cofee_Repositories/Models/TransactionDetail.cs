@@ -26,10 +26,14 @@ public partial class TransactionDetail
     public DateTime? UpdatedDate { get; set; }
 
     public string? UpdatedBy { get; set; }
+    public string? TenantID { get; set; } = null!;
+
 
     public virtual Product Product { get; set; } = null!;
 
     public virtual Transaction Transaction { get; set; } = null!;
 
     public virtual Warehouse? Warehouse { get; set; }
+    public virtual User Tent { get; set; } = null!;
+
 }

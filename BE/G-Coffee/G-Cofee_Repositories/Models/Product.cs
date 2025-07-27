@@ -25,7 +25,8 @@ public partial class Product
 
     public string? UpdatedBy { get; set; }
 
-    public bool? IsDisabled { get; set; } 
+    public bool? IsDisabled { get; set; }
+    public string? TenantID { get; set; } = null!;
 
     public virtual User? CreatedByNavigation { get; set; }
 
@@ -35,4 +36,6 @@ public partial class Product
 
     public virtual UnitsOfMeasure UnitOfMeasure { get; set; } = null!;
     public virtual User? UpdatedByNavigation { get; set; }
+    public virtual User Tent { get; set; } = null!;
+
 }

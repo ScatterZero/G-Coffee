@@ -14,7 +14,7 @@ namespace G_Cofee_Repositories.DTO
 
         public string? Address { get; set; }
 
-        public string? ManagerId { get; set; }
+        public string? TenantID { get; set; } = null!;
 
         public DateTime? CreatedDate { get; set; }
 

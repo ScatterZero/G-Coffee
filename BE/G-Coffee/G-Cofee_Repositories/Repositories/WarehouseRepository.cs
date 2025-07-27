@@ -21,5 +21,11 @@ namespace G_Cofee_Repositories.Repositories
         {
             return await _context.Warehouses.AnyAsync(value);
         }
+        public async Task<IEnumerable<Warehouse>> GetAllWarehouseAsync(string id)
+        {
+            return await _context.Warehouses.Where(t => t.TenantID == id)
+                .Include(p => p.Tenant)
+                .ToListAsync();
+        }
     }
 }

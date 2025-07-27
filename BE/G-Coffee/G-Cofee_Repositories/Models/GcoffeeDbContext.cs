@@ -110,16 +110,7 @@ public partial class GcoffeeDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.PaymentCreatedByNavigations)
-                .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__Payments__Create__7A672E12");
 
-    
-
-
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.PaymentUpdatedByNavigations)
-                .HasForeignKey(d => d.UpdatedBy)
-                .HasConstraintName("FK__Payments__Update__7B5B524B");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -156,9 +147,6 @@ public partial class GcoffeeDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.ProductCreatedByNavigations)
-                .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__Products__Create__5165187F");
 
 
             entity.HasOne(d => d.UnitOfMeasure).WithMany(p => p.Products)
@@ -166,9 +154,6 @@ public partial class GcoffeeDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Products__UnitOf__5070F446");
 
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.ProductUpdatedByNavigations)
-                .HasForeignKey(d => d.UpdatedBy)
-                .HasConstraintName("FK__Products__Update__52593CB8");
         });
 
         modelBuilder.Entity<Supplier>(entity =>
@@ -235,17 +220,12 @@ public partial class GcoffeeDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.TransactionCreatedByNavigations)
-                .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__Transacti__Creat__656C112C");
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.SupplierId)
                 .HasConstraintName("FK__Transacti__Suppl__6477ECF3");
 
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.TransactionUpdatedByNavigations)
-                .HasForeignKey(d => d.UpdatedBy)
-                .HasConstraintName("FK__Transacti__Updat__66603565");
+
         });
 
         modelBuilder.Entity<TransactionDetail>(entity =>
@@ -382,7 +362,7 @@ public partial class GcoffeeDbContext : DbContext
             entity.Property(e => e.CreatedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.ManagerId)
+            entity.Property(e => e.TenantID)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ManagerID");
@@ -394,9 +374,6 @@ public partial class GcoffeeDbContext : DbContext
 
 
 
-            entity.HasOne(d => d.Manager).WithMany(p => p.WarehouseManagers)
-                .HasForeignKey(d => d.ManagerId)
-                .HasConstraintName("FK__Warehouse__Manag__3D5E1FD2");
 
         });
 

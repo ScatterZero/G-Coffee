@@ -35,9 +35,10 @@ namespace G_Coffee_Services.Services
             _httpContextAccessor = httpContextAccessor;
             _unitOfMeasureRepository = unitOfMeasureRepository;
         }
-
+        
         public async Task<Product> CreateProductAsync(ProductDto productDto)
         {
+            var tenantId =  _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
             try
             {
                 if (productDto == null) throw new ArgumentNullException(nameof(productDto));
@@ -55,6 +56,7 @@ namespace G_Coffee_Services.Services
 
 
                 var product = _mapper.Map<Product>(productDto);
+                product.TenantID = tenantId;
 
                 var math = new Caculate();
                 do
@@ -98,9 +100,11 @@ namespace G_Coffee_Services.Services
 
         public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+
             try
             {
-                var products = await _productRepository.GetAllAsync();
+                var products = await _productRepository.GetAllProductsAsync(tenantId);
                 return _mapper.Map<IEnumerable<Product>>(products);
             }
             catch (Exception ex)

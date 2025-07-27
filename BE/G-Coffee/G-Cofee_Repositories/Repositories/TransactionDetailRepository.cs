@@ -30,5 +30,14 @@ namespace G_Cofee_Repositories.Repositories
             // Corrected to use the TransactionDetails DbSet instead of Suppliers
             return await _context.TransactionDetails.AnyAsync(predicate);
         }
+        public async Task<IEnumerable<TransactionDetail>> GetAllTransactionDetailsAsync(string tentID)
+        {
+
+            return await _context.TransactionDetails.Where(t => t.TenantID == tentID)
+                .Include(p => p.Tent)
+                .Include(td => td.Warehouse)
+                .Include(td => td.Product)
+                .ToListAsync();
+        }
     }
 }

@@ -16,10 +16,12 @@ public partial class Inventory
     public DateTime? LastUpdated { get; set; }
     public int Min { get; set; }
 
-    public int Max { get; set; }   
+    public int Max { get; set; }
 
-
+    public string? TenantID { get; set; } = null!;
     public virtual Warehouse Warehouse { get; set; } = null!;
     public virtual Product Product { get; set; } = null!;
+    public virtual User Tent { get; set; } = null!;
+
 
 }

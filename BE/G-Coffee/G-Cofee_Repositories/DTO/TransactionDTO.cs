@@ -33,7 +33,7 @@ namespace G_Cofee_Repositories.DTO
         public DateTime? UpdatedDate { get; set; }
 
         public string? UpdatedBy { get; set; }
-        public List<TransactionDetailDTO> TransactionDetails { get; set; } = new List<TransactionDetailDTO>();
+        //public List<TransactionDetailDTO> TransactionDetails { get; set; } = new List<TransactionDetailDTO>();
 
     }
 }

@@ -8,7 +8,7 @@ namespace G_Cofee_Repositories.DTO
 {
     public class TransactionDetailDTO
     {
-        public Guid TransactionDetailId { get; set; }
+        public Guid TransactionDetailId { get; set; } 
         public string TransactionId { get; set; }
         public string ProductId { get; set; }
         public decimal Quantity { get; set; }

@@ -12,6 +12,7 @@ namespace G_Cofee_Repositories.IRepositories
     public interface IWarehouseRepository : IGenericRepository<Models.Warehouse>
     {
         Task<bool> ExistsAsync(Expression<Func<Warehouse, bool>> value);
+        Task<IEnumerable<Warehouse>> GetAllWarehouseAsync(string id);
 
     }
 }

@@ -53,8 +53,7 @@ public class MappingProfile : Profile
         CreateMap<Warehouse, WarehouseDTO>()
      .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.WarehouseId.ToString()));
         // Transaction 
-        CreateMap<TransactionDTO, Transaction>()
-      .ForMember(dest => dest.TransactionDetails, opt => opt.MapFrom(src => src.TransactionDetails));
+        CreateMap<TransactionDTO, Transaction>();
         CreateMap<TransactionDetailDTO, TransactionDetail>();
         // TransactionDetail mapping
         CreateMap<TransactionDetailDTO, TransactionDetail>()

@@ -24,9 +24,9 @@ namespace G_Cofee_Repositories.Repositories
             return await _context.Transactions.AnyAsync(value);
         }
 
-        public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
+        public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync(string id)
         {
-            return await _context.Transactions
+            return await _context.Transactions.Where(t => t.TenantID == id)
                          .Include(i => i.Supplier)
                          .Include(i => i.TransactionDetails)
                              .ThenInclude(td => td.Warehouse)

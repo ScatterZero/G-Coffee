@@ -42,9 +42,9 @@ namespace G_Cofee_Repositories.Repositories
         }
 
 
-        public async Task<IEnumerable<Inventory>> GetAllInventory()
+        public async Task<IEnumerable<Inventory>> GetAllInventory(string tentID)
         {
-            return await _context.Inventories
+            return await _context.Inventories.Where(t => t.TenantID == tentID)
                 .Include(i => i.Warehouse)
                 .Include(i => i.Product)
                 .ToListAsync();

@@ -12,5 +12,7 @@ namespace G_Cofee_Repositories.IRepositories
     {
         Task<bool> ExistsAsync(Expression<Func<Product, bool>> value);
         Task<IEnumerable<Product>> GetProductsBySupplierIdAsync(string supplierId);
+        //Task<IEnumerable<Product>> GetProductsByIdAsync(string id);
+        Task<IEnumerable<Product>> GetAllProductsAsync(string id);
     }
 }
