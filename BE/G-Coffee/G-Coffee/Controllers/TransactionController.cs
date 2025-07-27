@@ -28,8 +28,8 @@ namespace G_Coffee_API.Controllers
 
             try
             {
-                await _transactionService.ImportReceipt(transaction);
-                return Ok(new { Message = "✅ Import transaction processed successfully." });
+                 var result = await _transactionService.ImportReceipt(transaction);
+                return Ok(result);
             }
             catch (ArgumentException ex)
             {
@@ -53,11 +53,7 @@ namespace G_Coffee_API.Controllers
             try
             {
                 var result = await _transactionService.ExportReceipt(transaction);
-                return Ok(new
-                {
-                    Message = "✅ Export transaction processed successfully.",
-                    Transaction = result
-                });
+                return Ok(result);
             }
             catch (ArgumentException ex)
             {

@@ -54,6 +54,7 @@ public class MappingProfile : Profile
      .ForMember(dest => dest.WarehouseId, opt => opt.MapFrom(src => src.WarehouseId.ToString()));
         // Transaction 
         CreateMap<TransactionDTO, Transaction>();
+        CreateMap<Transaction, TransactionDTO>();
         CreateMap<TransactionDetailDTO, TransactionDetail>();
         // TransactionDetail mapping
         CreateMap<TransactionDetailDTO, TransactionDetail>()

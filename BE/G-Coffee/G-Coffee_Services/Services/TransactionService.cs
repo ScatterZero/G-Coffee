@@ -216,17 +216,18 @@ namespace G_Coffee_Services.Services
                 return transactionEntity;
             }
 
-            public async Task ImportReceipt(TransactionDTO transaction)
+            public async Task<Transaction> ImportReceipt(TransactionDTO transaction)
             {
                 var transactionEntity = await CreateTransactionAsync(transaction, "Import", "IP");
                 await _unitOfWork.SaveChangesAsync();
-            }
+                return transactionEntity;
+        }
 
-            public async Task<TransactionDTO> ExportReceipt(TransactionDTO transaction)
+            public async Task<Transaction> ExportReceipt(TransactionDTO transaction)
             {
                 var transactionEntity = await CreateTransactionAsync(transaction, "Export", "EP");
                 await _unitOfWork.SaveChangesAsync();
-                return _mapper.Map<TransactionDTO>(transactionEntity);
+                return transactionEntity;
             }
 
             public Task<Transaction> GetTransactionByIdAsync(string transactionId)
