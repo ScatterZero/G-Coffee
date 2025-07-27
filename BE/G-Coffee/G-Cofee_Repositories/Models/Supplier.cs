@@ -33,6 +33,6 @@ public partial class Supplier
 
     //public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
-    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    //public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
 }
