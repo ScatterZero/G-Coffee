@@ -170,77 +170,114 @@ namespace G_Coffee_Services.Services
     //    }
     //}
 
-        public class TransactionService : ITransactionService
+    public class TransactionService : ITransactionService
+    {
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public TransactionService(
+            ITransactionRepository transactionRepository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor)
         {
-            private readonly ITransactionRepository _transactionRepository;
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IMapper _mapper;
-            private readonly IHttpContextAccessor _httpContextAccessor;
-
-            public TransactionService(
-                ITransactionRepository transactionRepository,
-                IUnitOfWork unitOfWork,
-                IMapper mapper,
-                IHttpContextAccessor httpContextAccessor)
-            {
-                _transactionRepository = transactionRepository ?? throw new ArgumentNullException(nameof(transactionRepository));
-                _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-                _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-                _httpContextAccessor = httpContextAccessor;
-            }
-
-            private async Task<Transaction> CreateTransactionAsync(TransactionDTO transaction, string transactionType, string prefix)
-            {
-                var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
-                if (transaction == null)
-                    throw new ArgumentNullException(nameof(transaction));
-
-                if (transaction.TransactionType != transactionType)
-                    throw new ArgumentException($"Invalid transaction type. Expected '{transactionType}'.");
-
-                if (transaction.TotalQuantity <= 0 || transaction.TotalAmount <= 0)
-                    throw new ArgumentException("Quantity and amount must be greater than zero.");
-
-                if (transactionType == "Import" && string.IsNullOrEmpty(transaction.SupplierId))
-                    throw new ArgumentNullException(nameof(transaction.SupplierId));
-
-                var random = new Random();
-                var transactionEntity = _mapper.Map<Transaction>(transaction);
-                transactionEntity.TenantID = tenantId ?? throw new InvalidOperationException("Tenant ID is required");
-                transactionEntity.TransactionId = prefix + random.Next(100000, 999999);
-                transactionEntity.CreatedDate = DateTime.Now;
-                transactionEntity.TransactionDetails = new List<TransactionDetail>();
-
-                await _transactionRepository.AddAsync(transactionEntity);
-                return transactionEntity;
-            }
-
-            public async Task<Transaction> ImportReceipt(TransactionDTO transaction)
-            {
-                var transactionEntity = await CreateTransactionAsync(transaction, "Import", "IP");
-                await _unitOfWork.SaveChangesAsync();
-                return transactionEntity;
+            _transactionRepository = transactionRepository ?? throw new ArgumentNullException(nameof(transactionRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _httpContextAccessor = httpContextAccessor;
         }
 
-            public async Task<Transaction> ExportReceipt(TransactionDTO transaction)
-            {
-                var transactionEntity = await CreateTransactionAsync(transaction, "Export", "EP");
-                await _unitOfWork.SaveChangesAsync();
-                return transactionEntity;
-            }
+        private async Task<Transaction> CreateTransactionAsync(TransactionDTO transaction, string transactionType, string prefix)
+        {
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+            if (transaction == null)
+                throw new ArgumentNullException(nameof(transaction));
 
-            public Task<Transaction> GetTransactionByIdAsync(string transactionId)
-            {
-                if (string.IsNullOrEmpty(transactionId))
-                    throw new ArgumentNullException(nameof(transactionId));
-                return _transactionRepository.GetTransactionByIdAsync(transactionId);
-            }
+            if (transaction.TransactionType != transactionType)
+                throw new ArgumentException($"Invalid transaction type. Expected '{transactionType}'.");
 
-            public Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
-            {
-                var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
-                return _transactionRepository.GetAllTransactionsAsync(tenantId);
-            }
+            if (transaction.TotalQuantity <= 0 || transaction.TotalAmount <= 0)
+                throw new ArgumentException("Quantity and amount must be greater than zero.");
+
+            if (transactionType == "Import" && string.IsNullOrEmpty(transaction.SupplierId))
+                throw new ArgumentNullException(nameof(transaction.SupplierId));
+
+            var random = new Random();
+            var transactionEntity = _mapper.Map<Transaction>(transaction);
+            transactionEntity.TenantID = tenantId ?? throw new InvalidOperationException("Tenant ID is required");
+            transactionEntity.TransactionId = prefix + random.Next(100000, 999999);
+            transactionEntity.CreatedDate = DateTime.Now;
+            transactionEntity.TransactionDetails = new List<TransactionDetail>();
+
+            await _transactionRepository.AddAsync(transactionEntity);
+            return transactionEntity;
+        }
+
+        public async Task<Transaction> ImportReceipt(TransactionDTO transaction)
+        {
+            var transactionEntity = await CreateTransactionAsync(transaction, "Import", "IP");
+            await _unitOfWork.SaveChangesAsync();
+            return transactionEntity;
+        }
+
+        public async Task<Transaction> ExportReceipt(TransactionDTO transaction)
+        {
+            var transactionEntity = await CreateTransactionAsync(transaction, "Export", "EP");
+            await _unitOfWork.SaveChangesAsync();
+            return transactionEntity;
+        }
+
+        public Task<Transaction> GetTransactionByIdAsync(string transactionId)
+        {
+            if (string.IsNullOrEmpty(transactionId))
+                throw new ArgumentNullException(nameof(transactionId));
+            return _transactionRepository.GetTransactionByIdAsync(transactionId);
+        }
+
+        public Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
+        {
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+            return _transactionRepository.GetAllTransactionsAsync(tenantId);
+        }
+        public async Task<bool> DeleteTransactionAsync(string transactionId)
+        {
+            if (string.IsNullOrEmpty(transactionId))
+                throw new ArgumentNullException(nameof(transactionId));
+            var transaction = await _transactionRepository.GetTransactionByIdAsync(transactionId);
+            if (transaction == null)
+                throw new KeyNotFoundException($"Transaction with ID {transactionId} not found");
+            _transactionRepository.Remove(transaction);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+        public async Task<Transaction> UpdateTransactionAsync(string id, UpdateTransactionDTO transactionDto)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+            if (transactionDto == null)
+                throw new ArgumentNullException(nameof(transactionDto));
+            var transaction = await _transactionRepository.GetTransactionByIdAsync(id);
+            if (transaction == null)
+                throw new KeyNotFoundException($"Transaction with ID {id} not found");
+
+            // Update properties from DTO
+            transaction.TransactionType = transactionDto.TransactionType ?? transaction.TransactionType;
+            transaction.TotalAmount = transactionDto.TotalAmount > 0 ? transactionDto.TotalAmount : transaction.TotalAmount;
+            transaction.SupplierId = transactionDto.SupplierId ?? transaction.SupplierId;
+            transaction.UpdatedDate = DateTime.UtcNow;
+            transaction.Status = transactionDto.Status ?? transaction.Status;
+            transaction.CustomerPhone = transactionDto.CustomerPhone ?? transaction.CustomerPhone;
+            transaction.CustomerName = transactionDto.CustomerName ?? transaction.CustomerName;
+            transaction.CustomerAddress = transactionDto.CustomerAddress ?? transaction.CustomerAddress;
+            _transactionRepository.Update(transaction);
+            await _unitOfWork.SaveChangesAsync();
+            return transaction;
+
+
         }
     }
+}
+
 

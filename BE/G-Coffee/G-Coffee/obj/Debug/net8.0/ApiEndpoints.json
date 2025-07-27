@@ -64,6 +64,22 @@
   },
   {
     "ContainingType": "G_Coffee.Controllers.AccountController",
+    "Method": "CreateAccountForManager",
+    "RelativePath": "api/Account/CreateAccount",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "registerDto",
+        "Type": "G_Cofee_Repositories.DTO.UserRegisterDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.AccountController",
     "Method": "Login",
     "RelativePath": "api/Account/login",
     "HttpMethod": "POST",
@@ -629,6 +645,22 @@
   },
   {
     "ContainingType": "G_Coffee_API.Controllers.TransactionController",
+    "Method": "DeleteTransaction",
+    "RelativePath": "api/Transaction/delete-transaction/{transactionId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "transactionId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee_API.Controllers.TransactionController",
     "Method": "ExportReceipt",
     "RelativePath": "api/Transaction/export",
     "HttpMethod": "POST",
@@ -680,6 +712,27 @@
       {
         "Name": "transaction",
         "Type": "G_Cofee_Repositories.DTO.TransactionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee_API.Controllers.TransactionController",
+    "Method": "UpdateTransaction",
+    "RelativePath": "api/Transaction/update-transaction/{transactionId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "transactionId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "transactionDto",
+        "Type": "G_Cofee_Repositories.DTO.UpdateTransactionDTO",
         "IsRequired": true
       }
     ],

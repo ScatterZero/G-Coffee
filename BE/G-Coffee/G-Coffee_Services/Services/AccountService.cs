@@ -4,6 +4,7 @@ using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Cofee_Repositories.Repositories;
 using G_Coffee_Services.IServices;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -23,12 +24,14 @@ namespace G_Coffee_Services.Services
         private readonly string _jwtSecret;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountService(IAccountRepository accountRepository, IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork)
+        public AccountService(IAccountRepository accountRepository, IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _accountRepository = accountRepository;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _jwtSecret = _configuration["JwtConfig:Key"] ?? throw new ArgumentNullException("JwtConfig" + ":Key", "JWT secret key is not configured");
 
@@ -131,6 +134,31 @@ namespace G_Coffee_Services.Services
 
             _accountRepository.Update(existing);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public Task<User> ChangeTentId(string id, string tentId)
+        {
+            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(tentId))
+                throw new ArgumentException("Account ID and Tenant ID are required");
+            var account = _accountRepository.GetByIdAsync(id);
+            if (account == null)
+                throw new KeyNotFoundException($"Account with ID {id} not found");
+            account.Result.TenantID = tentId;
+            _accountRepository.Update(account.Result);
+            return _unitOfWork.SaveChangesAsync().ContinueWith(_ => account.Result);
+        }
+
+        public async Task<User> CreateAccountForManager(UserRegisterDTO registerDto)
+        {
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+            var existingUser = await _accountRepository.GetUserByNameAsync(registerDto.Username);
+            if (existingUser != null)
+                throw new Exception("Username already exists");
+            var user = _mapper.Map<User>(registerDto);
+            user.TenantID = tenantId;
+            await _accountRepository.AddUserAsync(user);
+            await _unitOfWork.SaveChangesAsync();
+            return user;
         }
     }
 

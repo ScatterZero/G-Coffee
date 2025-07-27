@@ -36,4 +36,17 @@ namespace G_Cofee_Repositories.DTO
         //public List<TransactionDetailDTO> TransactionDetails { get; set; } = new List<TransactionDetailDTO>();
 
     }
+    public class UpdateTransactionDTO
+    {
+        public string TransactionNumber { get; set; } = null!;
+        public DateOnly TransactionDate { get; set; }
+        public string? SupplierId { get; set; }
+        public decimal? TotalQuantity { get; set; }
+        public decimal? TotalAmount { get; set; }
+        public string TransactionType { get; set; } = null!;
+        public string? Status { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustomerPhone { get; set; }
+        public string? CustomerAddress { get; set; }
+    }
 }

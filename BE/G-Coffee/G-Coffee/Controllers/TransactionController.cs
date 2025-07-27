@@ -98,5 +98,46 @@ namespace G_Coffee_API.Controllers
                 return StatusCode(500, new { Message = "❌ Internal Server Error while fetching transaction.", Error = ex.Message });
             }
         }
+        [HttpDelete("delete-transaction/{transactionId}")]
+        public async Task<IActionResult> DeleteTransaction(string transactionId)
+        {
+            if (string.IsNullOrEmpty(transactionId))
+                return BadRequest(new { Message = "Transaction ID cannot be null or empty." });
+            try
+            {
+                await _transactionService.DeleteTransactionAsync(transactionId);
+                return Ok(new { Message = "Transaction deleted successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "❌ Internal Server Error while deleting transaction.", Error = ex.Message });
+            }
+        }
+        [HttpPut("update-transaction/{transactionId}")]
+        public async Task<IActionResult> UpdateTransaction(string transactionId, [FromBody] UpdateTransactionDTO transactionDto)
+        {
+            if (string.IsNullOrEmpty(transactionId))
+                return BadRequest(new { Message = "Transaction ID cannot be null or empty." });
+            if (transactionDto == null)
+                return BadRequest(new { Message = "Transaction data cannot be null." });
+            try
+            {
+                var updatedTransaction = await _transactionService.UpdateTransactionAsync(transactionId, transactionDto);
+                return Ok(updatedTransaction);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "❌ Internal Server Error while updating transaction.", Error = ex.Message });
+            }
+        }
+
     }
 }

@@ -15,5 +15,7 @@ namespace G_Coffee_Services.IServices
         Task<G_Cofee_Repositories.Models.Transaction> ExportReceipt(TransactionDTO entity);
         Task<G_Cofee_Repositories.Models.Transaction> GetTransactionByIdAsync(string transactionId);
         Task<IEnumerable<G_Cofee_Repositories.Models.Transaction>> GetAllTransactionsAsync();
+        Task<bool> DeleteTransactionAsync(string id);
+        Task<G_Cofee_Repositories.Models.Transaction> UpdateTransactionAsync(string id, UpdateTransactionDTO dto);
     }
 }

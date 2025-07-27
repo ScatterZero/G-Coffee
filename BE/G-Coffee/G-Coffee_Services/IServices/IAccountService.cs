@@ -17,6 +17,7 @@ namespace G_Coffee_Services.IServices
         Task<IEnumerable<User>> GetAllAccountsAsync();
         Task UpdateAccountAsync(string id, UserUpdateDTO dt);
         Task DeleteAccountAsync(string id);
-
+        Task<User> ChangeTentId(string id, string tentId);
+        Task<User> CreateAccountForManager(UserRegisterDTO registerDto);
     }
 }

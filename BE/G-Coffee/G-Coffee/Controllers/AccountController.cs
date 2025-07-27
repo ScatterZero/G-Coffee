@@ -3,6 +3,7 @@ using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace G_Coffee.Controllers
 {
@@ -144,6 +145,46 @@ namespace G_Coffee.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        //[HttpPut]
+        //[Authorize(Roles = "User,Manager,Admin")]
+        //public async Task<IActionResult> ChangeTentID(string TendID)
+        //{
+        //    try
+        //    {
+        //        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //        if (string.IsNullOrEmpty(userId))
+        //            return BadRequest("User ID is required");
+        //        await _userService.ChangeTentId(userId, TendID);
+        //        return NoContent();
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //    catch (KeyNotFoundException ex)
+        //    {
+        //        return NotFound(ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+
+        //}
+        [HttpPost("CreateAccount")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateAccountForManager([FromBody] UserRegisterDTO registerDto)
+        {
+            try
+            {
+                await _userService.CreateAccountForManager(registerDto);
+                return Ok("Đăng ký thành công");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
