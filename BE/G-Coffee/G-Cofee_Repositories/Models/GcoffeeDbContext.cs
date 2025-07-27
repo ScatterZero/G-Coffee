@@ -221,9 +221,7 @@ public partial class GcoffeeDbContext : DbContext
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
 
-            entity.HasOne(d => d.Supplier).WithMany(p => p.Transactions)
-                .HasForeignKey(d => d.SupplierId)
-                .HasConstraintName("FK__Transacti__Suppl__6477ECF3");
+     
 
 
         });
