@@ -209,7 +209,6 @@ namespace G_Coffee_Services.Services
                 transactionEntity.TenantID = tenantId ?? throw new InvalidOperationException("Tenant ID is required");
                 transactionEntity.TransactionId = prefix + random.Next(100000, 999999);
                 transactionEntity.CreatedDate = DateTime.Now;
-                transactionEntity.Status = "Completed";
                 transactionEntity.TransactionDetails = new List<TransactionDetail>();
 
                 await _transactionRepository.AddAsync(transactionEntity);
