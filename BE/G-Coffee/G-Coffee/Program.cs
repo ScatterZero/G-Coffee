@@ -25,6 +25,17 @@ builder.Services.AddHttpClient<PayOSService>();
 // Đăng ký CORS
 builder.Services.AddCors(options =>
 {
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+builder.Services.AddCors(options =>
+{
     options.AddPolicy("AllowFrontend",
         policy => policy.WithOrigins("http://localhost:3000", "https://g-coffee-peach.vercel.app/")
                         .AllowAnyHeader()
@@ -168,6 +179,7 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "G-Coffee v1
 
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseCors("AllowFrontend"); // Sử dụng CORS với policy đã định nghĩa
 app.UseAuthentication(); // Thêm dòng này trước UseAuthorization
 app.UseAuthorization();
