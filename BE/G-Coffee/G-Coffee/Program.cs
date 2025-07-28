@@ -26,7 +26,7 @@ builder.Services.AddHttpClient<PayOSService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("http://localhost:3000")
+        policy => policy.WithOrigins("http://localhost:3000", "https://g-coffee-peach.vercel.app/")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
