@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("G-Cofee_Repositories")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a8c9024a3988be36d367c94cc0571fde41588b5a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d703440ea22a3f61fef8a2f9cae72cd267604c1")]
 [assembly: System.Reflection.AssemblyProductAttribute("G-Cofee_Repositories")]
 [assembly: System.Reflection.AssemblyTitleAttribute("G-Cofee_Repositories")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

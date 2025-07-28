@@ -54,7 +54,7 @@ namespace G_Coffee_Services.Services
         public async Task<IEnumerable<WarehouseDTO>> GetAllWarehousesAsync()
         {
             var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
-            var warehouses = await _warehouseRepository.GetAllAsync();
+            var warehouses = await _warehouseRepository.GetAllWarehouseAsync(tenantId);
             return _mapper.Map<IEnumerable<WarehouseDTO>>(warehouses);
         }
 
