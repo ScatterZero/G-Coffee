@@ -381,6 +381,16 @@
   },
   {
     "ContainingType": "G_Coffee.Controllers.OrderController",
+    "Method": "GetOrdersByUserId",
+    "RelativePath": "api/Order/api/Order/GetOrderByUser",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "G_Coffee.Controllers.OrderController",
     "Method": "GetOrdersByOrderId",
     "RelativePath": "api/Order/order-code/{orderId}",
     "HttpMethod": "GET",

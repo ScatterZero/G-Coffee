@@ -14,6 +14,7 @@ namespace G_Coffee_Services.IServices
         Task<Order> GetOrderByIdAsync(Guid id);
         Task<Order> GetOrderByOrderCodeAsync(long id);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
+        Task<Order> GetOrdersByUserIdAsync();
         Task UpdateOrderAsync(Order Order);
         Task DeleteOrderAsync(Guid id);
         Task<Order> GetOrderByCheckoutUrlAsync(string checkoutUrl);

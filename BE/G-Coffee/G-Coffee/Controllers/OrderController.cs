@@ -150,5 +150,28 @@ namespace G_Coffee.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("api/Order/GetOrderByUser")]
+        [Authorize(Roles = "User,Manager,Admin")]
+        public async Task<IActionResult> GetOrdersByUserId()
+        {
+            try
+            {
+                var order = await _orderService.GetOrdersByUserIdAsync();
+                return Ok(order);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

@@ -49,6 +49,17 @@ namespace G_Cofee_Repositories.Repositories
         {
             return _context.Orders.AnyAsync(value);
         }
+
+        public async Task<Order> GetOrderByUserIdAsync(string tentId,CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(tentId))
+                throw new ArgumentException("User ID is required", nameof(tentId));
+            return await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.ComboPackage)
+                .FirstOrDefaultAsync(o => o.User.TenantID == tentId, cancellationToken);
+
+        }
     }
 }
  

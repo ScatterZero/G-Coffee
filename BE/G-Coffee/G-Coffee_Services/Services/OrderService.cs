@@ -3,10 +3,12 @@ using G_Cofee_Repositories.DTO;
 using G_Cofee_Repositories.IRepositories;
 using G_Cofee_Repositories.Models;
 using G_Coffee_Services.IServices;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace G_Coffee_Services.Services
@@ -18,14 +20,17 @@ namespace G_Coffee_Services.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IComboPackageRepository _comboPackageRepository;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrderService(IUnitOfWork unitOfWork, IOrderRepository orderRepository, IMapper mapper, IAccountRepository accountRepository, IComboPackageRepository comboPackageRepository)
+        public OrderService(IUnitOfWork unitOfWork, IOrderRepository orderRepository, IMapper mapper, IAccountRepository accountRepository, IComboPackageRepository comboPackageRepository, IHttpContextAccessor httpContextAccessor)
+
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _accountRepository = accountRepository;
             _comboPackageRepository = comboPackageRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         //public async Task<OrderDTO> CreateOrderAsync(OrderDTO dto)
@@ -88,6 +93,7 @@ namespace G_Coffee_Services.Services
 
         public async Task<Order> GetOrderByIdAsync(Guid id)
         {
+
             if (id == Guid.Empty)
                 throw new ArgumentException("Order ID is required");
 
@@ -129,6 +135,16 @@ namespace G_Coffee_Services.Services
 
             _orderRepository.Update(dto);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<Order> GetOrdersByUserIdAsync()
+        {
+            var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirstValue("TenantID");
+
+            if (string.IsNullOrEmpty(tenantId))
+                throw new UnauthorizedAccessException("Tenant ID is not available in the current context.");
+            return await _orderRepository.GetOrderByUserIdAsync(tenantId); // Assuming this method exists in the repository
+
         }
     }
 }

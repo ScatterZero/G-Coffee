@@ -628,6 +628,18 @@
         }
       }
     },
+    "/api/Order/api/Order/GetOrderByUser": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Payment/create-link/{orderId}": {
       "post": {
         "tags": [

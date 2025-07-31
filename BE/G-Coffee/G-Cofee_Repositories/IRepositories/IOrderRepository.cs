@@ -15,6 +15,7 @@ namespace G_Cofee_Repositories.IRepositories
 
         Task<IEnumerable<Order>> GetAllOrderAsync(CancellationToken cancellationToken = default);
         Task<Order> GetByOrderIdAsync(object id, CancellationToken cancellationToken = default);
+        Task<Order> GetOrderByUserIdAsync(string tentId, CancellationToken cancellationToken = default);
     }
 
 
